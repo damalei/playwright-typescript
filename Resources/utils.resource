@@ -1,0 +1,24 @@
+*** Settings ***
+Library     RPA.FileSystem
+Library    OperatingSystem
+Library    RPA.Browser.Playwright
+Resource    ../Resources/credentials.resource
+Resource    ../Resources/config.resource
+
+*** Keywords ***
+Log-in to expedock
+    [Arguments]    ${env}    ${username}   ${password}
+    New Browser    chromium    headless=false    #downloadsPath=C:\Users\immad\Code\expedock-robot-automation\
+    New Context    viewport={'width': 1920, 'height': 1080}    acceptDownloads=True
+    Delete All Cookies
+    ${old_timeout} =    Set Browser Timeout    1m 30 seconds
+    New Page       https://${env}-dashboard.expedock.com/
+    Set Browser Timeout    ${old_timeout}
+    Sleep          10s
+    Click          input#username
+    Fill Text      input#username    ${username}
+    Click          input#password
+    Fill Text      input#password    ${password}
+    RPA.Browser.Playwright.Press Keys     input#password    Enter
+    Sleep          10s
+
