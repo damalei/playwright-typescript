@@ -9,7 +9,6 @@ Resource    ../Resources/credentials.resource
 Resource    ../Resources/config.resource
 Resource    ../Resources/utils.resource
 
-
 *** Variables ***
 @{shipment_columns}
 
@@ -37,6 +36,12 @@ Verify that when user clicks column names, the page does not refresh to an empty
     Click       text="Receivable Invoices"
     Wait For Elements State    text=Total Invoices:     timeout=30s
     Click on column header names    Total Invoices:
+
+Verify that when user clicks column names, the page does not refresh to an empty page (Explore > Explore Organizations)
+    Click       text="Explore"
+    Click       text="Explore Organizations"
+    Wait For Elements State    text=Total Organizations:     timeout=30s
+    Click on column header names    Total Organizations:
 
 *** Keywords ***
 Click on column header names

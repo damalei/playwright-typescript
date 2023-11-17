@@ -148,9 +148,6 @@ Resource    ../Resources/utils.resource
 ...     Number Of Shipments Shipped By Container Type
 #...     Container Summary       #Removed by team, experiment chart created by Rui
 
-
-
-
 *** Test Cases ***
 Verify page dashboard in Business Performance
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
