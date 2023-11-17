@@ -14,7 +14,7 @@ Log-in to expedock
     ${old_timeout} =    Set Browser Timeout    1m 30 seconds
     New Page       https://${env}-dashboard.expedock.com/
     Set Browser Timeout    ${old_timeout}
-    Sleep          10s
+    Wait Until Keyword Succeeds    30s    .5s    Wait For Elements State    text="Welcome"   visible    timeout=1 min
     Click          input#username
     Fill Text      input#username    ${username}
     Click          input#password
