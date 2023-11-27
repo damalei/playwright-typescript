@@ -163,6 +163,111 @@ Verify page dashboard in Business Performance
 #    Log-in to expedock   passive     ${username}     ${password}
 #    Crawl Site           https://passive-dashboard.expedock.com     max_number_of_page_to_crawl=100     max_depth_to_crawl=2
 
+User clicks on Organization name from Explore > Explore Organization
+    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+    ...     AND     Click    text="Explore"
+    Click    text="Explore Organizations"
+    Wait For Elements State    text="Org Name"  timeout=30s
+    @{elements}=    Get Elements    xpath=//a[@rel="noreferrer"]
+    Log Many    @{elements}
+    Click   ${elements}[0]
+    Switch Page    NEW
+    Wait For Elements State    text="You’re viewing your relationship with this organization as your"  timeout=30s
+    ${url}=     Get Url
+    Should Contain    ${url}    dashboard.expedock.com/organizations/   ignore_case=true
+
+User clicks on See Payables from Explore > Explore Organization
+    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+    ...     AND     Click    text="Explore"
+    Click    text="Explore Organizations"
+    Wait For Elements State    text="Org Name"  timeout=30s
+    @{elements}=    Get Elements    xpath=//a[@rel="noreferrer"]
+    Log Many    @{elements}
+    Click   ${elements}[2]
+    Switch Page    NEW
+    Wait For Elements State    text="Total Invoices:"  timeout=30s
+    ${url}=     Get Url
+    Should Contain    ${url}    dashboard.expedock.com/explore/payable-invoices?   ignore_case=true
+
+User clicks on See Receivables from Explore > Explore Organization
+    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+    ...     AND     Click    text="Explore"
+    Click    text="Explore Organizations"
+    Wait For Elements State    text="Org Name"  timeout=30s
+    @{elements}=    Get Elements    xpath=//a[@rel="noreferrer"]
+    Click   ${elements}[3]
+    Switch Page    NEW
+    Wait For Elements State    text="Total Invoices:"  timeout=30s
+    ${url}=     Get Url
+    Should Contain    ${url}    dashboard.expedock.com/explore/receivable-invoices?   ignore_case=true
+
+User clicks on Forwarder Reference from Explore > Explore Shipments
+    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+    ...     AND     Click    text="Explore"
+    Click    text="Explore Shipments"
+    Wait For Elements State    text="Total Shipments:"  timeout=30s
+    @{elements}=    Get Elements    xpath=//a[@rel="noopener noreferrer"]
+    Click   ${elements}[0]
+    Switch Page    NEW
+    Wait For Elements State    text="Shipment Details"  timeout=30s
+    ${url}=     Get Url
+    Should Contain    ${url}    dashboard.expedock.com/explore/shipment-details?   ignore_case=true
+
+User clicks on Invoice Number from Explore > Payable Invoices
+    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+    ...     AND     Click    text="Explore"
+    Click    text="Payable Invoices"
+    Wait For Elements State    text="Total Invoices:"  timeout=30s
+    Wait For Elements State    text="Creditor"  timeout=30s
+    @{elements}=    Get Elements    css=.css-p3mme2
+    Click   ${elements}[0]
+    Switch Page    NEW
+    Wait For Elements State    text="Invoice Details"  timeout=30s
+    ${url}=     Get Url
+    Should Contain    ${url}    dashboard.expedock.com/invoice/posted/   ignore_case=true
+
+User clicks on Job Number from Explore > Payable Invoices
+    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+    ...     AND     Click    text="Explore"
+    Click    text="Payable Invoices"
+    Wait For Elements State    text="Total Invoices:"  timeout=30s
+    Wait For Elements State    text="Creditor"  timeout=30s
+    @{elements}=    Get Elements    xpath=//a[@rel="noopener noreferrer"]
+    Click   ${elements}[0]
+    Switch Page    NEW
+    Wait For Elements State    text="Shipment Details"  timeout=30s
+    ${url}=     Get Url
+    Should Contain    ${url}    dashboard.expedock.com/explore/shipment-details?   ignore_case=true
+
+User clicks on Invoice Number from Explore > Receivable Invoices
+    [Documentation]     Page opens in the same tab, as designed?
+    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+    ...     AND     Click    text="Explore"
+    Click    text="Receivable Invoices"
+    Wait For Elements State    text="Total Invoices:"  timeout=30s
+    Wait For Elements State    text="Debitor"  timeout=30s
+    @{elements}=    Get Elements    css=.css-p3mme2
+    Click   ${elements}[0]
+    #Switch Page    NEW
+    Wait For Elements State    text="Invoice Details"  timeout=30s
+    ${url}=     Get Url
+    Should Contain    ${url}    dashboard.expedock.com/invoice/posted/   ignore_case=true
+
+User clicks on Job Number from Explore > Receivable Invoices
+    [Documentation]     Some job numbers are empty, as designed?
+    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+    ...     AND     Click    text="Explore"
+    Click    text="Receivable Invoices"
+    Wait For Elements State    text="Total Invoices:"  timeout=30s
+    Wait For Elements State    text="Debitor"  timeout=30s
+    @{elements}=    Get Elements    xpath=//a[@rel="noopener noreferrer"]
+    Click   ${elements}[0]
+    Switch Page    NEW
+    Wait For Elements State    text="Shipment Details"  timeout=30s
+    ${url}=     Get Url
+    Should Contain    ${url}    dashboard.expedock.com/explore/shipment-details?   ignore_case=true
+    Sleep    5s
+
 *** Keywords ***
 Check charts
         [Arguments]     ${sub_menu}
@@ -187,3 +292,7 @@ Check dashboard loaded
             #Focus    text="${chart}"
            Wait For Elements State    text="${chart}"   visible    timeout=1 min
         END
+
+
+
+

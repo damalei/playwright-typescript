@@ -12,10 +12,9 @@ Resource    ../Resources/utils.resource
 
 *** Variables ***
 &{shipment_details}      num=S00004556   org=CN0PRD
-${favicon_loc}       xpath=//link[@rel="shortcut icon"]
-${searchbar_loc}    xpath=//input[@name="searchShipments"]
+${favicon_loc}          xpath=//link[@rel="shortcut icon"]
+${searchbar_loc}        xpath=//input[@name="searchShipments"]
 ${shipmentcard_loc}     xpath=//div[@data-testid="shipment-card" and contains(@data-company-shipment-key, '${shipment_details}[num]')]
-
 
 *** Test Cases ***
 Verify shipper landing page loads
@@ -24,6 +23,7 @@ Verify shipper landing page loads
     RPA.Desktop.Take Screenshot
 
 Verify favicon loads successfully
+    [Tags]  re-run
     ${favicon_link}=    Get Attribute     ${favicon_loc}     href
     New Page        ${favicon_link}
     Sleep    10s
@@ -32,6 +32,7 @@ Verify favicon loads successfully
     RPA.Desktop.Take Screenshot
 
 Verify user can search for a record and access the shipment details page
+    [Tags]  re-run
     ${shipper_details_url}          Set Variable   https://apinvdemo.passive-portal.expedock.com/details/${shipment_details}[num]%20(${shipment_details}[org])?breadcrumbs=%7B%22name%22%3A%22Search+Shipments%22%2C%22link%22%3A%22%2Fsearch-shipments%3Fquery%3D${shipment_details}[num]%22%7D&query=${shipment_details}[num]
     RPA.Browser.Playwright.Click    ${searchbar_loc}
     Keyboard Input    insertText     ${shipment_details}[num]
