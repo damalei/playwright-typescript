@@ -22,3 +22,6 @@ Log-in to expedock
     RPA.Browser.Playwright.Press Keys     input#password    Enter
     Sleep          10s
 
+Teardown
+    Run Keyword If Test Failed    Take Screenshot  fullPage=True
+

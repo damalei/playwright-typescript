@@ -6,6 +6,7 @@ Library         String
 Resource    ../Resources/credentials.resource
 Resource    ../Resources/config.resource
 Resource    ../Resources/utils.resource
+Test Teardown       Teardown
 
 *** Variables ***
 @{business_performance}

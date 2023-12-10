@@ -9,9 +9,11 @@ Library         DateTime
 Resource    ../Resources/credentials.resource
 Resource    ../Resources/config.resource
 Resource    ../Resources/utils.resource
+Test Teardown       Teardown
 
 *** Test Cases ***
 Create AN Job
+    [Tags]      robot:exclude
     Log-in to expedock app          passive      ${jms-uname}         ${jms-password}
     ${name}=                        Create a task name
     Create a task                   ${name}

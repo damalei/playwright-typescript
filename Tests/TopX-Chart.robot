@@ -5,6 +5,7 @@ Library    RPA.Browser.Playwright
 Resource    ../Resources/credentials.resource
 Resource    ../Resources/config.resource
 Resource    ../Resources/utils.resource
+Test Teardown       Teardown
 
 *** Variables ***
 @{agent_reports}           

@@ -8,6 +8,7 @@ Library         Collections
 Resource    ../Resources/credentials.resource
 Resource    ../Resources/config.resource
 Resource    ../Resources/utils.resource
+Test Teardown       Teardown
 
 *** Variables ***
 @{shipment_columns}
@@ -50,5 +51,5 @@ Click on column header names
     FOR    ${element}    IN    @{elements}
         ${option_value} =   Get Text    ${element}
         Click    ${element}
-        Wait For Elements State    text=${reference_text}  timeout=30s
+        Run Keyword And Continue On Failure    Wait For Elements State    text=${reference_text}  timeout=30s
     END

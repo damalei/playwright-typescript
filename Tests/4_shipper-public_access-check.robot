@@ -9,6 +9,7 @@ Library         RPA.Desktop
 Resource    ../Resources/credentials.resource
 Resource    ../Resources/config.resource
 Resource    ../Resources/utils.resource
+Test Teardown       Teardown
 
 *** Variables ***
 &{shipment_details}      num=S00004556   org=CN0PRD
