@@ -15,9 +15,9 @@ Log-in to expedock
     New Page       https://${env}-dashboard.expedock.com/
     Set Browser Timeout    ${old_timeout}
     Wait Until Keyword Succeeds    30s    .5s    Wait For Elements State    text="Welcome"   visible    timeout=1 min
-    Click          input#username
+    RPA.Browser.Playwright.Click          input#username
     Fill Text      input#username    ${username}
-    Click          input#password
+    RPA.Browser.Playwright.Click          input#password
     Fill Text      input#password    ${password}
     RPA.Browser.Playwright.Press Keys     input#password    Enter
     Sleep          10s

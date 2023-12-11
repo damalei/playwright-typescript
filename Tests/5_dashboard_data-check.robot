@@ -4,6 +4,7 @@ Library         OperatingSystem
 Library         RPA.Browser.Playwright
 Library         String
 Library         Collections
+#Library         RPA.Desktop
 Resource    ../Resources/credentials.resource
 Resource    ../Resources/config.resource
 Resource    ../Resources/utils.resource
@@ -17,34 +18,33 @@ Documentation     As of 12/11/2023 m/d/y , the columns available in the explore 
 User checks local client data when clicking 'See Shipments'
 #    [Tags]    robot:exclude
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
-    ...     AND     Click    text="Explore"
-    ...     AND     Set Browser Timeout    1min
-    ...     AND     Click    text="Explore Organizations"
+    ...     AND     RPA.Browser.Playwright.Click    text="Explore"
+    ...     AND     Set Browser Timeout    5min
+    ...     AND     RPA.Browser.Playwright.Click    text="Explore Organizations"
     Verify values between Explore organization and Explore Shipments
 
 User checks shipper data when clicking 'See Shipments'
-    [Tags]    robot:exclude
+#    [Tags]    robot:exclude
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
-    ...     AND     Click    text="Explore"
+    ...     AND     RPA.Browser.Playwright.Click    text="Explore"
     ...     AND     Set Browser Timeout    1min
-    ...     AND     Click    text="Explore Organizations"
-    Click       xpath=//input[@value="Local Client"]
-    ${option}       Get Element
-    Get element by role
-    #Click       xpath=//input[@id="mui-102-option-0"]
-    Sleep    10s
-#    Verify values between Explore organization and Explore Shipments
-    
-
-
+    ...     AND     RPA.Browser.Playwright.Click    text="Explore Organizations"
+    Wait Until Keyword Succeeds    30s    1s    Wait For Elements State    text="Total Organizations:"     visible
+    RPA.Browser.Playwright.Click       xpath=//button[@aria-label="Open"] >> nth=3
+#    Move Mouse      ocr:Shipper
+#    RPA.Desktop.Click
+    Wait Until Keyword Succeeds    30s    1s    Wait For Elements State    text="Org Name"     visible
+    Verify values between Explore organization and Explore Shipments
 
 *** Keywords ***
 Verify values between Explore organization and Explore Shipments
     ${table}=       Set Variable    xpath=//table[@class="MuiTable-root MuiTable-stickyHeader css-1mkkbhk"]
 
     #Get max numbers of rows on display
-    ${rows}=    Get Elements    css=.css-195uojy-rowCell
-    ${max}=      Get length  ${rows}
+#    ${rows}=        Get Elements        xpath=//tr[@data-testid="explore-table-row"]
+    Wait For Elements State    xpath=//tbody[@data-testid="explore-table-body"]    visible
+    ${rows}=        Wait Until Keyword Succeeds  10s   1s    Get Elements        css=.css-195uojy-rowCell
+    ${max}=         Get length  ${rows}
 
     #Get row where Org Name is not N/A
     FOR    ${count}    IN RANGE   1     ${max}
@@ -52,8 +52,8 @@ Verify values between Explore organization and Explore Shipments
         ${text}=    Get Text    ${e}
         IF    "${text}" != "N/A"  BREAK
     END
-    ${last}=    Get Table Cell Element    ${table}    -1    ${count}
-    ${max_col}=      Get Table Cell Index    ${last}
+    ${last}=            Get Table Cell Element      ${table}    -1    ${count}
+    ${max_col}=         Get Table Cell Index        ${last}
     @{row_values}=      Create List
 
     #Get values in the row
@@ -65,7 +65,7 @@ Verify values between Explore organization and Explore Shipments
 
     #Click on See Shipments
     ${see_ship}=    Get Table Cell Element    ${table}    17    ${count}
-    Click    ${see_ship}
+    RPA.Browser.Playwright.Click    ${see_ship}
 
     #Go to new tab
     Switch Page    NEW
