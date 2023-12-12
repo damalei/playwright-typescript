@@ -4,7 +4,7 @@ Library         OperatingSystem
 Library         RPA.Browser.Playwright
 Library         String
 Library         Collections
-#Library         RPA.Desktop
+Library         RPA.Desktop
 Resource    ../Resources/credentials.resource
 Resource    ../Resources/config.resource
 Resource    ../Resources/utils.resource
@@ -15,35 +15,46 @@ Documentation     As of 12/11/2023 m/d/y , the columns available in the explore 
 ...     Payable Invoices, Receivable Invoices
 
 *** Test Cases ***
-User checks local client data when clicking 'See Shipments'
-#    [Tags]    robot:exclude
-    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
-    ...     AND     RPA.Browser.Playwright.Click    text="Explore"
-    ...     AND     Set Browser Timeout    5min
-    ...     AND     RPA.Browser.Playwright.Click    text="Explore Organizations"
-    Verify values between Explore organization and Explore Shipments
-
-User checks shipper data when clicking 'See Shipments'
+User checks LOCAL CLIENT data when clicking 'See Shipments'
 #    [Tags]    robot:exclude
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
     ...     AND     RPA.Browser.Playwright.Click    text="Explore"
     ...     AND     Set Browser Timeout    1min
     ...     AND     RPA.Browser.Playwright.Click    text="Explore Organizations"
-    Wait Until Keyword Succeeds    30s    1s    Wait For Elements State    text="Total Organizations:"     visible
-    RPA.Browser.Playwright.Click       xpath=//button[@aria-label="Open"] >> nth=3
-#    Move Mouse      ocr:Shipper
-#    RPA.Desktop.Click
-    Wait Until Keyword Succeeds    30s    1s    Wait For Elements State    text="Org Name"     visible
+    Verify values between Explore organization and Explore Shipments
+
+User checks SHIPPER data when clicking 'See Shipments'
+#    [Tags]    robot:exclude
+    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+    ...     AND     Set Browser Timeout    1min
+    ...     AND     Go To    https://passive-dashboard.expedock.com/explore/explore-organizations?apiPartnerIds=dcbadbee-d78f-4337-89c9-3aa150cec6f6&exploreTab=EXPLORE_SHIPMENTS&filters.shipment=eyJpZCI6ImJhYmI5YmFiLTAxMjMtNDQ1Ni1iODlhLWIxOGM1YTNiYjVkMyIsInR5cGUiOiJncm91cCIsImNoaWxkcmVuMSI6eyI4YThiODk5OS00NTY3LTQ4OWEtYmNkZS1mMThjNWEzYmI1ZDMiOnsiaWQiOiI4YThiODk5OS00NTY3LTQ4OWEtYmNkZS1mMThjNWEzYmI1ZDMiLCJ0eXBlIjoicnVsZSIsInByb3BlcnRpZXMiOnsiZmllbGQiOiJzaGlwbWVudC5kYXRlX3NoaXBtZW50X2NyZWF0ZWQiLCJ2YWx1ZVR5cGUiOlsiZGF0ZSJdLCJ2YWx1ZSI6W3sidmFsdWUiOiItMSIsInVuaXQiOiJZRUFSIn1dLCJ2YWx1ZVNyYyI6WyJ2YWx1ZSJdLCJvcGVyYXRvciI6ImdyZWF0ZXIiLCJmaWVsZFNyYyI6ImZpZWxkIn19fSwicHJvcGVydGllcyI6eyJjb25qdW5jdGlvbiI6IkFORCIsIm5vdCI6ZmFsc2V9fQ%3D%3D&unitSettings=eyJjdXJyZW5jeSI6IlVTRCIsImdyb3VwQnlEYXRlIjoiREFURV9TSElQTUVOVF9DUkVBVEVEIiwib3JnVHlwZSI6eyJ0eXBlIjoiT1JHX1RZUEUiLCJ0YXJnZXRVbml0IjoiU2hpcHBlciJ9LCJwZXJpb2RUeXBlIjoiTU9OVEhMWSIsInNoaXBtZW50Vm9sdW1lVW5pdCI6eyJ0YXJnZXRVbml0Ijoic2hpcG1lbnRzIiwidHlwZSI6IlNISVBNRU5UX0NPVU5UIn0sInZvbHVtZVVuaXQiOnsidGFyZ2V0VW5pdCI6Ik0zIiwidHlwZSI6IlZPTFVNRSJ9LCJ3ZWlnaHRVbml0Ijp7InRhcmdldFVuaXQiOiJLRyIsInR5cGUiOiJXRUlHSFQifX0%3D
+    Verify values between Explore organization and Explore Shipments
+
+User checks CONSIGNEE data when clicking 'See Shipments'
+    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+    ...     AND     Set Browser Timeout    1min
+    ...     AND     Go To    https://passive-dashboard.expedock.com/explore/explore-organizations?apiPartnerIds=dcbadbee-d78f-4337-89c9-3aa150cec6f6&exploreTab=EXPLORE_SHIPMENTS&filters.shipment=eyJpZCI6ImJhYmI5YmFiLTAxMjMtNDQ1Ni1iODlhLWIxOGM1YTNiYjVkMyIsInR5cGUiOiJncm91cCIsImNoaWxkcmVuMSI6eyI4YThiODk5OS00NTY3LTQ4OWEtYmNkZS1mMThjNWEzYmI1ZDMiOnsiaWQiOiI4YThiODk5OS00NTY3LTQ4OWEtYmNkZS1mMThjNWEzYmI1ZDMiLCJ0eXBlIjoicnVsZSIsInByb3BlcnRpZXMiOnsiZmllbGQiOiJzaGlwbWVudC5kYXRlX3NoaXBtZW50X2NyZWF0ZWQiLCJ2YWx1ZVR5cGUiOlsiZGF0ZSJdLCJ2YWx1ZSI6W3sidmFsdWUiOiItMSIsInVuaXQiOiJZRUFSIn1dLCJ2YWx1ZVNyYyI6WyJ2YWx1ZSJdLCJvcGVyYXRvciI6ImdyZWF0ZXIiLCJmaWVsZFNyYyI6ImZpZWxkIn19fSwicHJvcGVydGllcyI6eyJjb25qdW5jdGlvbiI6IkFORCIsIm5vdCI6ZmFsc2V9fQ%3D%3D&unitSettings=eyJjdXJyZW5jeSI6IlVTRCIsImdyb3VwQnlEYXRlIjoiREFURV9TSElQTUVOVF9DUkVBVEVEIiwib3JnVHlwZSI6eyJ0eXBlIjoiT1JHX1RZUEUiLCJ0YXJnZXRVbml0IjoiQ29uc2lnbmVlIn0sInBlcmlvZFR5cGUiOiJNT05USExZIiwic2hpcG1lbnRWb2x1bWVVbml0Ijp7InRhcmdldFVuaXQiOiJzaGlwbWVudHMiLCJ0eXBlIjoiU0hJUE1FTlRfQ09VTlQifSwidm9sdW1lVW5pdCI6eyJ0YXJnZXRVbml0IjoiTTMiLCJ0eXBlIjoiVk9MVU1FIn0sIndlaWdodFVuaXQiOnsidGFyZ2V0VW5pdCI6IktHIiwidHlwZSI6IldFSUdIVCJ9fQ%3D%3D
+    Verify values between Explore organization and Explore Shipments
+
+User checks DEBTOR data when clicking 'See Shipments'
+    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+    ...     AND     Set Browser Timeout    1min
+    ...     AND     Go To    https://passive-dashboard.expedock.com/explore/explore-organizations?apiPartnerIds=dcbadbee-d78f-4337-89c9-3aa150cec6f6&exploreTab=EXPLORE_SHIPMENTS&filters.shipment=eyJpZCI6ImJhYmI5YmFiLTAxMjMtNDQ1Ni1iODlhLWIxOGM1YTNiYjVkMyIsInR5cGUiOiJncm91cCIsImNoaWxkcmVuMSI6eyI4YThiODk5OS00NTY3LTQ4OWEtYmNkZS1mMThjNWEzYmI1ZDMiOnsiaWQiOiI4YThiODk5OS00NTY3LTQ4OWEtYmNkZS1mMThjNWEzYmI1ZDMiLCJ0eXBlIjoicnVsZSIsInByb3BlcnRpZXMiOnsiZmllbGQiOiJzaGlwbWVudC5kYXRlX3NoaXBtZW50X2NyZWF0ZWQiLCJ2YWx1ZVR5cGUiOlsiZGF0ZSJdLCJ2YWx1ZSI6W3sidmFsdWUiOiItMSIsInVuaXQiOiJZRUFSIn1dLCJ2YWx1ZVNyYyI6WyJ2YWx1ZSJdLCJvcGVyYXRvciI6ImdyZWF0ZXIiLCJmaWVsZFNyYyI6ImZpZWxkIn19fSwicHJvcGVydGllcyI6eyJjb25qdW5jdGlvbiI6IkFORCIsIm5vdCI6ZmFsc2V9fQ%3D%3D&unitSettings=eyJjdXJyZW5jeSI6IlVTRCIsImdyb3VwQnlEYXRlIjoiREFURV9TSElQTUVOVF9DUkVBVEVEIiwib3JnVHlwZSI6eyJ0eXBlIjoiT1JHX1RZUEUiLCJ0YXJnZXRVbml0IjoiRGVidG9yIn0sInBlcmlvZFR5cGUiOiJNT05USExZIiwic2hpcG1lbnRWb2x1bWVVbml0Ijp7InRhcmdldFVuaXQiOiJzaGlwbWVudHMiLCJ0eXBlIjoiU0hJUE1FTlRfQ09VTlQifSwidm9sdW1lVW5pdCI6eyJ0YXJnZXRVbml0IjoiTTMiLCJ0eXBlIjoiVk9MVU1FIn0sIndlaWdodFVuaXQiOnsidGFyZ2V0VW5pdCI6IktHIiwidHlwZSI6IldFSUdIVCJ9fQ%3D%3D
+    Verify values between Explore organization and Explore Shipments
+
+User checks CREDITOR data when clicking 'See Shipments'
+    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+    ...     AND     Set Browser Timeout    1min
+    ...     AND     Go To    https://passive-dashboard.expedock.com/explore/explore-organizations?apiPartnerIds=dcbadbee-d78f-4337-89c9-3aa150cec6f6&exploreTab=EXPLORE_SHIPMENTS&filters.shipment=eyJpZCI6ImJhYmI5YmFiLTAxMjMtNDQ1Ni1iODlhLWIxOGM1YTNiYjVkMyIsInR5cGUiOiJncm91cCIsImNoaWxkcmVuMSI6eyI4YThiODk5OS00NTY3LTQ4OWEtYmNkZS1mMThjNWEzYmI1ZDMiOnsiaWQiOiI4YThiODk5OS00NTY3LTQ4OWEtYmNkZS1mMThjNWEzYmI1ZDMiLCJ0eXBlIjoicnVsZSIsInByb3BlcnRpZXMiOnsiZmllbGQiOiJzaGlwbWVudC5kYXRlX3NoaXBtZW50X2NyZWF0ZWQiLCJ2YWx1ZVR5cGUiOlsiZGF0ZSJdLCJ2YWx1ZSI6W3sidmFsdWUiOiItMSIsInVuaXQiOiJZRUFSIn1dLCJ2YWx1ZVNyYyI6WyJ2YWx1ZSJdLCJvcGVyYXRvciI6ImdyZWF0ZXIiLCJmaWVsZFNyYyI6ImZpZWxkIn19fSwicHJvcGVydGllcyI6eyJjb25qdW5jdGlvbiI6IkFORCIsIm5vdCI6ZmFsc2V9fQ%3D%3D&unitSettings=eyJjdXJyZW5jeSI6IlVTRCIsImdyb3VwQnlEYXRlIjoiREFURV9TSElQTUVOVF9DUkVBVEVEIiwib3JnVHlwZSI6eyJ0eXBlIjoiT1JHX1RZUEUiLCJ0YXJnZXRVbml0IjoiQ3JlZGl0b3IifSwicGVyaW9kVHlwZSI6Ik1PTlRITFkiLCJzaGlwbWVudFZvbHVtZVVuaXQiOnsidGFyZ2V0VW5pdCI6InNoaXBtZW50cyIsInR5cGUiOiJTSElQTUVOVF9DT1VOVCJ9LCJ2b2x1bWVVbml0Ijp7InRhcmdldFVuaXQiOiJNMyIsInR5cGUiOiJWT0xVTUUifSwid2VpZ2h0VW5pdCI6eyJ0YXJnZXRVbml0IjoiS0ciLCJ0eXBlIjoiV0VJR0hUIn19
     Verify values between Explore organization and Explore Shipments
 
 *** Keywords ***
 Verify values between Explore organization and Explore Shipments
     ${table}=       Set Variable    xpath=//table[@class="MuiTable-root MuiTable-stickyHeader css-1mkkbhk"]
 
-    #Get max numbers of rows on display
+    #Get max numbers of rows on display under Explore Org
 #    ${rows}=        Get Elements        xpath=//tr[@data-testid="explore-table-row"]
-    Wait For Elements State    xpath=//tbody[@data-testid="explore-table-body"]    visible
-    ${rows}=        Wait Until Keyword Succeeds  10s   1s    Get Elements        css=.css-195uojy-rowCell
+    ${rows}=        Get Elements        css=.css-195uojy-rowCell
     ${max}=         Get length  ${rows}
 
     #Get row where Org Name is not N/A
@@ -78,6 +89,9 @@ Verify values between Explore organization and Explore Shipments
         Append To List      ${ship_vals}   ${text}
     END
 
+    #Removing the comma from Total shipments from the Explore Shipments page
+    ${ship_val0_clean}=     Replace String  ${ship_vals}[0]     ,     ${EMPTY}
+
     #Assertions -- note this does not include 'margin' value
     Run Keyword And Continue On Failure     Assert string values    Total Shipments   ${row_values}[13]       ${ship_vals}[0]
     Run Keyword And Continue On Failure     Assert string values    Total Weight   ${row_values}[2]       ${ship_vals}[1]
@@ -97,7 +111,7 @@ Assert string values
     IF    ${status} == ${True}
         Set Test Message    ${column_name} match${\n}    append=True
    ELSE
-        Fail    ${column_name}  explore org page: ${value_1} | see shipments page: ${value_2}
+        Fail      ${column_name} explore org page: ${value_1} | see shipments page: ${value_2}   append=True
    END
 
 
