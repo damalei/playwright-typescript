@@ -276,6 +276,7 @@ Check charts
         ${sub_menu}=    Replace String    ${sub_menu}    ${SPACE}   -
         ${chart_name}=  Set Variable    ${sub_menu}-charts
         Run keyword and continue on failure     Check dashboard loaded      @{${chart_name}}
+        Check for 'No data' text on page    ${sub_menu}
 
 Click on sub-menu
         [Arguments]     ${sub_menu}

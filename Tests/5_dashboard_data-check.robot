@@ -30,6 +30,7 @@ ${creditor_url}     https://passive-dashboard.expedock.com/explore/explore-organ
 
 *** Test Cases ***
 User checks data after clicking 'See Shipments' with Org Type > LOCAL CLIENT
+    [Tags]  rerun
 #    [Tags]    robot:exclude
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
     ...     AND     RPA.Browser.Playwright.Click    text="Explore"
@@ -70,6 +71,7 @@ User checks data after clicking 'See Receivable' with Org Type > LOCAL CLIENT
     Verify values between Explore Organization and Receivable Invoices
 
 User checks data after clicking 'See Receivable' with Org Type > SHIPPER
+    [Tags]  rerun
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
     ...     AND     Set Browser Timeout    1min
     ...     AND     Go To    ${shipper_url}
@@ -101,6 +103,7 @@ User checks data after clicking 'See Payable' with Org Type > LOCAL CLIENT
     Verify values between Explore Organization and Payable Invoices
 
 User checks data after clicking 'See Payable' with Org Type > SHIPPER
+    [Tags]  rerun
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
     ...     AND     Set Browser Timeout    1min
     ...     AND     Go To    ${shipper_url}
@@ -168,7 +171,7 @@ Verify values between Explore organization and Explore Shipments
     ${ship_val0_clean}=     Replace String  ${ship_vals}[0]     ,     ${EMPTY}
 
     #Assertions -- note this does not include 'margin' value because margin value is expected to not match
-    Run Keyword And Continue On Failure     Assert string values    Total Shipments   ${row_values}[13]       ${ship_vals}[0]
+    Run Keyword And Continue On Failure     Assert string values    Total Shipments   ${row_values}[13]       ${ship_val0_clean}
     Run Keyword And Continue On Failure     Assert string values    Total Weight   ${row_values}[2]       ${ship_vals}[1]
     Run Keyword And Continue On Failure     Assert string values    Total Volume   ${row_values}[3]       ${ship_vals}[2]
     Run Keyword And Continue On Failure     Assert string values    Total TEUs      ${row_values}[4]       ${ship_vals}[3]

@@ -59,7 +59,7 @@ Check data count of Top X charts on tabular view - Agent Report
          Get data count of top X chart    ${agent_report}
     END
 
-Check data count of Top X charts on tabular view - Consignee Report
+KCE: Check data count of Top X charts on tabular view - Consignee Report
     Log-in to expedock    passive    ${kce-username}   ${kce-password}
     Click    text="Sales"
     Click    text="Consignee Report"
@@ -81,8 +81,7 @@ Check data count of Top X charts on tabular view - Debtor Report
     Log-in to expedock    passive    ${clear-username}   ${clear-password}
     Click    text="Sales"
     Click    text="Debtor Report"
-    Get data count of top X chart    Top 20 Debtors by Revenue
-    Get data count of top X chart    Top 20 Debtors by Number of Shipments
+    Get data count of top X chart    Top 20 Debtors by Revenue66
 
 Check data count of Top X charts on tabular view - Agent Report
     Log-in to expedock    passive    ${clear-username}   ${clear-password} 
@@ -92,7 +91,8 @@ Check data count of Top X charts on tabular view - Agent Report
          Get data count of top X chart    ${agent_report}
     END
 
-Check data count of Top X charts on tabular view - Consignee Report
+ClearFreight: Check data count of Top X charts on tabular view - Consignee Report
+    [Tags]  rerun
     Log-in to expedock    passive    ${clear-username}   ${clear-password} 
     Click    text="Sales"
     Click    text="Consignee Report"

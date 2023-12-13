@@ -25,3 +25,11 @@ Log-in to expedock
 Teardown
     Run Keyword If Test Failed    Take Screenshot  fullPage=True
 
+Check for 'No data' text on page
+    [Arguments]     ${sub_menu}
+    #This is to check that the page does not contain the following text 'No data found' and 'No data to display'
+#    ${status}=  Wait For Elements State    text="No data found"
+    ${count}=   Get Element Count    text="No data found"
+#    Run Keyword if  ${status} == ${True}    Fail    Missing data on page
+    Run Keyword if  ${count} > ${0}    Fail    Missing data on ${sub_menu}
+
