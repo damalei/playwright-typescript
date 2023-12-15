@@ -33,3 +33,12 @@ Check for 'No data' text on page
 #    Run Keyword if  ${status} == ${True}    Fail    Missing data on page
     Run Keyword if  ${count} > ${0}    Fail    Missing data on ${sub_menu}
 
+Click by role
+    [Arguments]     ${role}     ${name}
+    ${el}=  Get Element By Role    ${role}  name=${name}    exact=True
+    Click    ${el}
+
+Click by strategy
+    [Arguments]     ${strategy}   ${text}
+    ${el}=   Get Element By    Label    ${text}     exact=True
+    Click    ${el}

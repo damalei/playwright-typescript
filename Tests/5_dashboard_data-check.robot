@@ -30,7 +30,6 @@ ${creditor_url}     https://passive-dashboard.expedock.com/explore/explore-organ
 
 *** Test Cases ***
 User checks data after clicking 'See Shipments' with Org Type > LOCAL CLIENT
-    [Tags]  rerun
 #    [Tags]    robot:exclude
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
     ...     AND     RPA.Browser.Playwright.Click    text="Explore"
