@@ -23,7 +23,7 @@ Log-in to expedock
     Sleep          10s
 
 Teardown
-    Run Keyword If Test Failed    Take Screenshot  fullPage=True
+    Run Keyword If Test Failed    RPA.Browser.Playwright.Take Screenshot  fullPage=True
 
 Check for 'No data' text on page
     [Arguments]     ${sub_menu}
@@ -36,9 +36,9 @@ Check for 'No data' text on page
 Click by role
     [Arguments]     ${role}     ${name}
     ${el}=  Get Element By Role    ${role}  name=${name}    exact=True
-    Click    ${el}
+    RPA.Browser.Playwright.Click    ${el}
 
 Click by strategy
     [Arguments]     ${strategy}   ${text}
     ${el}=   Get Element By    Label    ${text}     exact=True
-    Click    ${el}
+    RPA.Browser.Playwright.Click    ${el}
