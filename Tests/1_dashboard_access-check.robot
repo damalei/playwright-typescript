@@ -54,7 +54,7 @@ Test Teardown       Teardown
 ...                     Revenue By Branch
 ...                     Expenses By Branch
 ...                     Shipment Volume By Branch
-...                     Milestones By Branch for Latest Month (2023 Nov)
+...                     Milestones By Branch for Latest Month (2023 Dec)
 ...                     Shipments per Operator By Branch
 
 @{Department-Overview-charts}
@@ -169,6 +169,7 @@ User clicks on Organization name from Explore > Explore Organization
     ...     AND     Click    text="Explore"
     Click    text="Explore Organizations"
     Wait For Elements State    text="Org Name"  timeout=30s
+    Click    text="Org Name"
     @{elements}=    Get Elements    xpath=//a[@rel="noreferrer"]
     Log Many    @{elements}
     Click   ${elements}[0]
@@ -182,6 +183,7 @@ User clicks on See Payables from Explore > Explore Organization
     ...     AND     Click    text="Explore"
     Click    text="Explore Organizations"
     Wait For Elements State    text="Org Name"  timeout=30s
+    Click    text="Org Name"
     @{elements}=    Get Elements    xpath=//a[@rel="noreferrer"]
     Log Many    @{elements}
     Click   ${elements}[2]
@@ -195,6 +197,7 @@ User clicks on See Receivables from Explore > Explore Organization
     ...     AND     Click    text="Explore"
     Click    text="Explore Organizations"
     Wait For Elements State    text="Org Name"  timeout=30s
+    Click    text="Org Name"
     @{elements}=    Get Elements    xpath=//a[@rel="noreferrer"]
     Click   ${elements}[3]
     Switch Page    NEW
@@ -222,7 +225,7 @@ User clicks on Invoice Number from Explore > Payable Invoices
     Wait For Elements State    text="Creditor"  timeout=30s
     @{elements}=    Get Elements    css=.css-p3mme2
     Click   ${elements}[0]
-    Switch Page    NEW
+#    Switch Page    NEW
     Wait For Elements State    text="Invoice Details"  timeout=30s
     ${url}=     Get Url
     Should Contain    ${url}    dashboard.expedock.com/invoice/posted/   ignore_case=true

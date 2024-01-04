@@ -81,7 +81,7 @@ Check data count of Top X charts on tabular view - Debtor Report
     Log-in to expedock    passive    ${clear-username}   ${clear-password}
     Click    text="Sales"
     Click    text="Debtor Report"
-    Get data count of top X chart    Top 20 Debtors by Revenue66
+    Get data count of top X chart    Top 20 Debtors by Revenue
 
 Check data count of Top X charts on tabular view - Agent Report
     Log-in to expedock    passive    ${clear-username}   ${clear-password} 

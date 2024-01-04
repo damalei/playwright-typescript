@@ -13,14 +13,14 @@ Documentation     This test suite covers testing for enabling sandboxing and dis
 
 *** Variables ***
 ${url_user_manage}  https://passive-dashboard.expedock.com/user-management?apiPartnerIds=dcbadbee-d78f-4337-89c9-3aa150cec6f6
-${sales_1}      Shirley Mayo (LGQG)
+${sales_1}      Alyssa Jones (AJ)
 ${sales_2}      Melissa Williams (MW)
-${ops_1}        Mario Kidd (CXHK)
-${ops_2}        Omar Watson (GSYQ)
+${ops_1}        Mario Kidd (NUHH)
+${ops_2}        Omar Watson (ZZXA)
 ${branch_1}     HK1
-${branch_2}     OIJ
-${dept_1}       FJL
-${dept_2}       LIN
+${branch_2}     DFB
+${dept_1}       FES
+${dept_2}       FIS
 
 *** Test Cases ***
 User enables sandboxing

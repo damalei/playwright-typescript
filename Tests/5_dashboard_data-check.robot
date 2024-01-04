@@ -9,6 +9,9 @@ Library    RPA.RobotLogListener
 Resource    ../Resources/credentials.resource
 Resource    ../Resources/config.resource
 Resource    ../Resources/utils.resource
+
+Test Teardown    Teardown
+
 Documentation     This Test Suite is for checking if tha data found under Explore > Explore Organizations table matches
 ...     with thw data found on the redirect page when users click 'See Shipments', 'See Payable Invoices' or 'See
 ...     Receivable Invoices'
@@ -67,6 +70,7 @@ User checks data after clicking 'See Receivable' with Org Type > LOCAL CLIENT
     ...     AND     RPA.Browser.Playwright.Click    text="Explore"
     ...     AND     Set Browser Timeout    1min
     ...     AND     RPA.Browser.Playwright.Click    text="Explore Organizations"
+    ...     AND     RPA.Browser.Playwright.Click    text="Total Revenue w/ Tax"
     Verify values between Explore Organization and Receivable Invoices
 
 User checks data after clicking 'See Receivable' with Org Type > SHIPPER
@@ -74,24 +78,28 @@ User checks data after clicking 'See Receivable' with Org Type > SHIPPER
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
     ...     AND     Set Browser Timeout    1min
     ...     AND     Go To    ${shipper_url}
+    ...     AND     RPA.Browser.Playwright.Click    text="Total Revenue w/ Tax"
     Verify values between Explore Organization and Receivable Invoices
 
 User checks data after clicking 'See Receivable' with Org Type > CONSIGNEE
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
     ...     AND     Set Browser Timeout    1min
     ...     AND     Go To    ${consignee_url}
+    ...     AND     RPA.Browser.Playwright.Click    text="Total Revenue w/ Tax"
     Verify values between Explore Organization and Receivable Invoices
 
 User checks data after clicking 'See Receivable' with Org Type > DEBTOR
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
     ...     AND     Set Browser Timeout    1min
     ...     AND     Go To    ${debtor_url}
+    ...     AND     RPA.Browser.Playwright.Click    text="Total Revenue w/ Tax"
     Verify values between Explore Organization and Receivable Invoices
 
 User checks data after clicking 'See Receivable' with Org Type > CREDITOR
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
     ...     AND     Set Browser Timeout    1min
     ...     AND     Go To    ${creditor_url}
+    ...     AND     RPA.Browser.Playwright.Click    text="Total Revenue w/ Tax"
     Verify values between Explore Organization and Receivable Invoices
 
 User checks data after clicking 'See Payable' with Org Type > LOCAL CLIENT
@@ -99,6 +107,7 @@ User checks data after clicking 'See Payable' with Org Type > LOCAL CLIENT
     ...     AND     RPA.Browser.Playwright.Click    text="Explore"
     ...     AND     Set Browser Timeout    1min
     ...     AND     RPA.Browser.Playwright.Click    text="Explore Organizations"
+    ...     AND     RPA.Browser.Playwright.Click    text="Total Expenses w/ Tax"
     Verify values between Explore Organization and Payable Invoices
 
 User checks data after clicking 'See Payable' with Org Type > SHIPPER
@@ -106,24 +115,28 @@ User checks data after clicking 'See Payable' with Org Type > SHIPPER
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
     ...     AND     Set Browser Timeout    1min
     ...     AND     Go To    ${shipper_url}
+    ...     AND     RPA.Browser.Playwright.Click    text="Total Expenses w/ Tax"
     Verify values between Explore Organization and Payable Invoices
 
 User checks data after clicking 'See Payable' with Org Type > CONSIGNEE
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
     ...     AND     Set Browser Timeout    1min
     ...     AND     Go To    ${consignee_url}
+    ...     AND     RPA.Browser.Playwright.Click    text="Total Expenses w/ Tax"
     Verify values between Explore Organization and Payable Invoices
 
 User checks data after clicking 'See Payable' with Org Type > DEBTOR
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
     ...     AND     Set Browser Timeout    1min
     ...     AND     Go To    ${debtor_url}
+    ...     AND     RPA.Browser.Playwright.Click    text="Total Expenses w/ Tax"
     Verify values between Explore Organization and Payable Invoices
 
 User checks data after clicking 'See Payable' with Org Type > CREDITOR
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
     ...     AND     Set Browser Timeout    1min
     ...     AND     Go To    ${creditor_url}
+    ...     AND     RPA.Browser.Playwright.Click    text="Total Expenses w/ Tax"
     Verify values between Explore Organization and Payable Invoices
 
 *** Keywords ***
