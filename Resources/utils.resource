@@ -42,3 +42,25 @@ Click by strategy
     [Arguments]     ${strategy}   ${text}
     ${el}=   Get Element By    Label    ${text}     exact=True
     RPA.Browser.Playwright.Click    ${el}
+
+Assert sandboxing fields
+    [Arguments]     ${field}   ${field_text}
+    Click by strategy    label    ${field}
+    ${status}=      Run Keyword And Return Status    Get Element By    text    ${field_text}
+    IF    ${status} == ${True}
+        Set Test Message    Field sanboxing enabled successfully for field: ${field}${\n}  append=True
+    ELSE
+        Fail    Missing Sandbox value for field: ${field}
+    END
+
+Assert sandboxing fields disabled
+    [Arguments]     ${field_name}   ${field_text}
+    ${field}=   Get Element By    Label    ${field_name}
+    ${msg}=     Run Keyword And Expect Error    *    Get Attribute    ${field}    text
+    ${status}=  Run keyword and Return Status   Should Contain    ${msg}    AttributeError: Attribute 'text' not found!
+    IF    ${status} == ${True}
+        Set Test Message    Field sanboxing disabled successfully for field: ${field}${\n}  append=True
+    ELSE
+        Fail    ${field_name}: ${msg}
+    END
+

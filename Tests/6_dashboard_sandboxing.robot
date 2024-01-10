@@ -145,16 +145,6 @@ Clear combobox by label
     ${clear}=   Get Element By Role    button   name=Clear
     Click   ${clear}
 
-Assert sandboxing fields disabled
-    [Arguments]     ${field_name}   ${field_text}
-    ${field}=   Get Element By    Label    ${field_name}
-    ${msg}=     Run Keyword And Expect Error    *    Get Attribute    ${field}    text
-    ${status}=  Run keyword and Return Status   Should Contain    ${msg}    AttributeError: Attribute 'text' not found!
-    IF    ${status} == ${True}
-        Set Test Message    Field sanboxing disabled successfully for field: ${field}${\n}  append=True
-    ELSE
-        Fail    ${field_name}: ${msg}
-    END
 
 
 
