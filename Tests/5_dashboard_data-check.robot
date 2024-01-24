@@ -139,6 +139,70 @@ User checks data after clicking 'See Payable' with Org Type > CREDITOR
     ...     AND     RPA.Browser.Playwright.Click    text="Total Expenses w/ Tax"
     Verify values between Explore Organization and Payable Invoices
 
+User checks that clicking on Receivable Summary Chart CTA shows uniform data
+    [Setup]   Run Keywords      Log-in to expedock      passive     ${username}     ${password}
+    ...     AND     Set Browser Timeout    1min
+
+    #Go to Accounting > Receivables Overview page
+    RPA.Browser.Playwright.Click   text="Accounting"
+    RPA.Browser.Playwright.Click   text="Receivables Overview"
+
+    #Wait for page to load
+    Wait For Elements State    text="Total Outstanding Receivables"
+
+    #Get value: Total Outstanding Receivables
+    ${summary_link_text}=   Get Text    xpath=//div[@data-testid="data-component-Total Outstanding Receivables"] >> xpath=//h3[@data-testid="summary-link"]
+
+    #Click on CTA: View Receivable Invoices to Collect
+    RPA.Browser.Playwright.Click   xpath=//div[@data-testid="data-component-Total Outstanding Receivables"] >> text="View Receivable Invoices to Collect"
+
+    #Wait for page to load
+    Wait For Elements State    text="Total Amount Outstanding:"
+
+    #Get values on the summary
+    @{ship_vals}=       Create List
+    ${summary_els}=    Get Elements    css=.css-pd02lq
+    FOR    ${summary_el}    IN    @{summary_els}
+        ${text}=    Get Text    ${summary_el}
+        Append To List      ${ship_vals}   ${text}
+    END
+
+    #Assertions
+    Run Keyword And Continue On Failure     Assert string values    Total Outstanding Receivables       ${summary_link_text}       ${ship_vals}[1]
+
+User checks that clicking on Payable Summary Chart CTA shows uniform data
+    [Setup]   Run Keywords      Log-in to expedock      passive     ${username}     ${password}
+    ...     AND     Set Browser Timeout    1min
+
+    #Go to Accounting > Payables Overview page
+    RPA.Browser.Playwright.Click   text="Accounting"
+    RPA.Browser.Playwright.Click   text="Payables Overview"
+
+    #Wait for page to load
+    Wait For Elements State    text="Total Outstanding Payables Amount"
+
+    #Get value: Total Outstanding Payables Amount
+    ${summary_link_text}=   Get Text    xpath=//div[@data-testid="data-component-Total Outstanding Payables Amount"] >> xpath=//h3[@data-testid="summary-link"]
+
+    #Click on CTA: View Receivable Invoices to Collect
+    RPA.Browser.Playwright.Click   xpath=//div[@data-testid="data-component-Total Outstanding Payables Amount"] >> text="View Payable Invoices to Pay"
+
+    #Wait for page to load
+    Wait For Elements State    text="Total Amount Outstanding:"
+
+    #Get values on the summary
+    @{ship_vals}=       Create List
+    ${summary_els}=    Get Elements    css=.css-pd02lq
+    FOR    ${summary_el}    IN    @{summary_els}
+        ${text}=    Get Text    ${summary_el}
+        Append To List      ${ship_vals}   ${text}
+    END
+
+    #Assertions
+    Run Keyword And Continue On Failure     Assert string values    Total Outstanding Receivables       ${summary_link_text}       ${ship_vals}[1]
+
+
+
 *** Keywords ***
 Verify values between Explore organization and Explore Shipments
     ${table}=       Set Variable    xpath=//table[@class="MuiTable-root MuiTable-stickyHeader css-1mkkbhk"]

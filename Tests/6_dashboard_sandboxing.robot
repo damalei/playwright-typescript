@@ -15,8 +15,8 @@ Documentation     This test suite covers testing for enabling sandboxing and dis
 ${url_user_manage}  https://passive-dashboard.expedock.com/user-management?apiPartnerIds=dcbadbee-d78f-4337-89c9-3aa150cec6f6
 ${sales_1}      Alyssa Jones (AJ)
 ${sales_2}      Melissa Williams (MW)
-${ops_1}        Mario Kidd (NUHH)
-${ops_2}        Omar Watson (ZZXA)
+${ops_1}        Melody Thomas (MT)
+${ops_2}        Jason Robinson (JR)
 ${branch_1}     HK1
 ${branch_2}     DFB
 ${dept_1}       FES

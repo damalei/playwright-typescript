@@ -54,7 +54,7 @@ Test Teardown       Teardown
 ...                     Revenue By Branch
 ...                     Expenses By Branch
 ...                     Shipment Volume By Branch
-...                     Milestones By Branch for Latest Month (2023 Dec)
+...                     Milestones By Branch for Latest Month (2024 Jan)
 ...                     Shipments per Operator By Branch
 
 @{Department-Overview-charts}
