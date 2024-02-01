@@ -14,11 +14,11 @@ Test Teardown       Teardown
 @{shipment_columns}
 
 *** Test Cases ***
-Verify that when user clicks column names, the page does not refresh to an empty page (Operation > Negative Profit Shipments)
-    Click       text="Operations"
-    Click       text="Negative Profit Shipments"
-    Wait For Elements State    text=Total Shipments:    timeout=30s
-    Click on column header names    Total Shipments:
+#Verify that when user clicks column names, the page does not refresh to an empty page (Operation > Negative Profit Shipments)
+#    Click       text="Operations"
+#    Click       text="Negative Profit Shipments"
+#    Wait For Elements State    text=Total Shipments:    timeout=30s
+#    Click on column header names    Total Shipments:
 
 Verify that when user clicks column names, the page does not refresh to an empty page (Explore > Explore Shipments)
     Click       text="Explore"

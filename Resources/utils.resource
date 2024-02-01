@@ -23,7 +23,7 @@ Log-in to expedock
     Sleep          10s
 
 Teardown
-    Run Keyword If Test Failed    Take Screenshot  fullPage=True
+    Run Keyword If Test Failed    RPA.Browser.Playwright.Take Screenshot  fullPage=True
 
 Check for 'No data' text on page
     [Arguments]     ${sub_menu}
@@ -36,9 +36,31 @@ Check for 'No data' text on page
 Click by role
     [Arguments]     ${role}     ${name}
     ${el}=  Get Element By Role    ${role}  name=${name}    exact=True
-    Click    ${el}
+    RPA.Browser.Playwright.Click    ${el}
 
 Click by strategy
     [Arguments]     ${strategy}   ${text}
     ${el}=   Get Element By    Label    ${text}     exact=True
-    Click    ${el}
+    RPA.Browser.Playwright.Click    ${el}
+
+Assert sandboxing fields
+    [Arguments]     ${field}   ${field_text}
+    Click by strategy    label    ${field}
+    ${status}=      Run Keyword And Return Status    Get Element By    text    ${field_text}
+    IF    ${status} == ${True}
+        Set Test Message    Field sanboxing enabled successfully for field: ${field}${\n}  append=True
+    ELSE
+        Fail    Missing Sandbox value for field: ${field}
+    END
+
+Assert sandboxing fields disabled
+    [Arguments]     ${field_name}   ${field_text}
+    ${field}=   Get Element By    Label    ${field_name}
+    ${msg}=     Run Keyword And Expect Error    *    Get Attribute    ${field}    text
+    ${status}=  Run keyword and Return Status   Should Contain    ${msg}    AttributeError: Attribute 'text' not found!
+    IF    ${status} == ${True}
+        Set Test Message    Field sanboxing disabled successfully for field: ${field}${\n}  append=True
+    ELSE
+        Fail    ${field_name}: ${msg}
+    END
+
