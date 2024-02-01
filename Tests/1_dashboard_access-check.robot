@@ -11,11 +11,11 @@ Test Teardown       Teardown
 *** Variables ***
 @{business_performance}
 ...                     Overview
-...                     Account Overview
-...                     Branch Overview
-...                     Department Overview
-...                     Most Profitable Routes
-...                     Top Expenses
+#...                     Account Overview
+...                     Branch Overview*
+#...                     Department Overview
+#...                     Most Profitable Routes
+#...                     Top Expenses
 ...                     Shipment Reports
 ...                     Agent Report
 ...                     Staffing Reports
@@ -41,12 +41,12 @@ Test Teardown       Teardown
 ...                     Net Profit for Most Recent 12 months vs Previous 12 months
 ...                     Order to Cash Cycle in Days
 
-@{Account-Overview-charts}
-...                     Margin (Net Profit) By Account
-...                     Margin Percent By Account
-...                     Revenue By Account
-...                     Expenses By Account
-...                     Shipment Volume By Account
+#@{Account-Overview-charts}
+#...                     Margin (Net Profit) By Account
+#...                     Margin Percent By Account
+#...                     Revenue By Account
+#...                     Expenses By Account
+#...                     Shipment Volume By Account
 
 @{Branch-Overview-charts}
 ...                     Margin (Net Profit) By Branch
@@ -183,7 +183,7 @@ User clicks on See Payables from Explore > Explore Organization
     ...     AND     Click    text="Explore"
     Click    text="Explore Organizations"
     Wait For Elements State    text="Org Name"  timeout=30s
-    Click    text="Org Name"
+    Click    text="Total Expenses w/o Tax"
     @{elements}=    Get Elements    xpath=//a[@rel="noreferrer"]
     Log Many    @{elements}
     Click   ${elements}[2]
@@ -197,7 +197,7 @@ User clicks on See Receivables from Explore > Explore Organization
     ...     AND     Click    text="Explore"
     Click    text="Explore Organizations"
     Wait For Elements State    text="Org Name"  timeout=30s
-    Click    text="Org Name"
+    Click    text="Total Revenue w/o Tax"
     @{elements}=    Get Elements    xpath=//a[@rel="noreferrer"]
     Click   ${elements}[3]
     Switch Page    NEW

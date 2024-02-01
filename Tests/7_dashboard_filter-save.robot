@@ -52,8 +52,9 @@ User saves a basic filter
     Click   text="Save Filters"
 
     #--Move away from the current dashboard
-    ${side-account-overview}=   Get Element By    TestID    sidebar-tab-ACCOUNT_OVERVIEW
-    Click       ${side-account-overview}
+#    ${side-account-overview}=   Get Element By    TestID    sidebar-tab-ACCOUNT_OVERVIEW
+#    Click       ${side-account-overview}
+    Click   text="Declaration Reports"
 
     #--Move back to previous dashboard
     ${side-overview}=   Get Element By    TestID    sidebar-tab-OVERVIEW
@@ -79,8 +80,9 @@ User deletes a saved basic filter
     Click   ${basic-filters-button}
 
     #--Move away from the current dashboard
-    ${side-account-overview}=   Get Element By    TestID    sidebar-tab-ACCOUNT_OVERVIEW
-    Click       ${side-account-overview}
+#    ${side-account-overview}=   Get Element By    TestID    sidebar-tab-ACCOUNT_OVERVIEW
+#    Click       ${side-account-overview}
+    Click   text="Declaration Reports"
 
     #--Move back to previous dashboard
     ${side-overview}=   Get Element By    TestID    sidebar-tab-OVERVIEW

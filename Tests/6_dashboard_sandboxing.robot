@@ -18,7 +18,7 @@ ${sales_2}      Melissa Williams (MW)
 ${ops_1}        Melody Thomas (MT)
 ${ops_2}        Jason Robinson (JR)
 ${branch_1}     HK1
-${branch_2}     DFB
+${branch_2}     FJL
 ${dept_1}       FES
 ${dept_2}       FIS
 
@@ -92,7 +92,7 @@ User disables sandboxing
     Click by role    button    Search
 
     #-- Click edit access on first result
-    ${edit_access}=     Set Variable        xpath=//*[@data-testid="EditIcon"] >> nth=0
+    ${edit_access}=     Set Variable        m
     Click      ${edit_access}
 
     #--- Wait for modal to appear

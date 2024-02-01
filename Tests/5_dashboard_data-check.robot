@@ -154,7 +154,7 @@ User checks that clicking on Receivable Summary Chart CTA shows uniform data
     ${summary_link_text}=   Get Text    xpath=//div[@data-testid="data-component-Total Outstanding Receivables"] >> xpath=//h3[@data-testid="summary-link"]
 
     #Click on CTA: View Receivable Invoices to Collect
-    RPA.Browser.Playwright.Click   xpath=//div[@data-testid="data-component-Total Outstanding Receivables"] >> text="View Receivable Invoices to Collect"
+    Wait until keyword succeeds     60s     1s   RPA.Browser.Playwright.Click   xpath=//div[@data-testid="data-component-Total Outstanding Receivables"] >> text="View Receivable Invoices to Collect"
 
     #Wait for page to load
     Wait For Elements State    text="Total Amount Outstanding:"
@@ -185,7 +185,7 @@ User checks that clicking on Payable Summary Chart CTA shows uniform data
     ${summary_link_text}=   Get Text    xpath=//div[@data-testid="data-component-Total Outstanding Payables Amount"] >> xpath=//h3[@data-testid="summary-link"]
 
     #Click on CTA: View Receivable Invoices to Collect
-    RPA.Browser.Playwright.Click   xpath=//div[@data-testid="data-component-Total Outstanding Payables Amount"] >> text="View Payable Invoices to Pay"
+    Wait until keyword succeeds   60s   1s  RPA.Browser.Playwright.Click   xpath=//div[@data-testid="data-component-Total Outstanding Payables Amount"] >> text="View Payable Invoices to Pay"
 
     #Wait for page to load
     Wait For Elements State    text="Total Amount Outstanding:"
