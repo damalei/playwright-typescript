@@ -1,15 +1,16 @@
 *** Settings ***
-Suite Setup     Go to Shipper view landing page     passive
+#Suite Setup     Go to Shipper view landing page     passive
 Library         RPA.FileSystem
 Library         OperatingSystem
 Library         RPA.Browser.Playwright
 Library         String
 Library         Collections
 Library         RPA.Desktop
+Library         DateTime
 Resource    ../Resources/credentials.resource
 Resource    ../Resources/config.resource
 Resource    ../Resources/utils.resource
-Test Teardown       Teardown
+#Test Teardown       Teardown
 
 *** Variables ***
 &{shipment_details}      num=S00004556   org=CN0PRD
@@ -18,7 +19,7 @@ ${searchbar_loc}        xpath=//input[@name="searchShipments"]
 ${shipmentcard_loc}     xpath=//div[@data-testid="shipment-card" and contains(@data-company-shipment-key, '${shipment_details}[num]')]
 
 *** Test Cases ***
-Verify shipper landing page loads
+Verify shipper can log-in
     Go to Shipper view landing page     passive
     Wait Until Keyword Succeeds    30s    1s    Wait For Elements State    text=Let's track your shipment     visible
 
@@ -59,8 +60,13 @@ Verify user can search for a record and access the shipment details page
     Run Keyword and COntinue on Failure      Click by role    tab    Container Utilization
     Run Keyword and COntinue on Failure      Click by role    tab    Exceptions Management
 
-#    Wait Until Keyword Succeeds    30s    1s    RPA.Desktop.Find Element    image:./Resources/images/shipper_details.png
-
+Verify user can request for access
+    [Template]  Verify user can request for access
+        Documents
+        Cost per SKU
+        Invoices to Pay
+        Container Utilization
+        Exceptions Management
 
 *** Keywords ***
 Go to Shipper view landing page
@@ -70,3 +76,46 @@ Go to Shipper view landing page
     Delete All Cookies
     ${old_timeout} =    Set Browser Timeout    1m 30 seconds
     New Page       https://apinvdemo.${env}-portal.expedock.com/search-shipments
+
+Verify user can request for access
+    [Arguments]     ${tab}
+    #Open shipper landing page
+    Go to Shipper view landing page     passive
+    Wait For Elements State    text=Let's track your shipment     visible
+
+    #Open a shipment
+    RPA.Browser.Playwright.Click    ${searchbar_loc}
+    Keyboard Input    insertText     ${shipment_details}[num]
+    RPA.Browser.Playwright.Click    text="Track"
+    Wait For Elements State         ${shipmentcard_loc}    visible
+    RPA.Browser.Playwright.Click    ${shipmentcard_loc}
+
+    #Wait for shipment page to load
+    Wait For Elements State    xpath=//h5[contains(text(),'Shipment ${shipment_details}[num]')]   visible
+
+    #Click on a Tab
+    RPA.Browser.Playwright.Click    text="${Tab}"
+
+    #Click on Request now button
+    RPA.Browser.Playwright.Click    text="REQUEST NOW"
+
+    #Create an identifier
+    ${date}=    Get Current Date    result_format=%m%d%Y%H%M%S
+
+    #Fill-out fields
+    Wait For Elements State    text=Fill out this form to express your interest     visible
+    Fill Text   xpath=//div[@data-testid="paywall-request-modal"] >> css=.css-u74uof >> nth=0    QA${date} Name
+    Fill Text   xpath=//div[@data-testid="paywall-request-modal"] >> css=.css-u74uof >> nth=1     QA${date} Org
+    Fill Text   xpath=//div[@data-testid="paywall-request-modal"] >> css=.css-u74uof >> nth=2     imma.damalerio+QA${date}@expedock.com
+
+    #Click Submit Request
+    RPA.Browser.Playwright.Click    text="SUBMIT REQUEST"
+
+    #Assert that modal was closed and toast notification appears
+    ${status}=      Run keyword and return status   Wait For Elements State    text=Fill out this form to express your interest     hidden
+    ${status1}=      Run keyword and return status  Wait For Elements State    text="Your request has been submitted!"  visible
+    IF    ${status}== ${true} and ${status1}== ${true}
+        Set Test Message    ${\n}Pass. Request sent successfully in ${tab} tab   append=True
+    ELSE
+         Fail   Fail. Check request submission at ${tab} tab
+    END

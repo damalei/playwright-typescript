@@ -43,18 +43,32 @@ Click by strategy
     ${el}=   Get Element By    Label    ${text}     exact=True
     RPA.Browser.Playwright.Click    ${el}
 
+#Assert sandboxing fields
+#    [Arguments]     ${field}   ${field_text}
+#    Click by strategy    label    ${field}
+#    ${status}=      Run Keyword And Return Status    Get Element By    text    ${field_text}
+#    IF    ${status} == ${True}
+#        Set Test Message    Field sanboxing enabled successfully for field: ${field}${\n}  append=True
+#    ELSE
+#        Fail    Missing Sandbox value for field: ${field}
+#    END
+
 Assert sandboxing fields
-    [Arguments]     ${field}   ${field_text}
-    Click by strategy    label    ${field}
+    [Arguments]     ${field}   ${field_text}     ${field_text1}
+#    Click by strategy    label    ${field}
+#    Click   xpath=//label[text()='${field}']
+#    Click   text='${field}'
+    Click   xpath=//div[@data-testid="${field}-custom-multiple-text-field"]
     ${status}=      Run Keyword And Return Status    Get Element By    text    ${field_text}
-    IF    ${status} == ${True}
+    ${status1}=      Run Keyword And Return Status    Get Element By    text    ${field_text1}
+    IF    ${status} == ${True} and ${status1} == ${True}
         Set Test Message    Field sanboxing enabled successfully for field: ${field}${\n}  append=True
     ELSE
         Fail    Missing Sandbox value for field: ${field}
     END
 
 Assert sandboxing fields disabled
-    [Arguments]     ${field_name}   ${field_text}
+    [Arguments]     ${field_name}
     ${field}=   Get Element By    Label    ${field_name}
     ${msg}=     Run Keyword And Expect Error    *    Get Attribute    ${field}    text
     ${status}=  Run keyword and Return Status   Should Contain    ${msg}    AttributeError: Attribute 'text' not found!

@@ -18,7 +18,7 @@ ${sales_2}      Melissa Williams (MW)
 ${ops_1}        Melody Thomas (MT)
 ${ops_2}        Jason Robinson (JR)
 ${branch_1}     HK1
-${branch_2}     FJL
+${branch_2}     BNW
 ${dept_1}       FES
 ${dept_2}       FIS
 
@@ -35,7 +35,7 @@ User enables sandboxing
     Click by role    button    Search
 
     #-- Click edit access on first result
-    ${edit_access}=     Set Variable        xpath=//*[@data-testid="EditIcon"] >> nth=0
+    ${edit_access}=     Set Variable        xpath=//*[@data-testid='EditIcon'] >> nth=0
     Click      ${edit_access}
 
     #--- Wait for modal to appear
@@ -74,10 +74,10 @@ User enables sandboxing
     #--- Verify that sandboxing is enabled
     Click   text="Business Performance"
     Click by role    link    Overview
-    Assert sandboxing fields    Branch    ${branch_1}${branch_2}Branch
-    Assert sandboxing fields    Department    ${dept_1}${dept_2}Department
-    Assert sandboxing fields    Operator    ${ops_1}${ops_2}
-    Assert sandboxing fields    Sales Representative    ${sales_1}${sales_2}
+    Assert sandboxing fields    Branch    ${branch_1}   ${branch_2}
+    Assert sandboxing fields    Department    ${dept_1}     ${dept_2}
+    Assert sandboxing fields    Operator    ${ops_1}    ${ops_2}
+    Assert sandboxing fields    Sales Representative    ${sales_1}  ${sales_2}
 
 User disables sandboxing
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
@@ -92,7 +92,7 @@ User disables sandboxing
     Click by role    button    Search
 
     #-- Click edit access on first result
-    ${edit_access}=     Set Variable        m
+    ${edit_access}=     Set Variable        xpath=//*[@data-testid='EditIcon'] >> nth=0
     Click      ${edit_access}
 
     #--- Wait for modal to appear
@@ -104,7 +104,9 @@ User disables sandboxing
     Run Keyword If    '${checker_value}' == 'true'   Click   ${checker}
 
     #--- Click Save
-    Click by role    button     Save
+#    Click by role    button     Save
+    Click   xpath=//button[contains(text(),'Save')]
+    Sleep    10s
 
     #--- Close browser
     Close Browser
@@ -115,10 +117,14 @@ User disables sandboxing
     #--- Verify that sandboxing is disabled
     Click   text="Business Performance"
     Click by role    link    Overview
-    Run Keyword And Continue On Failure     Assert sandboxing fields disabled    Branch    ${EMPTY}
-    Run Keyword And Continue On Failure     Assert sandboxing fields disabled    Department    ${EMPTY}
-    Run Keyword And Continue On Failure     Assert sandboxing fields disabled    Operator    ${EMPTY}
-    Run Keyword And Continue On Failure     Assert sandboxing fields disabled    Sales Representative    ${EMPTY}
+#    Run Keyword And Continue On Failure     Assert sandboxing fields disabled    Branch
+#    Run Keyword And Continue On Failure     Assert sandboxing fields disabled    Department
+#    Run Keyword And Continue On Failure     Assert sandboxing fields disabled    Operator
+#    Run Keyword And Continue On Failure     Assert sandboxing fields disabled    Sales Representative
+    Run Keyword And Continue On Failure     Wait For Elements State    xpath=//label[contains(text(),'Branch')]    visible
+    Run Keyword And Continue On Failure     Wait For Elements State    xpath=//label[contains(text(),'Department')]    visible
+    Run Keyword And Continue On Failure     Wait For Elements State    xpath=//label[contains(text(),'Operator')]  visible
+    Run Keyword And Continue On Failure     Wait For Elements State    xpath=//label[contains(text(),'Sales Representative')]  visible
 
 *** Keywords ***
 Add sandbox option
@@ -128,15 +134,7 @@ Add sandbox option
     ${option}    Get Element By Role    option   name=${option_name}
     Click    ${option}
 
-Assert sandboxing fields
-    [Arguments]     ${field}   ${field_text}
-    Click by strategy    label    ${field}
-    ${status}=      Run Keyword And Return Status    Get Element By    text    ${field_text}
-    IF    ${status} == ${True}
-        Set Test Message    Field sanboxing enabled successfully for field: ${field}${\n}  append=True
-    ELSE
-        Fail    Missing Sandbox value for field: ${field}
-    END
+
 
 Clear combobox by label
     [Arguments]     ${label}

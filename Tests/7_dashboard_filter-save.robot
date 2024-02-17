@@ -61,7 +61,7 @@ User saves a basic filter
     Click       ${side-overview}
 
     #--Verify that basic filters was saved successfully
-    Assert sandboxing fields    Branch    ${branch_1}${branch_2}Branch
+    Assert sandboxing fields    Branch    ${branch_1}   ${branch_2}
 
 User deletes a saved basic filter
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
@@ -69,7 +69,7 @@ User deletes a saved basic filter
     ...     AND     Click   text="Business Performance"
     ${side-overview}=   Get Element By    TestID    sidebar-tab-OVERVIEW
     Click       ${side-overview}
-    Assert sandboxing fields    Branch    ${branch_1}${branch_2}Branch
+    Assert sandboxing fields    Branch    ${branch_1}   ${branch_2}
 
     ${advance-button}=      Get Element By     TestID   advanced-filters-button
     Click   ${advance-button}
@@ -89,7 +89,7 @@ User deletes a saved basic filter
     Click       ${side-overview}
 
     #--Verify filter save is successful
-    Assert sandboxing fields disabled   Branch    ${EMPTY}
+    Assert sandboxing fields disabled   Branch
 
 *** Keywords ***
 Clear filter
