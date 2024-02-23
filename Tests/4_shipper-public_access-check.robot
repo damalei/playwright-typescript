@@ -1,5 +1,6 @@
 *** Settings ***
 #Suite Setup     Go to Shipper view landing page     passive
+Test Setup     Go to Shipper view landing page     passive
 Library         RPA.FileSystem
 Library         OperatingSystem
 Library         RPA.Browser.Playwright
@@ -19,8 +20,8 @@ ${searchbar_loc}        xpath=//input[@name="searchShipments"]
 ${shipmentcard_loc}     xpath=//div[@data-testid="shipment-card" and contains(@data-company-shipment-key, '${shipment_details}[num]')]
 
 *** Test Cases ***
-Verify shipper can log-in
-    Go to Shipper view landing page     passive
+Verify shipper can access the landing page
+#    Go to Shipper view landing page     passive
     Wait Until Keyword Succeeds    30s    1s    Wait For Elements State    text=Let's track your shipment     visible
 
 Verify favicon loads successfully
@@ -50,6 +51,7 @@ Verify user can search for a record and access the shipment details page
     RPA.Browser.Playwright.Click    ${shipmentcard_loc}
 
     #--- Verify Shipment details page URL
+    Wait For Elements State    text="Log in to your account"
     Get Url     ==  ${shipper_details_url}
 
     #--- Verify Shipment Details page has the corerct tabs

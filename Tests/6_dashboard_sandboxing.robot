@@ -18,7 +18,7 @@ ${sales_2}      Melissa Williams (MW)
 ${ops_1}        Melody Thomas (MT)
 ${ops_2}        Jason Robinson (JR)
 ${branch_1}     HK1
-${branch_2}     BNW
+${branch_2}     OIJ
 ${dept_1}       FES
 ${dept_2}       FIS
 
@@ -104,9 +104,9 @@ User disables sandboxing
     Run Keyword If    '${checker_value}' == 'true'   Click   ${checker}
 
     #--- Click Save
-#    Click by role    button     Save
+    Scroll To Element    xpath=//button[contains(text(),'Save')]
     Click   xpath=//button[contains(text(),'Save')]
-    Sleep    10s
+    Wait For Elements State    text="Update User"   hidden
 
     #--- Close browser
     Close Browser
@@ -117,10 +117,6 @@ User disables sandboxing
     #--- Verify that sandboxing is disabled
     Click   text="Business Performance"
     Click by role    link    Overview
-#    Run Keyword And Continue On Failure     Assert sandboxing fields disabled    Branch
-#    Run Keyword And Continue On Failure     Assert sandboxing fields disabled    Department
-#    Run Keyword And Continue On Failure     Assert sandboxing fields disabled    Operator
-#    Run Keyword And Continue On Failure     Assert sandboxing fields disabled    Sales Representative
     Run Keyword And Continue On Failure     Wait For Elements State    xpath=//label[contains(text(),'Branch')]    visible
     Run Keyword And Continue On Failure     Wait For Elements State    xpath=//label[contains(text(),'Department')]    visible
     Run Keyword And Continue On Failure     Wait For Elements State    xpath=//label[contains(text(),'Operator')]  visible

@@ -157,7 +157,7 @@ Verify Exception Management Dashboard and shipment matches
 
 Login to shipper view
     Wait For Elements State    text=Back to Search Shipments     visible
-    Fill Secret      css=.css-hqatm4 >> nth=0   ${ship-user1}
-    Fill Secret      css=.css-hqatm4 >> nth=0   ${ship-pass1}
+    Fill Secret      css=.css-hqatm4 >> nth=0   $ship-user1
+    Fill Secret      css=.css-hqatm4 >> nth=0   $ship-pass1
     RPA.Browser.Playwright.Click   xpath=//button[contains(text(),'LOG IN')]
     Wait For Elements State    text=Exceptions Management Dashboard     visible
