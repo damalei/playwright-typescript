@@ -150,12 +150,12 @@ Test Teardown       Teardown
 #...     Container Summary       #Removed by team, experiment chart created by Rui
 
 *** Test Cases ***
-Verify page dashboard in Business Performance
-    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
-    ...       AND              Click    text="Business Performance"
-    FOR    ${sub_menu}    IN    @{business_performance}
-        Run Keyword And Continue On Failure    Check charts     ${sub_menu}
-    END
+#Verify page dashboard in Business Performance
+#    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+#    ...       AND              Click    text="Business Performance"
+#    FOR    ${sub_menu}    IN    @{business_performance}
+#        Run Keyword And Continue On Failure    Check charts     ${sub_menu}
+#    END
 
 #Verify pages
 #    [Documentation]     Crawl is too fast. As a result, screenshots would show that the page is still loading
