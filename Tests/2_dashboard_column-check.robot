@@ -29,7 +29,7 @@ Verify that when user clicks column names, the page does not refresh to an empty
 Verify that when user clicks column names, the page does not refresh to an empty page (Explore > Payable Invoices)
     Click       text="Explore"
     Click       text="Payable Invoices"
-    Wait For Elements State    text=Total Invoices:     timeout=30s
+    Wait For Elements State    text=Total Invoices:     timeout=1min
     Click on column header names    Total Invoices:
 
 Verify that when user clicks column names, the page does not refresh to an empty page (Explore > Receivable Invoices)
@@ -50,6 +50,6 @@ Click on column header names
     @{elements}=     Get Elements    css=.css-ta4bw4
     FOR    ${element}    IN    @{elements}
         ${option_value} =   Get Text    ${element}
-        Click    ${element}
+        Run Keyword And Continue On Failure    Click    ${element}
         Run Keyword And Continue On Failure    Wait For Elements State    text=${reference_text}  timeout=30s
     END

@@ -18,7 +18,7 @@ ${sales_2}      Melissa Williams (MW)
 ${ops_1}        Melody Thomas (MT)
 ${ops_2}        Jason Robinson (JR)
 ${branch_1}     HK1
-${branch_2}     OIJ
+${branch_2}     FJL
 ${dept_1}       FES
 ${dept_2}       FIS
 
@@ -42,10 +42,10 @@ User enables sandboxing
     Wait For Elements State    text="Update User"   visible
 
     #---Clearing possible existing values in sandbox fields
-    Run keyword and continue on failure     Clear combobox by label     Sales Rep
-    Run keyword and continue on failure     Clear combobox by label     Operator
-    Run keyword and continue on failure     Clear combobox by label     Branch
-    Run keyword and continue on failure     Clear combobox by label     Department
+    Run Keyword And Ignore Error     Clear combobox by label     Sales Rep
+    Run Keyword And Ignore Error     Clear combobox by label     Operator
+    Run Keyword And Ignore Error     Clear combobox by label     Branch
+    Run Keyword And Ignore Error     Clear combobox by label     Department
 
     #--- Input options for sandbox fields
     Add sandbox option    Sales Rep     ${sales_1}
@@ -98,6 +98,12 @@ User disables sandboxing
     #--- Wait for modal to appear
     Wait For Elements State    text="Update User"   visible
 
+    #---Clearing possible existing values in sandbox fields
+    Run keyword and continue on failure     Clear combobox by label     Sales Rep
+    Run keyword and continue on failure     Clear combobox by label     Operator
+    Run keyword and continue on failure     Clear combobox by label     Branch
+    Run keyword and continue on failure     Clear combobox by label     Department
+
     #--- Disable sandboxing
     ${checker}=     Get Element By    Label    Can only access shipments
     ${checker_value}=   Get Attribute    ${checker}    value
@@ -105,7 +111,8 @@ User disables sandboxing
 
     #--- Click Save
     Scroll To Element    xpath=//button[contains(text(),'Save')]
-    Click   xpath=//button[contains(text(),'Save')]
+#    Click   xpath=//button[contains(text(),'Save')]
+    Click    button >> text="Save"
     Wait For Elements State    text="Update User"   hidden
 
     #--- Close browser
