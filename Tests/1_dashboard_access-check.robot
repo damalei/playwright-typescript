@@ -6,7 +6,7 @@ Library         String
 Resource    ../Resources/credentials.resource
 Resource    ../Resources/config.resource
 Resource    ../Resources/utils.resource
-Test Teardown       Teardown
+#Test Teardown       Teardown
 
 *** Variables ***
 @{business_performance}
@@ -149,6 +149,8 @@ Test Teardown       Teardown
 ...     Number Of Shipments Shipped By Container Type
 #...     Container Summary       #Removed by team, experiment chart created by Rui
 
+${search_this_shipment}     S00665399
+
 *** Test Cases ***
 #Verify page dashboard in Business Performance
 #    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
@@ -271,8 +273,86 @@ User clicks on Job Number from Explore > Receivable Invoices
     ${url}=     Get Url
     Should Contain    ${url}    dashboard.expedock.com/explore/shipment-details?   ignore_case=true
     Sleep    5s
+    
+User searches a shipment under Explore details
+    [Documentation]     Verifies that user can view the shipment details after a search
+    [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+    ...     AND     Click    text="Explore"
+    Click    text="Shipment Details"
+    Fill Text    //input[@data-testid="search-bar-field"]   ${search_this_shipment}
+    Sleep   10s
+    Click    text="FIND"
+    Get Element States      h5 >> .css-1isyst2 >> text=${search_this_shipment}      then       bool(value & visible)
+    Get Element States    h6 >> .css-s72vqw >> text="Shipment Details"      then       bool(value & visible)
+
+User edits 'org type' and clicks on Org Name on Explore Organizations page
+    [Documentation]     Verifies that org type is retained when user access the Org Main page
+    [Template]      User edits org type and clicks on Org Name
+        Shipper
+        Consignee
+        Local Client
+        Debtor
+        Creditor
+
+User edits 'currency' and clicks on Org Name on Explore Organizations page
+    [Documentation]     Verifies that org type is retained when user access the Org Main page
+    [Template]      User edits '<field>>' and clicks on Org Name on Explore Organizations page
+        CURRENCY    PHP
+        CURRENCY    TJS
+
+User edits 'weight' and clicks on Org Name on Explore Organizations page
+    [Documentation]     Verifies that org type is retained when user access the Org Main page
+    [Template]      User edits '<field>>' and clicks on Org Name on Explore Organizations page
+        WEIGHT    MT
+        WEIGHT    LB
+
+User edits 'volume' and clicks on Org Name on Explore Organizations page
+    [Documentation]     Verifies that org type is retained when user access the Org Main page
+    [Template]      User edits '<field>>' and clicks on Org Name on Explore Organizations page
+        VOLUME    MT
+        VOLUME    LB
 
 *** Keywords ***
+User edits org type and clicks on Org Name
+    [Arguments]     ${org_type}
+    Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+    ...     AND     Click    text="Explore"
+    Click    text="Explore Organizations"
+    Wait For Elements State    text="Org Name"  visible     timeout=1 min
+    Click    xpath=//div[@title="ORG TYPE"]
+    Keyboard key    press    Delete
+    Keyboard Input    insertText    ${org_type}
+    Keyboard Key    press    ArrowDown
+    Keyboard Key    press    Enter
+    Wait For Elements State    text="Org Name"  visible     timeout=1 min
+    Click    text="Org Name"
+    Click    tr >> .css-1mabvd7-cell >> a >> nth=0
+    Switch Page    NEW
+    Wait For Elements State    text="You’re viewing your relationship with this organization as your"
+    Get Element States    .css-1a1ajbi >> text="${org_type}"     then       bool(value & visible)
+    Close Browser
+
+User edits '<field>>' and clicks on Org Name on Explore Organizations page
+    [Arguments]     ${title}    ${currency}
+    Run Keywords     Log-in to expedock   passive     ${username}     ${password}
+    ...     AND     Click    text="Explore"
+    Click    text="Explore Organizations"
+    Wait For Elements State    text="Org Name"  visible     timeout=1 min
+    Click    xpath=//div[@title="${title}"]
+    Keyboard key    press    Delete
+    Keyboard Input    insertText    ${currency}
+    Sleep    2s
+    Keyboard Key    press    ArrowDown
+    Keyboard Key    press    Enter
+    Wait For Elements State    text="Org Name"  visible     timeout=1 min
+    Click    text="Org Name"
+    Click    tr >> .css-1mabvd7-cell >> a >> nth=0
+    Switch Page    NEW
+    Wait For Elements State    text="You’re viewing your relationship with this organization as your"
+    Get Element States    .css-kxu0dz >> //div[@title="CURRENCY"] >> //input[@value="${currency}"]     then       bool(value & visible)
+    Close Browser
+
+
 Check charts
         [Arguments]     ${sub_menu}
         Click on sub-menu           ${sub_menu}

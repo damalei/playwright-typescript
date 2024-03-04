@@ -18,7 +18,7 @@ ${sales_2}      Melissa Williams (MW)
 ${ops_1}        Melody Thomas (MT)
 ${ops_2}        Jason Robinson (JR)
 ${branch_1}     HK1
-${branch_2}     FJL
+${branch_2}     TFU
 ${dept_1}       FES
 ${dept_2}       FIS
 
@@ -74,10 +74,48 @@ User enables sandboxing
     #--- Verify that sandboxing is enabled
     Click   text="Business Performance"
     Click by role    link    Overview
-    Assert sandboxing fields    Branch    ${branch_1}   ${branch_2}
-    Assert sandboxing fields    Department    ${dept_1}     ${dept_2}
-    Assert sandboxing fields    Operator    ${ops_1}    ${ops_2}
-    Assert sandboxing fields    Sales Representative    ${sales_1}  ${sales_2}
+    Assert sandboxing fields    Branch    ${branch_1}   ${branch_2}     Overview
+    Assert sandboxing fields    Department    ${dept_1}     ${dept_2}   Overview
+    Assert sandboxing fields    Operator    ${ops_1}    ${ops_2}    Overview
+    Assert sandboxing fields    Sales Rep    ${sales_1}  ${sales_2}  Overview
+
+User checks on each native dashboard that the sandbox filters are enabled
+    [Setup]     Run Keywords
+    ...     Log-in to expedock      passive     ${username}     ${password}
+    ...     AND     Click   .css-sneu20-menuText >> text="Dashboard"        #To collapse dashboard tab
+    ...     AND     Click   .css-sneu20-menuText >> text="Business Performance"
+    ...     AND     Click   .css-sneu20-menuText >> text="Operations"
+    ...     AND     Click   .css-sneu20-menuText >> text="Accounting"
+    ...     AND     Click   .css-sneu20-menuText >> text="Sales"
+#    ...     AND     Click   .css-sneu20-menuText >> text="Explore"
+
+    #---Get dashboard or sub-tab names
+    @{SUB_TABS}=     Get Elements    xpath=${xpath_subtabs}
+    ${filtered_subtab_names}=   Get name of all specified visible elements  @{SUB_TABS}
+
+    #---Loop and access each sub-tab or dashboard
+        FOR    ${subtab_name}    IN    @{filtered_subtab_names}
+            Log To Console    Starting check for dashboard: ${subtab_name}
+            Click    .css-xutiuc-menuText-nestedMenuItems >> text="${subtab_name}"
+
+    #---Check if dashboard is a native dashboard
+            ${is_native}=     Check dashboard is native
+
+    #---Start fields checks if yes
+            IF    ${is_native} == ${true}
+
+    #---Verify all charts are loaded in the dashboard before check starts
+                Wait Until Keyword Succeeds    5min     30s     Verify all charts have loaded
+
+    #---Start check if fields contain sandbox filters
+                Assert if fields contain sandbox filters    ${subtab_name}
+
+    #---Log skip dashboard message if non-native
+            ELSE
+                 Set Test Message        ${\n}Dashboard: ${subtab_name} is a metabase dashboard. Skipped   append=True
+            END
+        END
+
 
 User disables sandboxing
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
@@ -127,25 +165,45 @@ User disables sandboxing
     Run Keyword And Continue On Failure     Wait For Elements State    xpath=//label[contains(text(),'Branch')]    visible
     Run Keyword And Continue On Failure     Wait For Elements State    xpath=//label[contains(text(),'Department')]    visible
     Run Keyword And Continue On Failure     Wait For Elements State    xpath=//label[contains(text(),'Operator')]  visible
-    Run Keyword And Continue On Failure     Wait For Elements State    xpath=//label[contains(text(),'Sales Representative')]  visible
+    Run Keyword And Continue On Failure     Wait For Elements State    xpath=//label[contains(text(),'Sales Rep')]  visible
 
 *** Keywords ***
 Add sandbox option
     [Arguments]     ${label}    ${option_name}
     ${field}=       Get element by  label   ${label}    exact=True
     Click     ${field}
-    ${option}    Get Element By Role    option   name=${option_name}
+    ${option}=    Get Element By Role    option   name=${option_name}
     Click    ${option}
 
 
 
 Clear combobox by label
     [Arguments]     ${label}
+#    ${field}=      Get Element By  Label    ${label}    exact=True
+#    Click   ${field}
+#    ${clear}=   Get Element By Role    button   name=Clear
+#    Click   ${clear}
+
     ${field}=      Get Element By  Label    ${label}    exact=True
     Click   ${field}
     ${clear}=   Get Element By Role    button   name=Clear
-    Click   ${clear}
+    ${is_clear_visible}=    Get Element States    ${clear}  then    bool(value & visible)
+    IF    ${is_clear_visible} == ${TRUE}
+        Click    ${clear}
+    ELSE
+        No Operation
+    END
 
+Assert if fields contain sandbox filters
+    [Arguments]     ${subtab_name}
+    Assert sandboxing fields    Branch    ${branch_1}   ${branch_2}     ${subtab_name}
+    Assert sandboxing fields    Department    ${dept_1}     ${dept_2}   ${subtab_name}
+    Assert sandboxing fields    Operator    ${ops_1}    ${ops_2}    ${subtab_name}
+    IF  '${subtab_name}'=='Overview'
+        Assert sandboxing fields    Sales Representative    ${sales_1}  ${sales_2}      ${subtab_name}
+    ELSE
+        Assert sandboxing fields    Sales Rep    ${sales_1}  ${sales_2}      ${subtab_name}
+    END
 
 
 
