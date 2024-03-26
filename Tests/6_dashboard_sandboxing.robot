@@ -18,55 +18,15 @@ ${sales_2}      Melissa Williams (MW)
 ${ops_1}        Melody Thomas (MT)
 ${ops_2}        Jason Robinson (JR)
 ${branch_1}     HK1
-${branch_2}     TFU
-${dept_1}       FES
-${dept_2}       FIS
+${branch_2}     BNW
+${dept_1}       FJL
+${dept_2}       LIN
 
 *** Test Cases ***
 User enables sandboxing
     [Setup]   Run Keywords     Log-in to expedock   passive     ${username}     ${password}
     ...     AND     Set Browser Timeout    1min
-    #--- Go to User management page
-    Go To    ${url_user_manage}
-
-    #--- Search for a user
-    Click by strategy   Label   Email
-    Keyboard Input    insertText    ${username}
-    Click by role    button    Search
-
-    #-- Click edit access on first result
-    ${edit_access}=     Set Variable        xpath=//*[@data-testid='EditIcon'] >> nth=0
-    Click      ${edit_access}
-
-    #--- Wait for modal to appear
-    Wait For Elements State    text="Update User"   visible
-
-    #---Clearing possible existing values in sandbox fields
-    Run Keyword And Ignore Error     Clear combobox by label     Sales Rep
-    Run Keyword And Ignore Error     Clear combobox by label     Operator
-    Run Keyword And Ignore Error     Clear combobox by label     Branch
-    Run Keyword And Ignore Error     Clear combobox by label     Department
-
-    #--- Input options for sandbox fields
-    Add sandbox option    Sales Rep     ${sales_1}
-    Add sandbox option    Sales Rep     ${sales_2}
-    Add sandbox option    Operator      ${ops_1}
-    Add sandbox option    Operator      ${ops_2}
-    Add sandbox option    Branch        ${branch_1}
-    Add sandbox option    Branch        ${branch_2}
-    Add sandbox option    Department    ${dept_1}
-    Add sandbox option    Department    ${dept_2}
-
-    #--- Enable sandboxing
-    ${checker}=     Get Element By    Label    Can only access shipments
-    ${checker_value}=   Get Attribute    ${checker}    value
-    Run Keyword If    '${checker_value}' == 'false'   Click   ${checker}
-
-    #--- Click Save
-    Click by role    button     Save
-
-    #--- Close browser
-    Close Browser
+    Enable sandboxing
 
     #--- Re-open and login to test account
     Log-in to expedock   passive     ${username}     ${password}
@@ -80,18 +40,30 @@ User enables sandboxing
     Assert sandboxing fields    Sales Rep    ${sales_1}  ${sales_2}  Overview
 
 User checks on each native dashboard that the sandbox filters are enabled
+    [Tags]  robot:exclude
     [Setup]     Run Keywords
     ...     Log-in to expedock      passive     ${username}     ${password}
-    ...     AND     Click   .css-sneu20-menuText >> text="Dashboard"        #To collapse dashboard tab
-    ...     AND     Click   .css-sneu20-menuText >> text="Business Performance"
-    ...     AND     Click   .css-sneu20-menuText >> text="Operations"
-    ...     AND     Click   .css-sneu20-menuText >> text="Accounting"
-    ...     AND     Click   .css-sneu20-menuText >> text="Sales"
+    ...     AND     Set Browser Timeout    30s
+    ...     AND     Enable sandboxing
+#    ...     AND     Click   .css-sneu20-menuText >> text="Dashboard"        #To collapse dashboard tab
+#    ...     AND     Click   .css-sneu20-menuText >> text="Business Performance"
+#    ...     AND     Click   .css-sneu20-menuText >> text="Operations"
+#    ...     AND     Click   .css-sneu20-menuText >> text="Accounting"
+#    ...     AND     Click   .css-sneu20-menuText >> text="Sales"
 #    ...     AND     Click   .css-sneu20-menuText >> text="Explore"
+
+    Log-in to expedock   passive     ${username}     ${password}
+
+    Click   .css-sneu20-menuText >> text="Dashboard"        #To collapse dashboard tab
+    Click   .css-sneu20-menuText >> text="Business Performance"
+    Click   .css-sneu20-menuText >> text="Operations"
+    Click   .css-sneu20-menuText >> text="Accounting"
+    Click   .css-sneu20-menuText >> text="Sales"
 
     #---Get dashboard or sub-tab names
     @{SUB_TABS}=     Get Elements    xpath=${xpath_subtabs}
     ${filtered_subtab_names}=   Get name of all specified visible elements  @{SUB_TABS}
+
 
     #---Loop and access each sub-tab or dashboard
         FOR    ${subtab_name}    IN    @{filtered_subtab_names}
@@ -167,13 +139,65 @@ User disables sandboxing
     Run Keyword And Continue On Failure     Wait For Elements State    xpath=//label[contains(text(),'Operator')]  visible
     Run Keyword And Continue On Failure     Wait For Elements State    xpath=//label[contains(text(),'Sales Rep')]  visible
 
+
 *** Keywords ***
+Enable sandboxing
+#--- Go to User management page
+    Go To    ${url_user_manage}
+
+    #--- Search for a user
+    Click by strategy   Label   Email
+    Keyboard Input    insertText    ${username}
+    Click by role    button    Search
+
+    #-- Click edit access on first result
+    ${edit_access}=     Set Variable        xpath=//*[@data-testid='EditIcon'] >> nth=0
+    Click      ${edit_access}
+
+    #--- Wait for modal to appear
+    Wait For Elements State    text="Update User"   visible
+
+    #---Clearing possible existing values in sandbox fields
+    Run Keyword And Ignore Error     Clear combobox by label     Sales Rep
+    Run Keyword And Ignore Error     Clear combobox by label     Operator
+    Run Keyword And Ignore Error     Clear combobox by label     Branch
+    Run Keyword And Ignore Error     Clear combobox by label     Department
+
+    #--- Input options for sandbox fields
+    Add sandbox option    Sales Rep     ${sales_1}
+    Add sandbox option    Sales Rep     ${sales_2}
+    Add sandbox option    Operator      ${ops_1}
+    Add sandbox option    Operator      ${ops_2}
+    Add sandbox option    Branch        ${branch_1}
+    Add sandbox option    Branch        ${branch_2}
+    Add sandbox option    Department    ${dept_1}
+    Add sandbox option    Department    ${dept_2}
+
+    #--- Enable sandboxing
+    ${checker}=     Get Element By    Label    Can only access shipments
+    ${checker_value}=   Get Attribute    ${checker}    value
+    Run Keyword If    '${checker_value}' == 'false'   Click   ${checker}
+
+    #--- Click Save
+    Click by role    button     Save
+
+    #--- Close browser
+    Close Browser
+
 Add sandbox option
     [Arguments]     ${label}    ${option_name}
     ${field}=       Get element by  label   ${label}    exact=True
     Click     ${field}
     ${option}=    Get Element By Role    option   name=${option_name}
     Click    ${option}
+#    Focus    ${field}/. >> input
+#    Keyboard Key    press    ArrowDown
+#    Keyboard Key    press    ArrowDown
+#    Keyboard Key    press    Enter
+#    Keyboard Input    insertText    ${option_name}
+
+#    Press Keys     ${field}     ${option_name}
+#    Fill Text    ${field}/. >> input     ${option_name}
 
 
 

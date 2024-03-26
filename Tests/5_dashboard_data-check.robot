@@ -201,9 +201,61 @@ User checks that clicking on Payable Summary Chart CTA shows uniform data
     #Assertions
     Run Keyword And Continue On Failure     Assert string values    Total Outstanding Receivables       ${summary_link_text}       ${ship_vals}[1]
 
+User checks on Avg. Margin Percent Per Shipment chart does not exceed 100%
+    [Template]  User checks on Avg. Margin Percent Per Shipment chart does not exceed 100%
+    Overview*
+    Branch Overview*
 
+User checks the data between the dashboard and explore shipments
+    [Template]     User checks the data between the dashboard and explore shipments
+    Overview*
+    Branch Overview*
 
 *** Keywords ***
+User checks the data between the dashboard and explore shipments
+    [Arguments]     ${dashboard}
+    Log-in to expedock   passive     ${username}     ${password}
+    Set Browser Timeout    1min
+    RPA.Browser.Playwright.Click   text="Business Performance"
+    RPA.Browser.Playwright.Click    text="${dashboard}"
+
+    #--- Get Dashboard Values
+    Wait Until Keyword Succeeds    5min    30s     Verify all charts have loaded
+    ${summary_els}=     Get Elements    //*[@data-testid="summary-link"]
+    @{dash_vals}    Create List
+    FOR    ${summary_el}    IN    @{summary_els}
+        ${text}=    Get Text    ${summary_el}
+        Append To List      ${dash_vals}   ${text}
+    END
+
+    #--- Get explore shipment page values
+    RPA.Browser.Playwright.Click    text="View Shipments" >> nth=0
+    ${explore_els}=    Get Elements    css=.css-pd02lq
+    @{explore_vals}    Create List
+    FOR    ${explore_el}    IN    @{explore_els}
+        ${text}=    Get Text    ${explore_el}
+        Append To List      ${explore_vals}   ${text}
+    END
+
+    ${clean_text}=      Replace String    ${dash_vals}[2]    .00 shipments    ${EMPTY}
+
+    Run Keyword And Continue On Failure     Assert string values    Shipment Volume              ${explore_vals}[0]       ${clean_text}
+    Run Keyword And Continue On Failure     Assert string values    Expenses              ${explore_vals}[6]       ${dash_vals}[4]
+    Run Keyword And Continue On Failure     Assert string values    Revenue              ${explore_vals}[9]       ${dash_vals}[1]
+    Run Keyword And Continue On Failure     Assert string values    Margins              ${explore_vals}[10]       ${dash_vals}[3]
+
+
+User checks on Avg. Margin Percent Per Shipment chart does not exceed 100%
+    [Arguments]     ${dashboard}
+    Log-in to expedock   passive     ${username}     ${password}
+    Set Browser Timeout    1min
+    RPA.Browser.Playwright.Click   text="Business Performance"
+    RPA.Browser.Playwright.Click    text="${dashboard}"
+    ${value}=   Get Text    //*[@data-testid="data-component-Avg. Margin Percent Per Shipment"] >> //*[@data-testid="summary-link"]
+    ${value}=   Replace String    ${value}    ${SPACE}%    ${EMPTY}
+    ${value_int}=   Convert To Number    ${value}
+    ${status}=  Evaluate    ${value_int} <= 100
+
 Verify values between Explore organization and Explore Shipments
     ${table}=       Set Variable    xpath=//table[@class="MuiTable-root MuiTable-stickyHeader css-1mkkbhk"]
 
