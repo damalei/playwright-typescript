@@ -14,5 +14,3 @@ setup('authenticate', async ({ page, browser }) => {
   await expect(page.getByRole('button', { name: '+ Create Task' })).toBeVisible({ timeout: GLOBALTIMEOUT });
   await page.context().storageState({ path: authFile });
 });
-
-

@@ -2,14 +2,14 @@ import { test, Page, expect } from '@playwright/test';
 import * as path from 'path';
 
 const GLOBALTIMEOUT = 60000
-const serialnum = 'QAREGTEST20240816053046'
+const serialnum = 'QAREGTEST20240816053056'
 // const apFilePath = '../fixtures/Case_3_V3.pdf'
 const __apFilePath = 'C:/Users/immad/PycharmProjects/expedock-qa-automation/projects/App/fixtures'
 const apFileName = 'Case_3_V3.pdf'
-const shipmentNo = 'S00004889'
-const consolNo = 'C00004136'
-const hblNo ='HBL00004889'
-const mblNo ='MBL00004136'
+const shipmentNo = 'S00004892'
+const consolNo = 'C00004139'
+const hblNo ='HBL00004892'
+const mblNo ='MBL00004139'
 
 test.describe.configure({ mode: 'serial' });
 
@@ -20,7 +20,7 @@ test.describe("AP Job Processing - ForwardingShipment", () => {
     await page.goto(global.testTaskUrl);
   })
 test('User creates an AP entry and verifies entry was added in the task', async () => {
-    await page.goto(global.testTaskUrl)
+    // await page.goto(global.testTaskUrl)
     await page.getByRole('row', {name:' P Create'}).getByRole('textbox').first().fill('AP1-'+serialnum)
     await page.getByRole('row', {name:' P Create'}).getByRole('button').first().click()
     await page.getByRole('option', {name:'AP Invoice NYC (Demo)'}).click()
@@ -97,12 +97,80 @@ test('User clicks show customer modal and verifies reconciliation attempts are c
   await expect.soft(page.locator('#notesContainer')).toContainText('Status: Discrepant. Changed external status from for_expedock to todo.')
 })
 
-// test('User push and pulls edocs and verifies correct files are displayed on the page', async () => {
-//   await page.getByTestId('edocs-tab')
-//   await page.
+test('User push and pulls edocs for shipment', async () => {
+  // const edocsLocator: string[] = [
+  //   'getByTestId('push-edocs-to-shipment-btn')',
+  //   'getByRole('button', {name: 'Push eDocs to Consol'})',
+  //   'getByTestId('push-edocs-to-cdec-btn')',
+  //   'getByRole('button', {name: 'Push eDocs to AP Invoice'})'
+  // ];
+  test.slow()
+  await page.reload()
+  await page.getByTestId('edocs-tab').click()
+  await page.getByLabel('Select all').check()
+  await page.getByTestId('push-edocs-to-shipment-btn').click() //Shipment button
+  await page.getByTestId('push-edocs-confirm-btn').click()
+  await page.waitForSelector('[data-test-id="push-edocs-confirm-btn"]', {state: 'hidden', timeout: 5 * GLOBALTIMEOUT})
+  await page.getByRole('button', {name: 'Pull eDocs From Shipment'}).click()
+  await expect.soft(page.locator('table').nth(0)).toContainText('Case_3_V3.pdf', {timeout: 10 * GLOBALTIMEOUT})
+ })
+
+ test('User push and pulls edocs for consol', async () => {
+  test.slow()
+  await page.reload()
+  await page.getByTestId('edocs-tab').click()
+  await page.getByLabel('Select all').check()
+  await page.getByRole('button', {name: 'Push eDocs to Consol'}).click() // Consol button
+  await page.getByTestId('push-edocs-confirm-btn').click()
+  await page.waitForSelector('[data-test-id="push-edocs-confirm-btn"]', {state: 'hidden', timeout: 5 * GLOBALTIMEOUT})
+  await page.getByRole('button', {name: 'Pull eDocs From Consol'}).click()
+  await expect.soft(page.locator('table').nth(1)).toContainText('Case_3_V3.pdf', {timeout: 5 * GLOBALTIMEOUT})
+ })
+
+ test('User push and pulls edocs for custom declaration', async () => {
+  test.slow()
+  await page.reload()
+  await page.getByTestId('edocs-tab').click()
+  await page.getByLabel('Select all').check()
+  await page.getByTestId('push-edocs-to-cdec-btn').click() //Customs declaration
+  await page.getByTestId('push-edocs-confirm-btn').click()
+  await page.waitForSelector('[data-test-id="push-edocs-confirm-btn"]', {state: 'hidden', timeout: 5 * GLOBALTIMEOUT})
+  await page.getByRole('button', {name: 'Pull eDocs From Customs'}).click()
+  await expect.soft(page.locator('table').nth(2)).toContainText('Case_3_V3.pdf', {timeout: 5 * GLOBALTIMEOUT})
+ })
+
+
+
+
+
+//   await page.getByLabel('Select all').check({ timeout: 5 * GLOBALTIMEOUT })
+//   await page.getByRole('button', {name: 'Push eDocs to Consol'}).click() // Consol button
+//   await page.getByTestId('push-edocs-confirm-btn').click({ timeout: 5 * GLOBALTIMEOUT })
+//   await page.waitForSelector('[data-test-id="push-edocs-confirm-btn"]', {state: 'hidden', timeout: 5 * GLOBALTIMEOUT})
+//   await page.getByTestId('edocs-tab').click({ timeout: 5 * GLOBALTIMEOUT })
+//   await page.getByLabel('Select all').check({ timeout: 5 * GLOBALTIMEOUT })
+//   await page.getByTestId('push-edocs-to-cdec-btn').click() //Customs declaration
+//   await page.getByTestId('push-edocs-confirm-btn').click({ timeout: 5 * GLOBALTIMEOUT })
+//   await page.waitForSelector('[data-test-id="push-edocs-confirm-btn"]', {state: 'hidden', timeout: 5 * GLOBALTIMEOUT})
+//   await page.getByTestId('edocs-tab').click({ timeout: 5 * GLOBALTIMEOUT })
+//   await page.getByLabel('Select all').check()
+//   await page.getByRole('button', {name: 'Push eDocs to AP Invoice'}).click() //Invoice
+//   await page.getByTestId('push-edocs-confirm-btn').click({ timeout: 5 * GLOBALTIMEOUT })
+//   //Pulling edocs
+//   await page.getByRole('button', {name: 'Pull eDocs From Shipment'}).click()
+//   await page.getByRole('button', {name: 'Pull eDocs From Consol'}).click()
+//   await page.getByRole('button', {name: 'Pull eDocs From Customs'}).click()
+//   await page.getByRole('button', {name: 'Pull eDocs From AP Invoice'}).click()
+//   // Confirm files
+//   await expect.soft(page.locator('table').nth(0)).toContainText('Case_3_V3.pdf', {timeout: 5 * GLOBALTIMEOUT})
+//   await expect.soft(page.locator('table').nth(1)).toContainText('Case_3_V3.pdf', {timeout: 5 * GLOBALTIMEOUT})
+//   await expect.soft(page.locator('table').nth(2)).toContainText('Case_3_V3.pdf', {timeout: 5 * GLOBALTIMEOUT})
+//   await expect.soft(page.locator('table').nth(3)).toContainText('Case_3_V3.pdf', {timeout: 5 * GLOBALTIMEOUT})
+// })
+
 
 test('User edits task name and qa and then verifies changes on task page', async () => {
-  await page.getByTestId('edocs-tab')
+  await page.getByTestId('job-info-tab').click()
   await page.getByTestId('job-name-input').fill(serialnum+'-edit')
   await page.locator('div').filter({ hasText: /^qa-passive-1@expedock\.comJob Owner$/ }).getByRole('button').click()
   await page.getByRole('option', {name:'imma.damalerio@expedock.com'}).click()
@@ -110,8 +178,7 @@ test('User edits task name and qa and then verifies changes on task page', async
   await page.waitForTimeout(3000)
   await page.goto(global.testTaskUrl)
   await expect.soft(page.locator("[name='taskReferenceId']")).toBeVisible({timeout: 3 * GLOBALTIMEOUT})
-  // await expect.soft(page.locator("[name='taskReferenceId']")).toHaveValue(serialnum+'-edit')
   await expect.soft(page.getByRole('cell', {name: serialnum+'-edit'}).getByRole('textbox')).toBeVisible()
-  await expect.soft(page.locator('td:nth-child(6)').first()).toHaveValue('imma.damalerio@expedock.com')
+  await expect.soft(page.locator('td:nth-child(5)').first().locator('input')).toHaveValue('imma.damalerio@expedock.com')
   })
 })
