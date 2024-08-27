@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { setGlobalData } from '../../utils';
 
-const serialnum = 'QAREGTEST20240816053056'
+const serialnum = 'QAREGTEST20240816053063'
 const GLOBALTIMEOUT = 60000
 
 test.describe.configure({ mode: 'serial' });
