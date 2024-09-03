@@ -1,0 +1,27 @@
+import { Locator, Page } from '@playwright/test';
+import { waitforTablePageLoad } from '../../utils'
+
+const GLOBALTIMEOUT = 60000
+const DEFAULT_GLOBAL_TIMEOUT_MS = GLOBALTIMEOUT
+
+export class GlobalNativeTable {
+    readonly page: Page;
+    readonly columnHeader: Locator;
+    readonly table: Locator
+
+    constructor(page: Page) {
+        this.page = page;
+        this.columnHeader = page.locator(`//*[contains(@data-testid, "table-header-")]`)
+        this.table = page.getByTestId('table')
+    }
+
+    async getColumnElements() {
+        return await this.columnHeader.all()
+    }
+
+    async clickColumnName(element: Locator) {
+        const headerName = await element.innerText()
+        await element.click()
+        return headerName
+    }
+}
