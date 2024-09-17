@@ -11,6 +11,7 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+  timeout: 5 * 60 * 1000,
   testDir: './projects',
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -80,11 +81,11 @@ export default defineConfig({
         dependencies: ['dashboard-setup'],
       },
 
-      // {
-      //   name: 'shipper-setup',
-      //   testDir: './projects/Shipper/tests',
-      //   testMatch: /Shipper\/tests\/auth[.]setup[.]ts/,
-      // },
+      {
+        name: 'shipper-setup',
+        testDir: './projects/Shipper/tests',
+        testMatch: /Shipper\/tests\/auth[.]setup[.]ts/,
+      },
 
       {
         name: 'shipper-main-tests',
@@ -98,7 +99,7 @@ export default defineConfig({
             height: 1080,
           },
         },
-        // dependencies: ['shipper-setup'],
+        dependencies: ['shipper-setup'],
       },
 
 

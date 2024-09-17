@@ -35,4 +35,49 @@ test.describe("SOA Processing - Upload a SOA file", () => {
     await expect(page.getByText('Sample SOA - HerculeanOcean Logistics-page 2..pdf')).toBeVisible({ timeout: 5 * GLOBALTIMEOUT })
   });
 
+  test('User verifies the information on the job form', async() => {
+    test.slow()
+    await page.getByLabel('Select all').check()
+    await page.getByTestId('upload-btn').click()
+    await expect.soft(page.getByText('Herculean Ocean Logistics (HEROCEEWR)Vendor')).toBeVisible({ timeout: 5 * GLOBALTIMEOUT })
+    await expect.soft(page.getByText('Steamship LineVendor Type')).toBeVisible();
+  });
+
+  test('User validates form and verifies all warning has been removed', async() => {
+    let i: number = 0
+    await page.getByText('Herculean Ocean Logistics (HEROCEEWR)Vendor').click()
+    while (i < 2) {
+      await page.getByTestId('confirm-field-btn').click()
+      i++;
+    }
+    await expect(page.locator('.MuiGrid-root > .MuiSvgIcon-root').first()).not.toBeVisible()
+  });
+
+  test('User reconciles using ForwardingShipment', async() => {
+    await page.getByTestId('edit-line-item-table').click();
+    await page.getByRole('tab', { name: 'Main SOA' }).click();
+    await page.locator('.htCommentCell').first().click()
+    await page.keyboard.type('invoicenumber1'+serialnum)
+
+    await page.locator('td:nth-child(3)').first().click()
+    await page.keyboard.type('S00004884')
+
+    await page.locator('td:nth-child(10)').first().click()
+    await page.keyboard.type('FRT')
+
+    await page.locator('td:nth-child(12)').first().click()
+    await page.keyboard.type('4780.00')
+
+    await page.locator('td:nth-child(13)').first().click()
+    await page.keyboard.type('USD')
+
+    await page.locator('td:nth-child(16)').first().click()
+    await page.keyboard.type('2021-07-24')
+
+    await page.locator('td:nth-child(17)').first().click()
+    await page.keyboard.type('2021-08-24')
+    
+    await page.getByRole('button', { name: 'Reconcile' }).click();
+  });
+
 })

@@ -13,5 +13,5 @@ setup('authenticate', async ({ page, browser }) => {
   await page.waitForURL('https://dashdemo.passive-portal.expedock.com/login');
   await expect(page.getByTestId('exceptions-management-header')).toBeVisible({ timeout: GLOBALTIMEOUT });
   await page.context().storageState({ path: authFile });
-  await setShipperUrl(page.url())
+  // await setShipperUrl(page.url())
 });

@@ -66,13 +66,13 @@ test.describe("Default Column check on Shipper", () => {
     let page: Page;
     test.beforeAll(async({browser}) => {
         page = await browser.newPage();
-        // await page.goto('https://dashdemo.passive-portal.expedock.com/login')
-        // await page.getByLabel('Email Address').fill("imma.damalerio+QATEST20240823@expedock.com")
-        // await page.getByLabel('Password').fill("P@ss1234P@ss1234")
-        // await page.getByRole('button', { name: 'LOG IN' }).click()
-        // await page.waitForURL('https://dashdemo.passive-portal.expedock.com/login')
-        // await expect(page.getByTestId('exceptions-management-header')).toBeVisible({ timeout: GLOBALTIMEOUT })
-        await page.goto(global.shipperUrl)
+        await page.goto('https://dashdemo.passive-portal.expedock.com/login')
+        await page.getByLabel('Email Address').fill("imma.damalerio+QATEST20240823@expedock.com")
+        await page.getByLabel('Password').fill("P@ss1234P@ss1234")
+        await page.getByRole('button', { name: 'LOG IN' }).click()
+        await page.waitForURL('https://dashdemo.passive-portal.expedock.com/login')
+        await expect(page.getByTestId('exceptions-management-header')).toBeVisible({ timeout: GLOBALTIMEOUT })
+        // await page.goto(global.shipperUrl)
     })
 
     test('Shipments page', async () => {
