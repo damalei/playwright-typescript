@@ -11,6 +11,7 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+  timeout: 5 * 60 * 1000,
   testDir: './projects',
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -57,6 +58,50 @@ export default defineConfig({
       },
       dependencies: ['app-setup'],
       },
+
+      {
+        name: 'dashboard-setup',
+        testDir: './projects/Dashboard/tests',
+        testMatch: /Dashboard\/tests\/auth[.]setup[.]ts/,
+      },
+
+      {
+        name: 'dashboard-main-tests',
+        testDir: './projects/Dashboard/tests',
+        // testtestMatch: './App/*.spec.ts',
+        testMatch: /.*.spec.ts/,
+        use: {
+          ...devices['Desktop Chrome'],
+          storageState: 'playwright/.auth/client.json',
+          viewport: {
+            width: 1920,
+            height: 1080,
+          },
+        },
+        dependencies: ['dashboard-setup'],
+      },
+
+      {
+        name: 'shipper-setup',
+        testDir: './projects/Shipper/tests',
+        testMatch: /Shipper\/tests\/auth[.]setup[.]ts/,
+      },
+
+      {
+        name: 'shipper-main-tests',
+        testDir: './projects/Shipper/tests',
+        testMatch: /.*.spec.ts/,
+        use: {
+          ...devices['Desktop Chrome'],
+          storageState: 'playwright/.auth/shipper-client.json',
+          viewport: {
+            width: 1920,
+            height: 1080,
+          },
+        },
+        dependencies: ['shipper-setup'],
+      },
+
 
     // {
     //   name: 'chromium',
