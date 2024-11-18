@@ -8,3 +8,7 @@ node_modules/
 /tests-examples/
 /test-ouput
 /projects/App/output
+/projects/Dashboard/output
+/projects/credentials.ts
+/env/.env.passive
+/env/.env.staging

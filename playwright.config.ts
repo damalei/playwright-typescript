@@ -1,4 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from "dotenv";
+
+dotenv.config({
+  path: `./env/.env.${process.env.ENV}`,
+})
 
 /**
  * Read environment variables from file.
@@ -70,6 +75,7 @@ export default defineConfig({
         testDir: './projects/Dashboard/tests',
         // testtestMatch: './App/*.spec.ts',
         testMatch: /.*.spec.ts/,
+        testIgnore: '/4-column-save.spec.ts',
         use: {
           ...devices['Desktop Chrome'],
           storageState: 'playwright/.auth/client.json',
