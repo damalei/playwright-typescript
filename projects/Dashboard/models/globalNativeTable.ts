@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { Locator, Page } from '@playwright/test';
 
 export class GlobalNativeTable {
   readonly page: Page;
@@ -14,11 +14,11 @@ export class GlobalNativeTable {
     this.columnHeader = page.locator(
       `//*[contains(@data-testid, "table-header-")]`
     );
-    this.table = page.getByTestId("table");
-    this.editColumnButton = page.getByRole("button", { name: "Edit Columns" });
-    this.editDisableAll = page.getByRole("button", { name: "Disable All" });
-    this.editShowAll = page.getByRole("button", { name: "Show All" });
-    this.saveButton = page.getByRole("button", { name: "Save" });
+    this.table = page.getByTestId('table');
+    this.editColumnButton = page.getByRole('button', { name: 'Edit Columns' });
+    this.editDisableAll = page.getByRole('button', { name: 'Disable All' });
+    this.editShowAll = page.getByRole('button', { name: 'Show All' });
+    this.saveButton = page.getByRole('button', { name: 'Save' });
   }
 
   async getColumnElements() {

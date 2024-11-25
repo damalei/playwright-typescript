@@ -1,20 +1,20 @@
-import { test, Page, expect } from "@playwright/test";
-import { ExploreShipments } from "../models/exploreShipments";
-import { ExploreOrganizations } from "../models/exploreOrganizations";
-import { ExplorePayableInvoices } from "../models/explorePayableInvoices";
-import { ExploreReceivableInvoices } from "../models/exploreReceivableInvoices";
-import { ExploreContainers } from "../models/exploreContainers";
+import { test, Page, expect } from '@playwright/test';
+import { ExploreShipments } from '../models/exploreShipments';
+import { ExploreOrganizations } from '../models/exploreOrganizations';
+import { ExplorePayableInvoices } from '../models/explorePayableInvoices';
+import { ExploreReceivableInvoices } from '../models/exploreReceivableInvoices';
+import { ExploreContainers } from '../models/exploreContainers';
 
 const GLOBALTIMEOUT = 300000;
 const DEFAULT_GLOBAL_TIMEOUT_MS = GLOBALTIMEOUT;
 
 test.describe.configure({
-  mode: "parallel",
+  mode: 'parallel',
   timeout: DEFAULT_GLOBAL_TIMEOUT_MS,
 });
 
-test.describe("User clicks edits column > disable all", () => {
-  test("Shipments page", async ({ page }) => {
+test.describe('User clicks edits column > disable all', () => {
+  test('Shipments page', async ({ page }) => {
     const exploreShipments = new ExploreShipments(page);
     await exploreShipments.goto();
     await exploreShipments.waitForReferenceComponent();
@@ -27,7 +27,7 @@ test.describe("User clicks edits column > disable all", () => {
     await expect.soft(exploreShipments.columnForwarderReference).toBeVisible();
   });
 
-  test("Organization page", async ({ page }) => {
+  test('Organization page', async ({ page }) => {
     const exploreOrg = new ExploreOrganizations(page);
     await exploreOrg.goto();
     await exploreOrg.waitForReferenceComponent();
@@ -40,7 +40,7 @@ test.describe("User clicks edits column > disable all", () => {
     await expect.soft(exploreOrg.columnOrganization).toBeVisible();
   });
 
-  test("Payable Invoices page", async ({ page }) => {
+  test('Payable Invoices page', async ({ page }) => {
     const explorePay = new ExplorePayableInvoices(page);
     await explorePay.goto();
     await explorePay.waitForReferenceComponent();
@@ -53,7 +53,7 @@ test.describe("User clicks edits column > disable all", () => {
     await expect.soft(explorePay.columnInvoiceNumber).toBeVisible();
   });
 
-  test("Receivable Invoices page", async ({ page }) => {
+  test('Receivable Invoices page', async ({ page }) => {
     const exploreRec = new ExploreReceivableInvoices(page);
     await exploreRec.goto();
     await exploreRec.waitForReferenceComponent();
@@ -66,7 +66,7 @@ test.describe("User clicks edits column > disable all", () => {
     await expect.soft(exploreRec.columnInvoiceNumber).toBeVisible();
   });
 
-  test("Container page", async ({ page }) => {
+  test('Container page', async ({ page }) => {
     const exploreCon = new ExploreContainers(page);
     await exploreCon.goto();
     await exploreCon.waitForReferenceComponent();
@@ -83,8 +83,8 @@ test.describe("User clicks edits column > disable all", () => {
   });
 });
 
-test.describe("User clicks edits column > show all", () => {
-  test("Shipments page", async ({ page }) => {
+test.describe('User clicks edits column > show all', () => {
+  test('Shipments page', async ({ page }) => {
     const exploreShipments = new ExploreShipments(page);
     await exploreShipments.goto();
     await exploreShipments.waitForReferenceComponent();
@@ -96,7 +96,7 @@ test.describe("User clicks edits column > show all", () => {
       .toHaveCount(444);
   });
 
-  test("Organization page", async ({ page }) => {
+  test('Organization page', async ({ page }) => {
     const exploreOrg = new ExploreOrganizations(page);
     await exploreOrg.goto();
     await exploreOrg.waitForReferenceComponent();
@@ -108,7 +108,7 @@ test.describe("User clicks edits column > show all", () => {
       .toHaveCount(89);
   });
 
-  test("Payable Invoices page", async ({ page }) => {
+  test('Payable Invoices page', async ({ page }) => {
     const explorePay = new ExplorePayableInvoices(page);
     await explorePay.goto();
     await explorePay.waitForReferenceComponent();
@@ -120,7 +120,7 @@ test.describe("User clicks edits column > show all", () => {
       .toHaveCount(28);
   });
 
-  test("Receivable Invoices page", async ({ page }) => {
+  test('Receivable Invoices page', async ({ page }) => {
     const exploreRec = new ExploreReceivableInvoices(page);
     await exploreRec.goto();
     await exploreRec.waitForReferenceComponent();
@@ -132,7 +132,7 @@ test.describe("User clicks edits column > show all", () => {
       .toHaveCount(28);
   });
 
-  test("Container page", async ({ page }) => {
+  test('Container page', async ({ page }) => {
     const exploreCon = new ExploreContainers(page);
     await exploreCon.goto();
     await exploreCon.waitForReferenceComponent();

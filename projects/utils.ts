@@ -1,4 +1,4 @@
-import { test, Page, expect } from "@playwright/test";
+import { test, Page, expect } from '@playwright/test';
 
 export function setGlobalData(url: string) {
   //const localData = 'This is the data to share globally';
@@ -9,7 +9,7 @@ export const waitforTablePageLoad = async (
   page: Page,
   loadTimeoutMs: number
 ) => {
-  await expect(page.getByTestId("table")).toBeVisible({
+  await expect(page.getByTestId('table')).toBeVisible({
     timeout: loadTimeoutMs,
   });
 };
