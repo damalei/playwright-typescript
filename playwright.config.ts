@@ -1,9 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 
 dotenv.config({
   path: `./env/.env.${process.env.ENV}`,
-})
+});
 
 /**
  * Read environment variables from file.
@@ -41,14 +41,14 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-      {
+    {
       name: 'app-setup',
       testDir: './projects/App/tests',
       // testMatch: '/.auth\.setup\.ts/',
       testMatch: /App\/tests\/auth[.]setup[.]ts/,
-      },
+    },
 
-      {
+    {
       name: 'app-main-tests',
       testDir: './projects/App/tests',
       // testtestMatch: './App/*.spec.ts',
@@ -62,52 +62,51 @@ export default defineConfig({
         },
       },
       dependencies: ['app-setup'],
-      },
+    },
 
-      {
-        name: 'dashboard-setup',
-        testDir: './projects/Dashboard/tests',
-        testMatch: /Dashboard\/tests\/auth[.]setup[.]ts/,
-      },
+    {
+      name: 'dashboard-setup',
+      testDir: './projects/Dashboard/tests',
+      testMatch: /Dashboard\/tests\/auth[.]setup[.]ts/,
+    },
 
-      {
-        name: 'dashboard-main-tests',
-        testDir: './projects/Dashboard/tests',
-        // testtestMatch: './App/*.spec.ts',
-        testMatch: /.*.spec.ts/,
-        testIgnore: '/4-column-save.spec.ts',
-        use: {
-          ...devices['Desktop Chrome'],
-          storageState: 'playwright/.auth/client.json',
-          viewport: {
-            width: 1920,
-            height: 1080,
-          },
+    {
+      name: 'dashboard-main-tests',
+      testDir: './projects/Dashboard/tests',
+      // testtestMatch: './App/*.spec.ts',
+      testMatch: /.*.spec.ts/,
+      testIgnore: '/4-column-save.spec.ts',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/client.json',
+        viewport: {
+          width: 1920,
+          height: 1080,
         },
-        dependencies: ['dashboard-setup'],
       },
+      dependencies: ['dashboard-setup'],
+    },
 
-      {
-        name: 'shipper-setup',
-        testDir: './projects/Shipper/tests',
-        testMatch: /Shipper\/tests\/auth[.]setup[.]ts/,
-      },
+    {
+      name: 'shipper-setup',
+      testDir: './projects/Shipper/tests',
+      testMatch: /Shipper\/tests\/auth[.]setup[.]ts/,
+    },
 
-      {
-        name: 'shipper-main-tests',
-        testDir: './projects/Shipper/tests',
-        testMatch: /.*.spec.ts/,
-        use: {
-          ...devices['Desktop Chrome'],
-          storageState: 'playwright/.auth/shipper-client.json',
-          viewport: {
-            width: 1920,
-            height: 1080,
-          },
+    {
+      name: 'shipper-main-tests',
+      testDir: './projects/Shipper/tests',
+      testMatch: /.*.spec.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/shipper-client.json',
+        viewport: {
+          width: 1920,
+          height: 1080,
         },
-        dependencies: ['shipper-setup'],
       },
-
+      dependencies: ['shipper-setup'],
+    },
 
     // {
     //   name: 'chromium',

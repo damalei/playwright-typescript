@@ -1,5 +1,5 @@
-import { Locator, Page } from "@playwright/test";
-import { SHIPPER_VIZ_BASE_URL } from "../../constants";
+import { Locator, Page } from '@playwright/test';
+import { SHIPPER_VIZ_BASE_URL } from '../../constants';
 
 export class LoginPage {
   readonly page: Page;
@@ -8,12 +8,12 @@ export class LoginPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.forgotPwdLink = page.getByRole("link", { name: "Forgot Password" });
-    this.loginBtn = page.getByRole("button", { name: "LOG IN" });
+    this.forgotPwdLink = page.getByRole('link', { name: 'Forgot Password' });
+    this.loginBtn = page.getByRole('button', { name: 'LOG IN' });
   }
 
   async goto() {
-    await this.page.goto(SHIPPER_VIZ_BASE_URL + "/login");
-    await this.forgotPwdLink.waitFor({ state: "visible" });
+    await this.page.goto(SHIPPER_VIZ_BASE_URL + '/login');
+    await this.forgotPwdLink.waitFor({ state: 'visible' });
   }
 }

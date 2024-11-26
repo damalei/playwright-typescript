@@ -1,32 +1,32 @@
-import { test, expect } from "@playwright/test";
-import { ExploreShipments } from "../models/exploreShipments";
-import { ExploreOrganizations } from "../models/exploreOrganizations";
-import { ExplorePayableInvoices } from "../models/explorePayableInvoices";
-import { ExploreReceivableInvoices } from "../models/exploreReceivableInvoices";
-import { ExploreContainers } from "../models/exploreContainers";
-import { GlobalNativeTable } from "../models/globalNativeTable";
+import { test, expect } from '@playwright/test';
+import { ExploreShipments } from '../models/exploreShipments';
+import { ExploreOrganizations } from '../models/exploreOrganizations';
+import { ExplorePayableInvoices } from '../models/explorePayableInvoices';
+import { ExploreReceivableInvoices } from '../models/exploreReceivableInvoices';
+import { ExploreContainers } from '../models/exploreContainers';
+import { GlobalNativeTable } from '../models/globalNativeTable';
 
 const GLOBALTIMEOUT = 300000;
 const DEFAULT_GLOBAL_TIMEOUT_MS = GLOBALTIMEOUT;
 
 test.describe.configure({
-  mode: "parallel",
+  mode: 'parallel',
   timeout: DEFAULT_GLOBAL_TIMEOUT_MS,
 });
 
 test.beforeEach(async ({ page }) => {
   await page.goto(`https://${process.env.ENV}-dashboard.expedock.com`);
   await page
-    .locator("#username")
+    .locator('#username')
     .fill(`${process.env.FREIGHT_BI_CLIENT2_USER}`);
   await page
-    .locator("#password")
+    .locator('#password')
     .fill(`${process.env.FREIGHT_BI_CLIENT2_USER}`);
-  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await page.waitForURL(
     `https://${process.env.ENV}-dashboard.expedock.com/**/`
   );
-  await expect(page.getByTestId("account-user-name")).toBeVisible({
+  await expect(page.getByTestId('account-user-name')).toBeVisible({
     timeout: GLOBALTIMEOUT,
   });
 });
@@ -39,8 +39,8 @@ test.afterEach(async ({ page }) => {
   await globalNativeTable.editColumnButton.click();
 });
 
-test.describe("User clicks edits column > save columns", () => {
-  test("Shipments page", async ({ page }) => {
+test.describe('User clicks edits column > save columns', () => {
+  test('Shipments page', async ({ page }) => {
     const exploreShipments = new ExploreShipments(page);
     await exploreShipments.goto();
     await exploreShipments.waitForReferenceComponent();
@@ -55,7 +55,7 @@ test.describe("User clicks edits column > save columns", () => {
     await expect.soft(exploreShipments.columnForwarderReference).toBeVisible();
   });
 
-  test("Organization page", async ({ page }) => {
+  test('Organization page', async ({ page }) => {
     const exploreOrg = new ExploreOrganizations(page);
     await exploreOrg.goto();
     await exploreOrg.waitForReferenceComponent();
@@ -70,7 +70,7 @@ test.describe("User clicks edits column > save columns", () => {
     await expect.soft(exploreOrg.columnOrganization).toBeVisible();
   });
 
-  test("Payable Invoices page", async ({ page }) => {
+  test('Payable Invoices page', async ({ page }) => {
     const explorePay = new ExplorePayableInvoices(page);
     await explorePay.goto();
     await explorePay.waitForReferenceComponent();
@@ -85,7 +85,7 @@ test.describe("User clicks edits column > save columns", () => {
     await expect.soft(explorePay.columnInvoiceNumber).toBeVisible();
   });
 
-  test("Receivable Invoices page", async ({ page }) => {
+  test('Receivable Invoices page', async ({ page }) => {
     const exploreRec = new ExploreReceivableInvoices(page);
     await exploreRec.goto();
     await exploreRec.waitForReferenceComponent();
@@ -100,7 +100,7 @@ test.describe("User clicks edits column > save columns", () => {
     await expect.soft(exploreRec.columnInvoiceNumber).toBeVisible();
   });
 
-  test("Container page", async ({ page }) => {
+  test('Container page', async ({ page }) => {
     const exploreCon = new ExploreContainers(page);
     await exploreCon.goto();
     await exploreCon.waitForReferenceComponent();

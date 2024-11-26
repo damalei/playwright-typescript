@@ -1,19 +1,19 @@
-import { test, Page, expect } from "@playwright/test";
-import { ExploreShipments } from "../models/exploreShipments";
-import { ExploreOrganizations } from "../models/exploreOrganizations";
-import { ExplorePayableInvoices } from "../models/explorePayableInvoices";
-import { ExploreReceivableInvoices } from "../models/exploreReceivableInvoices";
+import { test, Page, expect } from '@playwright/test';
+import { ExploreShipments } from '../models/exploreShipments';
+import { ExploreOrganizations } from '../models/exploreOrganizations';
+import { ExplorePayableInvoices } from '../models/explorePayableInvoices';
+import { ExploreReceivableInvoices } from '../models/exploreReceivableInvoices';
 
 const GLOBALTIMEOUT = 300000;
 const DEFAULT_GLOBAL_TIMEOUT_MS = GLOBALTIMEOUT;
 
 test.describe.configure({
-  mode: "parallel",
+  mode: 'parallel',
   timeout: DEFAULT_GLOBAL_TIMEOUT_MS,
 });
 
-test.describe("User clicks column names on Explore section table headers", () => {
-  test("Clicking on Explore Shipment table headers, page should not break", async ({
+test.describe('User clicks column names on Explore section table headers', () => {
+  test('Clicking on Explore Shipment table headers, page should not break', async ({
     page,
   }) => {
     const exploreShipments = new ExploreShipments(page);
@@ -22,10 +22,9 @@ test.describe("User clicks column names on Explore section table headers", () =>
     const elements =
       await exploreShipments.globalNativeTable.getColumnElements();
     for (const element of elements) {
-      let headerName = await exploreShipments.globalNativeTable.clickColumnName(
-        element
-      );
-      console.log("click" + element);
+      let headerName =
+        await exploreShipments.globalNativeTable.clickColumnName(element);
+      console.log('click' + element);
       await expect
         .soft(exploreShipments.referenceComponent)
         .toBeVisible({ timeout: DEFAULT_GLOBAL_TIMEOUT_MS });
@@ -39,7 +38,7 @@ test.describe("User clicks column names on Explore section table headers", () =>
     }
   });
 
-  test("Clicking on Explore Organization table headers, page should not break", async ({
+  test('Clicking on Explore Organization table headers, page should not break', async ({
     page,
   }) => {
     const exploreOrganizations = new ExploreOrganizations(page);
@@ -50,7 +49,7 @@ test.describe("User clicks column names on Explore section table headers", () =>
     for (const element of elements) {
       let headerName =
         await exploreOrganizations.globalNativeTable.clickColumnName(element);
-      console.log("click" + element);
+      console.log('click' + element);
       await expect
         .soft(exploreOrganizations.referenceComponent)
         .toBeVisible({ timeout: DEFAULT_GLOBAL_TIMEOUT_MS });
@@ -64,7 +63,7 @@ test.describe("User clicks column names on Explore section table headers", () =>
     }
   });
 
-  test("Clicking on Payable Invoices table headers, page should not break", async ({
+  test('Clicking on Payable Invoices table headers, page should not break', async ({
     page,
   }) => {
     const explorePayableInvoices = new ExplorePayableInvoices(page);
@@ -75,7 +74,7 @@ test.describe("User clicks column names on Explore section table headers", () =>
     for (const element of elements) {
       let headerName =
         await explorePayableInvoices.globalNativeTable.clickColumnName(element);
-      console.log("click" + element);
+      console.log('click' + element);
       await expect
         .soft(explorePayableInvoices.referenceComponent)
         .toBeVisible({ timeout: DEFAULT_GLOBAL_TIMEOUT_MS });
@@ -89,7 +88,7 @@ test.describe("User clicks column names on Explore section table headers", () =>
     }
   });
 
-  test("Clicking on Receivable Invoices table headers, page should not break", async ({
+  test('Clicking on Receivable Invoices table headers, page should not break', async ({
     page,
   }) => {
     const exploreReceivableInvoices = new ExploreReceivableInvoices(page);
@@ -102,7 +101,7 @@ test.describe("User clicks column names on Explore section table headers", () =>
         await exploreReceivableInvoices.globalNativeTable.clickColumnName(
           element
         );
-      console.log("click" + element);
+      console.log('click' + element);
       await expect
         .soft(exploreReceivableInvoices.referenceComponent)
         .toBeVisible({ timeout: DEFAULT_GLOBAL_TIMEOUT_MS });
