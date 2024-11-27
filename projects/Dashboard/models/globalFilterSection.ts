@@ -85,7 +85,6 @@ async removeBasicTextFilter(filtername: string, el_count: number){
 
 async removeAdvanceTextFilter(filtername: string){
     await this.page.locator('span', { hasText: `${filtername}`}).locator('//following-sibling::*[1]').click()
-
 }
 
 }
