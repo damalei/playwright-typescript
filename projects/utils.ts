@@ -17,3 +17,32 @@ export const waitforTablePageLoad = async (
 export function setShipperUrl(url: string) {
   global.shipperUrl = url;
 }
+
+export const waitForChartPageLoad = async (
+  page: Page,
+  loadTimeoutMs: number,
+  chartTestId: string
+) => {
+  await expect(page.getByTestId(chartTestId)).toBeVisible({
+    timeout: loadTimeoutMs,
+  });
+};
+
+export const waitForFilterSectionToLoad = async (
+  page: Page,
+  loadTimeoutMs: number
+) => {
+  await expect(page.getByTestId("filters")).toBeVisible({
+    timeout: loadTimeoutMs,
+  });
+};
+
+export const waitForSnackBar = async (
+  page: Page,
+  loadTimeoutMs: number
+) => {
+  await expect(page.locator('//div[@id="notistack-snackbar"]')).toBeVisible({
+    timeout: loadTimeoutMs,
+  });
+};
+
