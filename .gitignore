@@ -12,4 +12,3 @@ node_modules/
 /projects/credentials.ts
 /env/.env.passive
 /env/.env.staging
-/projects/Dashboard/tests/5-edit-filter-section.spec.ts
