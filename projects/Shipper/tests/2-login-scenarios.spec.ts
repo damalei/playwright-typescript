@@ -2,10 +2,10 @@ import { test, expect } from '@playwright/test';
 import { LoginPage } from '../models/login.ts';
 
 const GLOBALTIMEOUT = 60000;
-const username = `(${process.env.SHIPPER_VIZ_VALID_USER})`;
-const password = `(${process.env.SHIPPER_VIZ_VALID_PASS})`;
-const wrongusername = `(${process.env.SHIPPER_VIZ_INVALID_USER})`;
-const wrongpassword = `(${process.env.SHIPPER_VIZ_INVALID_PASS})`;
+const username = `${process.env.SHIPPER_VIZ_VALID_USER}`;
+const password = `${process.env.SHIPPER_VIZ_VALID_PASS}`;
+const wrongusername = `${process.env.SHIPPER_VIZ_INVALID_USER}`;
+const wrongpassword = `${process.env.SHIPPER_VIZ_INVALID_PASS}`;
 
 //Test clause for visiting Shipper Page
 test.describe('Login', () => {
