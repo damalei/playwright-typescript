@@ -1,9 +1,8 @@
 import { test, expect, Page } from '@playwright/test';
 import { ExploreOrganizations } from '../models/exploreOrganizations';
-import { FREIGHT_BI_BASE_URL } from '../../constants';
+import { DASHBOARD_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
 import { ExplorePayableInvoices } from '../models/explorePayableInvoices';
 
-const GLOBALTIMEOUT = 3000000;
 let exploreOrganizations;
 let explorePayableInvoices;
 
@@ -22,7 +21,7 @@ test.describe('Drilldown See Payable Invoices as different Org types', () => {
     await exploreOrganizations.waitForReferenceComponent();
     await exploreOrganizations.checkOrganizationsDefaultOrgTypeSelector();
     await expect(page.getByTestId('table-header-org_name')).toBeVisible({
-      timeout: GLOBALTIMEOUT,
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
     const { totalExpensesExclTaxAmount } =
       await exploreOrganizations.getOrganizationsTotalExpensesExclTaxAmount();

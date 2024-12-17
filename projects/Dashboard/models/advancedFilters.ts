@@ -1,9 +1,5 @@
 import { Locator, Page } from '@playwright/test';
 
-
-const GLOBALTIMEOUT = 60000;
-const DEFAULT_GLOBAL_TIMEOUT_MS = GLOBALTIMEOUT;
-
 export class AdvancedFilterView {
   readonly page: Page;
   readonly transportModeFilterLocator: Locator;
@@ -71,9 +67,15 @@ export class AdvancedFilterView {
     this.setShipmentWeightFilterValue = page.getByLabel('value');
     this.advancedUpdateFiltersBtn = page.getByTestId('update-filters-button');
     this.saveAdvanceFiltersBtn = page.getByTestId('save-view-button');
-    this.transportModeFilterLocator = page.locator('span:has-text("Transport Mode") + *');
-    this.hasExceptionsFilterLocator = page.locator('span:has-text("Has Exceptions") + *');
-    this.shipmentWeightFilterLocator = page.locator('span:has-text("Shipment Weight") + *');
+    this.transportModeFilterLocator = page.locator(
+      'span:has-text("Transport Mode") + *'
+    );
+    this.hasExceptionsFilterLocator = page.locator(
+      'span:has-text("Has Exceptions") + *'
+    );
+    this.shipmentWeightFilterLocator = page.locator(
+      'span:has-text("Shipment Weight") + *'
+    );
   }
   async waitForFilterFields() {
     await this.filterView.waitFor({ state: 'visible' });

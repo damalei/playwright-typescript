@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../models/login.ts';
+import { DEFAULT_TIMEOUT_IN_MS } from '../../constants.ts';
 
-const GLOBALTIMEOUT = 60000;
 const username = `${process.env.SHIPPER_VIZ_VALID_USER}`;
 const password = `${process.env.SHIPPER_VIZ_VALID_PASS}`;
 const wrongusername = `${process.env.SHIPPER_VIZ_INVALID_USER}`;
@@ -14,7 +14,7 @@ test.describe('Login', () => {
     await log.goto();
     await expect
       .soft(log.forgotPwdLink)
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('[30.1] Log-in using correct user credentials', async ({ page }) => {
@@ -23,7 +23,7 @@ test.describe('Login', () => {
     await page.getByRole('button', { name: 'LOG IN' }).click();
     await expect
       .soft(page.getByTestId('exceptions-management-header'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('[30.2] Log-in using incorrect username', async ({ page }) => {
@@ -32,7 +32,7 @@ test.describe('Login', () => {
     await page.getByRole('button', { name: 'LOG IN' }).click();
     await expect
       .soft(page.getByText('Wrong email or password'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT }); // Error Message
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS }); // Error Message
   });
 
   test('[30.3] Log-in using incorrect password', async ({ page }) => {
@@ -41,7 +41,7 @@ test.describe('Login', () => {
     await page.getByRole('button', { name: 'LOG IN' }).click();
     await expect
       .soft(page.getByText('Wrong email or password'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT }); // Error Message
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS }); // Error Message
   });
 
   test('[30.4] Log-in when username is empty', async ({ page }) => {
@@ -73,7 +73,7 @@ test.describe('Login', () => {
     await page.getByRole('button', { name: 'SUBMIT' }).click();
     await expect
       .soft(page.getByText('Successfully sent!'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('[30.8] Log out', async ({ page }) => {
@@ -82,10 +82,10 @@ test.describe('Login', () => {
     await page.getByRole('button', { name: 'LOG IN' }).click();
     await expect
       .soft(page.getByTestId('exceptions-management-header'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect
       .soft(page.getByTestId('account-menu-trigger-uncollapsed'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT }); //log out
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS }); //log out
     await page
       .getByTestId('account-menu-trigger-uncollapsed')
       .getByText('JM')
@@ -93,6 +93,6 @@ test.describe('Login', () => {
     await page.getByTestId('logout').click();
     await expect
       .soft(page.getByTestId('login-header'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 });

@@ -1,10 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { waitforTablePageLoad } from '../../utils';
 import { GlobalNativeTable } from './globalNativeTable';
-import { FREIGHT_BI_BASE_URL } from '../../constants';
-
-const GLOBALTIMEOUT = 60000;
-const DEFAULT_GLOBAL_TIMEOUT_MS = GLOBALTIMEOUT;
+import { DEFAULT_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
 
 export class ExploreContainers {
   readonly page: Page;
@@ -29,7 +26,7 @@ export class ExploreContainers {
 
   async goto() {
     await this.page.goto(FREIGHT_BI_BASE_URL + '/explore/containers');
-    await waitforTablePageLoad(this.page, DEFAULT_GLOBAL_TIMEOUT_MS);
+    await waitforTablePageLoad(this.page, DEFAULT_TIMEOUT_IN_MS);
   }
 
   async waitForReferenceComponent() {

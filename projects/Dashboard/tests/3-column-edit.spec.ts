@@ -1,16 +1,14 @@
-import { test, Page, expect } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { ExploreShipments } from '../models/exploreShipments';
 import { ExploreOrganizations } from '../models/exploreOrganizations';
 import { ExplorePayableInvoices } from '../models/explorePayableInvoices';
 import { ExploreReceivableInvoices } from '../models/exploreReceivableInvoices';
 import { ExploreContainers } from '../models/exploreContainers';
-
-const GLOBALTIMEOUT = 300000;
-const DEFAULT_GLOBAL_TIMEOUT_MS = GLOBALTIMEOUT;
+import { DASHBOARD_TIMEOUT_IN_MS } from '../../constants';
 
 test.describe.configure({
   mode: 'parallel',
-  timeout: DEFAULT_GLOBAL_TIMEOUT_MS,
+  timeout: DASHBOARD_TIMEOUT_IN_MS,
 });
 
 test.describe('User clicks edits column > disable all', () => {
@@ -23,7 +21,7 @@ test.describe('User clicks edits column > disable all', () => {
     await exploreShipments.globalNativeTable.editColumnButton.click();
     await expect
       .soft(exploreShipments.globalNativeTable.columnHeader.nth(1))
-      .not.toBeVisible({ timeout: GLOBALTIMEOUT });
+      .not.toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await expect.soft(exploreShipments.columnForwarderReference).toBeVisible();
   });
 
@@ -36,7 +34,7 @@ test.describe('User clicks edits column > disable all', () => {
     await exploreOrg.globalNativeTable.editColumnButton.click();
     await expect
       .soft(exploreOrg.globalNativeTable.columnHeader.nth(1))
-      .not.toBeVisible({ timeout: GLOBALTIMEOUT });
+      .not.toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await expect.soft(exploreOrg.columnOrganization).toBeVisible();
   });
 
@@ -49,7 +47,7 @@ test.describe('User clicks edits column > disable all', () => {
     await explorePay.globalNativeTable.editColumnButton.click();
     await expect
       .soft(explorePay.globalNativeTable.columnHeader.nth(1))
-      .not.toBeVisible({ timeout: GLOBALTIMEOUT });
+      .not.toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await expect.soft(explorePay.columnInvoiceNumber).toBeVisible();
   });
 
@@ -62,7 +60,7 @@ test.describe('User clicks edits column > disable all', () => {
     await exploreRec.globalNativeTable.editColumnButton.click();
     await expect
       .soft(exploreRec.globalNativeTable.columnHeader.nth(1))
-      .not.toBeVisible({ timeout: GLOBALTIMEOUT });
+      .not.toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await expect.soft(exploreRec.columnInvoiceNumber).toBeVisible();
   });
 
@@ -75,7 +73,7 @@ test.describe('User clicks edits column > disable all', () => {
     await exploreCon.globalNativeTable.editColumnButton.click();
     await expect
       .soft(exploreCon.globalNativeTable.columnHeader.nth(2))
-      .not.toBeVisible({ timeout: GLOBALTIMEOUT });
+      .not.toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await expect.soft(exploreCon.columnContainer).toBeVisible();
     await expect
       .soft(exploreCon.columnShipmentForwarderReference)

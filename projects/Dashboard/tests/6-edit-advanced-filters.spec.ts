@@ -1,10 +1,9 @@
 import { test, expect, Page } from '@playwright/test';
 import { ExploreShipments } from '../models/exploreShipments';
-import { FREIGHT_BI_BASE_URL } from '../../constants';
+import { DASHBOARD_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
 import { ExplorePayableInvoices } from '../models/explorePayableInvoices';
 import { AdvancedFilterView } from '../models/advancedFilters';
 
-const GLOBALTIMEOUT = 3000000;
 let explorePayableInvoices;
 let exploreShipments;
 let advancedFilterView;
@@ -27,47 +26,47 @@ test.describe('Edit, Save, and Remove filters on Advanced view', () => {
     await advancedFilterView.clickAdvanceFilterBtn();
     await expect
       .soft(page.getByTestId('edit-filters-button'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
 
     await advancedFilterView.clickEditFiltersBtn();
     await expect
       .soft(page.getByRole('button', { name: 'Filter Editor' }))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await advancedFilterView.clickShipmentFiltersBtn();
     await expect
       .soft(page.getByText('AndOrAdd ruleAdd group is'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
 
     await advancedFilterView.clickAddedFilterFields1();
     await page.keyboard.type('Transport Mode');
     await advancedFilterView.clickShipmentTransportMode();
     await expect
       .soft(page.getByText('is', { exact: true }))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await advancedFilterView.clickShipmentTransportModeCondition();
 
     await advancedFilterView.addAdvanceFilterRule();
     await expect
       .soft(page.getByTestId('Shipment Filters').getByLabel('Open').nth(2))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await advancedFilterView.clickAddedFilterFields2();
     await page.keyboard.type('Has Exceptions');
     await advancedFilterView.BooleanHasExceptions();
     await expect
       .soft(page.getByLabel('NoYes'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await page.getByLabel('NoYes').check();
 
     await advancedFilterView.addAdvanceFilterRule();
     await expect
       .soft(page.getByTestId('Shipment Filters').getByLabel('Open').nth(3))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await advancedFilterView.clickAddedFilterFields3();
     await page.keyboard.type('Shipment Weight');
     await advancedFilterView.clickShipmentWeightFilter();
     await expect
       .soft(page.getByText('- KG'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await advancedFilterView.setShipmentWeightFilter();
 
     await advancedFilterView.clickAdvanceUpdateFiltersBtn();
@@ -93,13 +92,13 @@ test.describe('Edit, Save, and Remove filters on Advanced view', () => {
     await advancedFilterView.saveAdvancedFiltersBtn();
     await expect
       .soft(page.getByText('Your "Shipments" report has'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
 
     await explorePayableInvoices.goto();
     await explorePayableInvoices.waitForReferenceComponent();
     await expect
       .soft(page.getByTestId('header-title'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
 
     await exploreShipments.goto();
     await exploreShipments.waitForReferenceComponent();
@@ -110,7 +109,7 @@ test.describe('Edit, Save, and Remove filters on Advanced view', () => {
           exact: true,
         })
       )
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await expect
       .soft(
         page.getByRole('button', {
@@ -118,7 +117,7 @@ test.describe('Edit, Save, and Remove filters on Advanced view', () => {
           exact: true,
         })
       )
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await expect
       .soft(
         page.getByRole('button', {
@@ -126,19 +125,19 @@ test.describe('Edit, Save, and Remove filters on Advanced view', () => {
           exact: true,
         })
       )
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
   });
 
   test('[9.2] User remove filter value/s on the advance filter view', async () => {
     await advancedFilterView.clickAdvanceFilterBtn();
     await expect
       .soft(page.getByTestId('edit-filters-button'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await advancedFilterView.removeAdvanceFilters();
     await advancedFilterView.saveAdvancedFiltersBtn();
     await expect
       .soft(page.getByText('Your "Shipments" report has'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await explorePayableInvoices.goto();
     await explorePayableInvoices.waitForReferenceComponent();
 
