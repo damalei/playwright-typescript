@@ -36,6 +36,7 @@ export class ExploreOrganizations {
   async waitForReferenceComponent() {
     await this.referenceComponent.waitFor({ state: 'visible' });
   }
+
   async clickOrganizationsSeePayableInvoices() {
     await this.seePayableInvoices.scrollIntoViewIfNeeded();
     await this.seePayableInvoices.click();
