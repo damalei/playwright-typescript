@@ -1,15 +1,13 @@
-import { test, Page, expect } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { ExploreShipments } from '../models/exploreShipments';
 import { ExploreOrganizations } from '../models/exploreOrganizations';
 import { ExplorePayableInvoices } from '../models/explorePayableInvoices';
 import { ExploreReceivableInvoices } from '../models/exploreReceivableInvoices';
-
-const GLOBALTIMEOUT = 300000;
-const DEFAULT_GLOBAL_TIMEOUT_MS = GLOBALTIMEOUT;
+import { DASHBOARD_TIMEOUT_IN_MS } from '../../constants';
 
 test.describe.configure({
   mode: 'parallel',
-  timeout: DEFAULT_GLOBAL_TIMEOUT_MS,
+  timeout: DASHBOARD_TIMEOUT_IN_MS,
 });
 
 test.describe('User clicks column names on Explore section table headers', () => {
@@ -27,7 +25,7 @@ test.describe('User clicks column names on Explore section table headers', () =>
       console.log('click' + element);
       await expect
         .soft(exploreShipments.referenceComponent)
-        .toBeVisible({ timeout: DEFAULT_GLOBAL_TIMEOUT_MS });
+        .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
       let isTableVisible =
         await exploreShipments.referenceComponent.isVisible();
       if (!isTableVisible) {
@@ -52,7 +50,7 @@ test.describe('User clicks column names on Explore section table headers', () =>
       console.log('click' + element);
       await expect
         .soft(exploreOrganizations.referenceComponent)
-        .toBeVisible({ timeout: DEFAULT_GLOBAL_TIMEOUT_MS });
+        .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
       let isTableVisible =
         await exploreOrganizations.referenceComponent.isVisible();
       if (!isTableVisible) {
@@ -77,7 +75,7 @@ test.describe('User clicks column names on Explore section table headers', () =>
       console.log('click' + element);
       await expect
         .soft(explorePayableInvoices.referenceComponent)
-        .toBeVisible({ timeout: DEFAULT_GLOBAL_TIMEOUT_MS });
+        .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
       let isTableVisible =
         await explorePayableInvoices.referenceComponent.isVisible();
       if (!isTableVisible) {
@@ -104,7 +102,7 @@ test.describe('User clicks column names on Explore section table headers', () =>
       console.log('click' + element);
       await expect
         .soft(exploreReceivableInvoices.referenceComponent)
-        .toBeVisible({ timeout: DEFAULT_GLOBAL_TIMEOUT_MS });
+        .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
       let isTableVisible =
         await exploreReceivableInvoices.referenceComponent.isVisible();
       if (!isTableVisible) {

@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { Locator, Page } from '@playwright/test';
 
 export class SideMenu {
   readonly page: Page;
@@ -7,9 +7,9 @@ export class SideMenu {
 
   constructor(page: Page) {
     this.page = page;
-    this.userProfile = page.getByTestId("account-user-name");
+    this.userProfile = page.getByTestId('account-user-name');
     this.dashboardBuilderOption = page
-      .locator("span")
-      .filter({ hasText: "Dashboard Builder" });
+      .locator('span')
+      .filter({ hasText: 'Dashboard Builder' });
   }
 }

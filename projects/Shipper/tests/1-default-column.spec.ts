@@ -1,6 +1,6 @@
 import { test, Page, expect } from '@playwright/test';
+import { DEFAULT_TIMEOUT_IN_MS } from '../../constants';
 
-const GLOBALTIMEOUT = 60000;
 test.describe.configure({ mode: 'serial' });
 
 const shipColumns: string[] = [
@@ -78,7 +78,7 @@ test.describe('Default Column check on Shipper', () => {
     await page.getByRole('button', { name: 'LOG IN' }).click();
     await page.waitForURL('https://dashdemo.passive-portal.expedock.com/login');
     await expect(page.getByTestId('exceptions-management-header')).toBeVisible({
-      timeout: GLOBALTIMEOUT,
+      timeout: DEFAULT_TIMEOUT_IN_MS,
     });
   });
 

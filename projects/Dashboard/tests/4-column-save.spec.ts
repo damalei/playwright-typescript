@@ -5,13 +5,11 @@ import { ExplorePayableInvoices } from '../models/explorePayableInvoices';
 import { ExploreReceivableInvoices } from '../models/exploreReceivableInvoices';
 import { ExploreContainers } from '../models/exploreContainers';
 import { GlobalNativeTable } from '../models/globalNativeTable';
-
-const GLOBALTIMEOUT = 300000;
-const DEFAULT_GLOBAL_TIMEOUT_MS = GLOBALTIMEOUT;
+import { DASHBOARD_TIMEOUT_IN_MS } from '../../constants';
 
 test.describe.configure({
   mode: 'parallel',
-  timeout: DEFAULT_GLOBAL_TIMEOUT_MS,
+  timeout: DASHBOARD_TIMEOUT_IN_MS,
 });
 
 test.beforeEach(async ({ page }) => {
@@ -27,7 +25,7 @@ test.beforeEach(async ({ page }) => {
     `https://${process.env.ENV}-dashboard.expedock.com/**/`
   );
   await expect(page.getByTestId('account-user-name')).toBeVisible({
-    timeout: GLOBALTIMEOUT,
+    timeout: DASHBOARD_TIMEOUT_IN_MS,
   });
 });
 
@@ -51,7 +49,7 @@ test.describe('User clicks edits column > save columns', () => {
     await exploreShipments.goto();
     await expect
       .soft(exploreShipments.globalNativeTable.columnHeader.nth(1))
-      .not.toBeVisible({ timeout: GLOBALTIMEOUT });
+      .not.toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await expect.soft(exploreShipments.columnForwarderReference).toBeVisible();
   });
 
@@ -66,7 +64,7 @@ test.describe('User clicks edits column > save columns', () => {
     await exploreOrg.goto();
     await expect
       .soft(exploreOrg.globalNativeTable.columnHeader.nth(1))
-      .not.toBeVisible({ timeout: GLOBALTIMEOUT });
+      .not.toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await expect.soft(exploreOrg.columnOrganization).toBeVisible();
   });
 
@@ -81,7 +79,7 @@ test.describe('User clicks edits column > save columns', () => {
     await explorePay.goto();
     await expect
       .soft(explorePay.globalNativeTable.columnHeader.nth(1))
-      .not.toBeVisible({ timeout: GLOBALTIMEOUT });
+      .not.toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await expect.soft(explorePay.columnInvoiceNumber).toBeVisible();
   });
 
@@ -96,7 +94,7 @@ test.describe('User clicks edits column > save columns', () => {
     await exploreRec.goto();
     await expect
       .soft(exploreRec.globalNativeTable.columnHeader.nth(1))
-      .not.toBeVisible({ timeout: GLOBALTIMEOUT });
+      .not.toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await expect.soft(exploreRec.columnInvoiceNumber).toBeVisible();
   });
 
@@ -111,7 +109,7 @@ test.describe('User clicks edits column > save columns', () => {
     await exploreCon.goto();
     await expect
       .soft(exploreCon.globalNativeTable.columnHeader.nth(2))
-      .not.toBeVisible({ timeout: GLOBALTIMEOUT });
+      .not.toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
     await expect.soft(exploreCon.columnContainer).toBeVisible();
     await expect
       .soft(exploreCon.columnShipmentForwarderReference)
