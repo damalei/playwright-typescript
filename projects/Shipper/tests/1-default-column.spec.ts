@@ -12,21 +12,21 @@ const shipColumns: string[] = [
   'Pickup Location',
   'Delivery Location',
   'First Origin',
-  'First Origin ETD (GMT+08:00)',
-  'First Origin ATD (GMT+08:00)',
+  'First Origin ETD (GMT+11:00)',
+  'First Origin ATD (GMT+11:00)',
   'Origin Port',
-  'Origin Port ETA (GMT+08:00)',
-  'Origin Port ATA (GMT+08:00)',
-  'Origin Port ETD (GMT+08:00)',
-  'Origin Port ATD (GMT+08:00)',
+  'Origin Port ETA (GMT+11:00)',
+  'Origin Port ATA (GMT+11:00)',
+  'Origin Port ETD (GMT+11:00)',
+  'Origin Port ATD (GMT+11:00)',
   'Discharge Port',
-  'Discharge Port ETA (GMT+08:00)',
-  'Discharge Port ATA (GMT+08:00)',
-  'Discharge Port ETD (GMT+08:00)',
-  'Discharge Port ATD (GMT+08:00)',
+  'Discharge Port ETA (GMT+11:00)',
+  'Discharge Port ATA (GMT+11:00)',
+  'Discharge Port ETD (GMT+11:00)',
+  'Discharge Port ATD (GMT+11:00)',
   'Final Destination',
-  'Final Destination ETA (GMT+08:00)',
-  'Final Destination ATA (GMT+08:00)',
+  'Final Destination ETA (GMT+11:00)',
+  'Final Destination ATA (GMT+11:00)',
   'Shipment Weight (KG)',
   'Shipment Volume (M³)',
   'Shipment Teus',
@@ -38,19 +38,19 @@ const contColumns: string[] = [
   'Shipment Order Refs',
   'Container Shipment Goods Description',
   'Container Latest Tracked Event',
-  'Latest Tracked Event Time (GMT+08:00)',
+  'Latest Tracked Event Time (GMT+11:00)',
   'Shipment Delivery Location',
-  'Container Estimated Delivery Date (GMT+08:00)',
-  'Container Actual Delivery Date (GMT+08:00)',
+  'Container Estimated Delivery Date (GMT+11:00)',
+  'Container Actual Delivery Date (GMT+11:00)',
   'Shipment Pickup Location',
-  'Container Estimated Pickup Date (GMT+08:00)',
-  'Container Actual Pickup Date (GMT+08:00)',
+  'Container Estimated Pickup Date (GMT+11:00)',
+  'Container Actual Pickup Date (GMT+11:00)',
   'Shipment Final Destination Port',
-  'Shipment Final Destination ETA (GMT+08:00)',
-  'Shipment Final Destination ATA (GMT+08:00)',
+  'Shipment Final Destination ETA (GMT+11:00)',
+  'Shipment Final Destination ATA (GMT+11:00)',
   'Shipment First Origin Port',
-  'Shipment First Origin ETD (GMT+08:00)',
-  'Shipment First Origin ATD (GMT+08:00)',
+  'Shipment First Origin ETD (GMT+11:00)',
+  'Shipment First Origin ATD (GMT+11:00)',
   'Container Gross Weight (KG)',
   'Goods Weight of Container-Shipment Pair (KG)',
   'Goods Volume of Container-Shipment Pair (M3)',
@@ -84,7 +84,7 @@ test.describe('Default Column check on Shipper', () => {
 
   test('Shipments page', async () => {
     test.slow;
-    await page.getByText('Shipments', { exact: true }).click();
+    await page.getByText('Explore Shipments', { exact: true }).click();
     for (const column of shipColumns) {
       await expect
         .soft(page.getByRole('columnheader', { name: column, exact: true }))
@@ -94,7 +94,7 @@ test.describe('Default Column check on Shipper', () => {
 
   test('Containers page', async () => {
     test.slow;
-    await page.getByText('Containers', { exact: true }).click();
+    await page.getByText('Explore Containers', { exact: true }).click();
     for (const column of contColumns) {
       await expect
         .soft(page.getByRole('columnheader', { name: column, exact: true }))
