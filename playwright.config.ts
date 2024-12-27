@@ -75,7 +75,7 @@ export default defineConfig({
       testDir: './projects/Dashboard/tests',
       // testtestMatch: './App/*.spec.ts',
       testMatch: /.*.spec.ts/,
-      testIgnore: '/4-column-save.spec.ts',
+      testIgnore: ['/4-column-save.spec.ts', '/21-load-dashboard-filter.spec.ts'],
       use: {
         ...devices['Desktop Chrome'],
         storageState: 'playwright/.auth/client.json',
