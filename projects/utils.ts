@@ -42,3 +42,9 @@ export const waitForSnackBar = async (page: Page, loadTimeoutMs: number) => {
     timeout: loadTimeoutMs,
   });
 };
+
+export const waitForElementToHide = async (page: Page, loadTimeoutMs: number, locator: string) => {
+  await expect(page.locator(locator)).toBeHidden({
+    timeout: loadTimeoutMs,
+  });
+};
