@@ -15,7 +15,7 @@ test.describe('User Edit dashboard list on side menu ', () => {
       await page.goto('https://passive-dashboard.expedock.com/');
     });
 
-    test('[33.1] add dashboards', async () => {
+    test('add dashboards', async () => {
         const side = new SideMenu(page)
         const user = new UserManagement(page)
         await page.goto(FREIGHT_BI_BASE_URL)
@@ -34,14 +34,14 @@ test.describe('User Edit dashboard list on side menu ', () => {
         await expect.soft(page.locator(`//span[text()='${dash2}']`)).toBeVisible()
     })
 
-    test('[33.2] verify dashboard is in the correct order', async () => {
+    test('verify dashboard is in the correct order', async () => {
         const side = new SideMenu(page)
         const menuList = await side.listWrapperBusiness.locator('li')
         const expectList = [`${dash1}`, `${dash2}`]
         await expect(menuList).toContainText(expectList)
     })
 
-    test('[33.3] remove dashboards', async () => {
+    test('remove dashboards', async () => {
         const side = new SideMenu(page)
         const user = new UserManagement(page)
         await page.goto(FREIGHT_BI_BASE_URL)
