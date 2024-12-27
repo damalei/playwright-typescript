@@ -15,6 +15,7 @@ export class GlobalFilterSection {
   readonly advanceEditFiltersButton: Locator;
   readonly advanceFilterContainerAccordion: Locator;
   readonly advanceUpdateFiltersButton: Locator;
+  readonly selectorOrgType: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -32,6 +33,7 @@ export class GlobalFilterSection {
     this.advanceUpdateFiltersButton = page.getByRole('button', {
       name: 'Update Filters',
     });
+    this.selectorOrgType = page.getByTitle("ORG TYPE").locator('input')
   }
 
   async goto() {
@@ -119,4 +121,9 @@ export class GlobalFilterSection {
       .locator('//following-sibling::*[1]')
       .click();
   }
-}
+
+  async setOrgType(orgType: string) {
+    await this.selectorOrgType.fill(`${orgType}`)
+    await this.selectorOrgType.press('ArrowDown')
+    await this.selectorOrgType.press('Enter')
+}}
