@@ -1,7 +1,7 @@
 import { test as setup, expect } from '@playwright/test';
+import { DEFAULT_TIMEOUT_IN_MS } from '../../constants';
 
 const authFile = 'playwright/.auth/client.json';
-const GLOBALTIMEOUT = 60000;
 
 setup('authenticate', async ({ page }) => {
   await page.goto(`https://${process.env.ENV}-dashboard.expedock.com/`);
@@ -10,7 +10,7 @@ setup('authenticate', async ({ page }) => {
   await page.getByRole('button', { name: 'Continue', exact: true }).click();
   await page.waitForURL('https://passive-dashboard.expedock.com/**/');
   await expect(page.getByTestId('account-user-name')).toBeVisible({
-    timeout: GLOBALTIMEOUT,
+    timeout: DEFAULT_TIMEOUT_IN_MS,
   });
   await page.context().storageState({ path: authFile });
 });

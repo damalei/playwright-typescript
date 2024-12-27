@@ -1,8 +1,6 @@
 import { test, Page, expect } from '@playwright/test';
 import * as path from 'path';
-import { serialnum } from '../../constants';
-
-const GLOBALTIMEOUT = 60000;
+import { DEFAULT_TIMEOUT_IN_MS, QA_AUTOMATION_ID } from '../../constants';
 
 // const apFilePath = '../fixtures/Case_3_V3.pdf'
 const __apFilePath = '../fixtures';
@@ -26,7 +24,7 @@ test.describe('AP Job Processing - ForwardingShipment', () => {
       .getByRole('row', { name: ' P Create' })
       .getByRole('textbox')
       .first()
-      .fill('AP1-' + serialnum);
+      .fill('AP1-' + QA_AUTOMATION_ID);
     await page
       .getByRole('row', { name: ' P Create' })
       .getByRole('button')
@@ -44,15 +42,15 @@ test.describe('AP Job Processing - ForwardingShipment', () => {
     await page.getByRole('button', { name: 'Create' }).click();
     await expect(
       page
-        .getByTestId('job-row-AP1-' + serialnum)
-        .getByRole('cell', { name: 'AP1-' + serialnum })
+        .getByTestId('job-row-AP1-' + QA_AUTOMATION_ID)
+        .getByRole('cell', { name: 'AP1-' + QA_AUTOMATION_ID })
         .getByRole('textbox')
-    ).toBeVisible({ timeout: GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User selects a file and verifies upload', async () => {
     await page
-      .getByTestId('job-row-AP1-' + serialnum)
+      .getByTestId('job-row-AP1-' + QA_AUTOMATION_ID)
       .getByTestId('open-job-button')
       .click();
     await page.getByTestId('upload-icon-btn').click();
@@ -61,14 +59,14 @@ test.describe('AP Job Processing - ForwardingShipment', () => {
       .setInputFiles(path.join(__apFilePath, apFileName));
     await expect(
       page.getByRole('listitem').getByText('Case_3_V3.pdf')
-    ).toBeVisible({ timeout: 5 * GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: 5 * DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User clicks upload and verifies extracted data on job form', async () => {
     await page.getByTestId('upload-btn').click();
     await expect
       .soft(page.getByLabel('Invoice Number'))
-      .toHaveValue('562', { timeout: 10 * GLOBALTIMEOUT });
+      .toHaveValue('562', { timeout: 10 * DEFAULT_TIMEOUT_IN_MS });
     await expect
       .soft(page.getByLabel('Invoice Date'))
       .toHaveValue('04-25-2021');
@@ -104,13 +102,13 @@ test.describe('AP Job Processing - ForwardingShipment', () => {
     await page.getByTestId('save-and-export-button').click();
     await page.getByTestId('open-check-shipment-info-btn').click();
     await expect(page.getByTestId('check-shipment-info-dialog')).toBeVisible({
-      timeout: GLOBALTIMEOUT,
+      timeout: DEFAULT_TIMEOUT_IN_MS,
     });
   });
 
   test('User edits form then checks the shipment using HBL as reference', async () => {
     await page.reload();
-    await page.getByLabel('Invoice Number').fill('AP1-' + serialnum);
+    await page.getByLabel('Invoice Number').fill('AP1-' + QA_AUTOMATION_ID);
     await page.getByLabel('Invoice Date').fill('04-25-2024');
     await page.getByLabel('Due Date').fill('05-25-2024');
     await page.getByLabel('Reference No').fill(' ');
@@ -119,7 +117,7 @@ test.describe('AP Job Processing - ForwardingShipment', () => {
     await page.getByTestId('open-check-shipment-info-btn').click();
     await expect
       .soft(page.getByTestId('check-shipment-info-dialog'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect
       .soft(page.getByTestId('check-shipment-info-dialog'))
       .toContainText(
@@ -127,7 +125,7 @@ test.describe('AP Job Processing - ForwardingShipment', () => {
           shipmentNo +
           ' found using HBL No. ' +
           hblNo,
-        { timeout: 5 * GLOBALTIMEOUT }
+        { timeout: 5 * DEFAULT_TIMEOUT_IN_MS }
       );
     await expect
       .soft(page.getByTestId('check-shipment-info-dialog'))
@@ -140,14 +138,14 @@ test.describe('AP Job Processing - ForwardingShipment', () => {
     await page.getByTestId('do-reconcile-btn').click();
     await expect(
       page.getByRole('heading', { name: 'Review Data to Reconcile' })
-    ).toBeVisible({ timeout: GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User clicks reconcile from data review modal and verifies Reconciliation Results modal appears', async () => {
     await page.getByTestId('recon-button').click();
     await expect
       .soft(page.getByRole('heading', { name: 'Reconciliation Results' }))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect.soft(page.getByText('Invoice DataCharge')).toBeVisible();
     await expect.soft(page.getByText('Expected DataCharge')).toBeVisible();
   });
@@ -158,7 +156,8 @@ test.describe('AP Job Processing - ForwardingShipment', () => {
     await expect
       .soft(page.locator('#notesContainer'))
       .toContainText(
-        'Successfully reconciled AP invoice. Invoice number: AP1-' + serialnum
+        'Successfully reconciled AP invoice. Invoice number: AP1-' +
+          QA_AUTOMATION_ID
       );
     await expect
       .soft(page.locator('#notesContainer'))
@@ -179,14 +178,14 @@ test.describe('AP Job Processing - ForwardingShipment', () => {
     await page.getByTestId('push-edocs-confirm-btn').click();
     await page.waitForSelector('[data-test-id="push-edocs-confirm-btn"]', {
       state: 'hidden',
-      timeout: 5 * GLOBALTIMEOUT,
+      timeout: 5 * DEFAULT_TIMEOUT_IN_MS,
     });
     await page
       .getByRole('button', { name: 'Pull eDocs From Shipment' })
       .click();
     await expect
       .soft(page.locator('table').nth(0))
-      .toContainText('Case_3_V3.pdf', { timeout: 10 * GLOBALTIMEOUT });
+      .toContainText('Case_3_V3.pdf', { timeout: 10 * DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User push and pulls edocs for consol', async () => {
@@ -198,12 +197,12 @@ test.describe('AP Job Processing - ForwardingShipment', () => {
     await page.getByTestId('push-edocs-confirm-btn').click();
     await page.waitForSelector('[data-test-id="push-edocs-confirm-btn"]', {
       state: 'hidden',
-      timeout: 5 * GLOBALTIMEOUT,
+      timeout: 5 * DEFAULT_TIMEOUT_IN_MS,
     });
     await page.getByRole('button', { name: 'Pull eDocs From Consol' }).click();
     await expect
       .soft(page.locator('table').nth(1))
-      .toContainText('Case_3_V3.pdf', { timeout: 5 * GLOBALTIMEOUT });
+      .toContainText('Case_3_V3.pdf', { timeout: 5 * DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User push and pulls edocs for custom declaration', async () => {
@@ -215,17 +214,17 @@ test.describe('AP Job Processing - ForwardingShipment', () => {
     await page.getByTestId('push-edocs-confirm-btn').click();
     await page.waitForSelector('[data-test-id="push-edocs-confirm-btn"]', {
       state: 'hidden',
-      timeout: 5 * GLOBALTIMEOUT,
+      timeout: 5 * DEFAULT_TIMEOUT_IN_MS,
     });
     await page.getByRole('button', { name: 'Pull eDocs From Customs' }).click();
     await expect
       .soft(page.locator('table').nth(2))
-      .toContainText('Case_3_V3.pdf', { timeout: 5 * GLOBALTIMEOUT });
+      .toContainText('Case_3_V3.pdf', { timeout: 5 * DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User edits task name and qa and then verifies changes on task page', async () => {
     await page.getByTestId('job-info-tab').click();
-    await page.getByTestId('job-name-input').fill(serialnum + '-edit');
+    await page.getByTestId('job-name-input').fill(QA_AUTOMATION_ID + '-edit');
     await page
       .locator('div')
       .filter({ hasText: /^qa-passive-1@expedock\.comJob Owner$/ })
@@ -239,11 +238,11 @@ test.describe('AP Job Processing - ForwardingShipment', () => {
     await page.goto(global.testTaskUrl);
     await expect
       .soft(page.locator("[name='taskReferenceId']"))
-      .toBeVisible({ timeout: 3 * GLOBALTIMEOUT });
+      .toBeVisible({ timeout: 3 * DEFAULT_TIMEOUT_IN_MS });
     await expect
       .soft(
         page
-          .getByRole('cell', { name: serialnum + '-edit' })
+          .getByRole('cell', { name: QA_AUTOMATION_ID + '-edit' })
           .getByRole('textbox')
       )
       .toBeVisible();
@@ -266,7 +265,7 @@ test.describe('AP Job Processing - Customs Declaration', () => {
       .getByRole('row', { name: ' P Create' })
       .getByRole('textbox')
       .first()
-      .fill('AP2-' + serialnum);
+      .fill('AP2-' + QA_AUTOMATION_ID);
     await page
       .getByRole('row', { name: ' P Create' })
       .getByRole('button')
@@ -284,15 +283,15 @@ test.describe('AP Job Processing - Customs Declaration', () => {
     await page.getByRole('button', { name: 'Create' }).click();
     await expect(
       page
-        .getByTestId('job-row-AP2-' + serialnum)
-        .getByRole('cell', { name: 'AP2-' + serialnum })
+        .getByTestId('job-row-AP2-' + QA_AUTOMATION_ID)
+        .getByRole('cell', { name: 'AP2-' + QA_AUTOMATION_ID })
         .getByRole('textbox')
-    ).toBeVisible({ timeout: GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User selects a file and verifies upload', async () => {
     await page
-      .getByTestId('job-row-AP2-' + serialnum)
+      .getByTestId('job-row-AP2-' + QA_AUTOMATION_ID)
       .getByTestId('open-job-button')
       .click();
     await page.getByTestId('upload-icon-btn').click();
@@ -301,14 +300,14 @@ test.describe('AP Job Processing - Customs Declaration', () => {
       .setInputFiles(path.join(__apFilePath, apFileName));
     await expect(
       page.getByRole('listitem').getByText('Case_3_V3.pdf')
-    ).toBeVisible({ timeout: 5 * GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: 5 * DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User clicks upload and verifies extracted data on job form', async () => {
     await page.getByTestId('upload-btn').click();
     await expect
       .soft(page.getByLabel('Invoice Number'))
-      .toHaveValue('562', { timeout: 10 * GLOBALTIMEOUT });
+      .toHaveValue('562', { timeout: 10 * DEFAULT_TIMEOUT_IN_MS });
     await expect
       .soft(page.getByLabel('Invoice Date'))
       .toHaveValue('04-25-2021');
@@ -344,13 +343,13 @@ test.describe('AP Job Processing - Customs Declaration', () => {
     await page.getByTestId('save-and-export-button').click();
     await page.getByTestId('open-check-shipment-info-btn').click();
     await expect(page.getByTestId('check-shipment-info-dialog')).toBeVisible({
-      timeout: GLOBALTIMEOUT,
+      timeout: DEFAULT_TIMEOUT_IN_MS,
     });
   });
 
   test('User edits form then checks the shipment using HBL as reference', async () => {
     await page.reload();
-    await page.getByLabel('Invoice Number').fill('AP2-' + serialnum);
+    await page.getByLabel('Invoice Number').fill('AP2-' + QA_AUTOMATION_ID);
     await page.getByLabel('Invoice Date').fill('04-25-2024');
     await page.getByLabel('Due Date').fill('05-25-2024');
     await page.getByLabel('Reference No').fill(' ');
@@ -364,7 +363,7 @@ test.describe('AP Job Processing - Customs Declaration', () => {
     await page.getByTestId('open-check-shipment-info-btn').click();
     await expect
       .soft(page.getByTestId('check-shipment-info-dialog'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect
       .soft(page.getByTestId('check-shipment-info-dialog'))
       .toContainText(
@@ -372,7 +371,7 @@ test.describe('AP Job Processing - Customs Declaration', () => {
           shipmentNo +
           ' found using HBL No. ' +
           hblNo,
-        { timeout: 5 * GLOBALTIMEOUT }
+        { timeout: 5 * DEFAULT_TIMEOUT_IN_MS }
       );
   });
 
@@ -380,14 +379,14 @@ test.describe('AP Job Processing - Customs Declaration', () => {
     await page.getByTestId('do-reconcile-btn').click();
     await expect(
       page.getByRole('heading', { name: 'Review Data to Reconcile' })
-    ).toBeVisible({ timeout: GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User clicks reconcile from data review modal and verifies Reconciliation Results modal appears', async () => {
     await page.getByTestId('recon-button').click();
     await expect
       .soft(page.getByRole('heading', { name: 'Reconciliation Results' }))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect.soft(page.getByText('Invoice DataCharge')).toBeVisible();
     await expect.soft(page.getByText('Expected DataCharge')).toBeVisible();
   });
@@ -398,7 +397,8 @@ test.describe('AP Job Processing - Customs Declaration', () => {
     await expect
       .soft(page.locator('#notesContainer'))
       .toContainText(
-        'Successfully reconciled AP invoice. Invoice number: AP2-' + serialnum
+        'Successfully reconciled AP invoice. Invoice number: AP2-' +
+          QA_AUTOMATION_ID
       );
     await expect
       .soft(page.locator('#notesContainer'))
@@ -424,7 +424,7 @@ test.describe('AP Job Processing - ForwardingConsol', () => {
       .getByRole('row', { name: ' P Create' })
       .getByRole('textbox')
       .first()
-      .fill('AP3-' + serialnum);
+      .fill('AP3-' + QA_AUTOMATION_ID);
     await page
       .getByRole('row', { name: ' P Create' })
       .getByRole('button')
@@ -442,15 +442,15 @@ test.describe('AP Job Processing - ForwardingConsol', () => {
     await page.getByRole('button', { name: 'Create' }).click();
     await expect(
       page
-        .getByTestId('job-row-AP3-' + serialnum)
-        .getByRole('cell', { name: 'AP3-' + serialnum })
+        .getByTestId('job-row-AP3-' + QA_AUTOMATION_ID)
+        .getByRole('cell', { name: 'AP3-' + QA_AUTOMATION_ID })
         .getByRole('textbox')
-    ).toBeVisible({ timeout: GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User selects a file and verifies upload', async () => {
     await page
-      .getByTestId('job-row-AP3-' + serialnum)
+      .getByTestId('job-row-AP3-' + QA_AUTOMATION_ID)
       .getByTestId('open-job-button')
       .click();
     await page.getByTestId('upload-icon-btn').click();
@@ -459,14 +459,14 @@ test.describe('AP Job Processing - ForwardingConsol', () => {
       .setInputFiles(path.join(__apFilePath, apFileName));
     await expect(
       page.getByRole('listitem').getByText('Case_3_V3.pdf')
-    ).toBeVisible({ timeout: 5 * GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: 5 * DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User clicks upload and verifies extracted data on job form', async () => {
     await page.getByTestId('upload-btn').click();
     await expect
       .soft(page.getByLabel('Invoice Number'))
-      .toHaveValue('562', { timeout: 10 * GLOBALTIMEOUT });
+      .toHaveValue('562', { timeout: 10 * DEFAULT_TIMEOUT_IN_MS });
     await expect
       .soft(page.getByLabel('Invoice Date'))
       .toHaveValue('04-25-2021');
@@ -502,13 +502,13 @@ test.describe('AP Job Processing - ForwardingConsol', () => {
     await page.getByTestId('save-and-export-button').click();
     await page.getByTestId('open-check-shipment-info-btn').click();
     await expect(page.getByTestId('check-shipment-info-dialog')).toBeVisible({
-      timeout: GLOBALTIMEOUT,
+      timeout: DEFAULT_TIMEOUT_IN_MS,
     });
   });
 
   test('User edits form then checks the shipment using HBL as reference', async () => {
     await page.reload();
-    await page.getByLabel('Invoice Number').fill('AP3-' + serialnum);
+    await page.getByLabel('Invoice Number').fill('AP3-' + QA_AUTOMATION_ID);
     await page.getByLabel('Invoice Date').fill('04-25-2024');
     await page.getByLabel('Due Date').fill('05-25-2024');
     await page.getByLabel('Reference No').fill(' ');
@@ -522,7 +522,7 @@ test.describe('AP Job Processing - ForwardingConsol', () => {
     await page.getByTestId('open-check-shipment-info-btn').click();
     await expect
       .soft(page.getByTestId('check-shipment-info-dialog'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect
       .soft(page.getByTestId('check-shipment-info-dialog'))
       .toContainText(
@@ -530,7 +530,7 @@ test.describe('AP Job Processing - ForwardingConsol', () => {
           consolNo +
           ' found using HBL No. ' +
           hblNo,
-        { timeout: 5 * GLOBALTIMEOUT }
+        { timeout: 5 * DEFAULT_TIMEOUT_IN_MS }
       );
     //await expect.soft(page.getByTestId('check-shipment-info-dialog')).toContainText('Customs Declaration is associated to the following consolidation/s: '+consolNo)
   });
@@ -539,14 +539,14 @@ test.describe('AP Job Processing - ForwardingConsol', () => {
     await page.getByTestId('do-reconcile-btn').click();
     await expect(
       page.getByRole('heading', { name: 'Review Data to Reconcile' })
-    ).toBeVisible({ timeout: GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User clicks reconcile from data review modal and verifies Reconciliation Results modal appears', async () => {
     await page.getByTestId('recon-button').click();
     await expect
       .soft(page.getByRole('heading', { name: 'Reconciliation Results' }))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect.soft(page.getByText('Invoice DataCharge')).toBeVisible();
     await expect.soft(page.getByText('Expected DataCharge')).toBeVisible();
   });
@@ -557,7 +557,8 @@ test.describe('AP Job Processing - ForwardingConsol', () => {
     await expect
       .soft(page.locator('#notesContainer'))
       .toContainText(
-        'Successfully reconciled AP invoice. Invoice number: AP3-' + serialnum
+        'Successfully reconciled AP invoice. Invoice number: AP3-' +
+          QA_AUTOMATION_ID
       );
     await expect
       .soft(page.locator('#notesContainer'))
@@ -582,7 +583,7 @@ test.describe('Download AP files in different formats', () => {
       .getByRole('row', { name: ' P Create' })
       .getByRole('textbox')
       .first()
-      .fill('AP4-' + serialnum);
+      .fill('AP4-' + QA_AUTOMATION_ID);
     await page
       .getByRole('row', { name: ' P Create' })
       .getByRole('button')
@@ -600,15 +601,15 @@ test.describe('Download AP files in different formats', () => {
     await page.getByRole('button', { name: 'Create' }).click();
     await expect(
       page
-        .getByTestId('job-row-AP4-' + serialnum)
-        .getByRole('cell', { name: 'AP4-' + serialnum })
+        .getByTestId('job-row-AP4-' + QA_AUTOMATION_ID)
+        .getByRole('cell', { name: 'AP4-' + QA_AUTOMATION_ID })
         .getByRole('textbox')
-    ).toBeVisible({ timeout: GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User selects a file and verifies upload', async () => {
     await page
-      .getByTestId('job-row-AP4-' + serialnum)
+      .getByTestId('job-row-AP4-' + QA_AUTOMATION_ID)
       .getByTestId('open-job-button')
       .click();
     await page.getByTestId('upload-icon-btn').click();
@@ -617,14 +618,14 @@ test.describe('Download AP files in different formats', () => {
       .setInputFiles(path.join(__apFilePath, apFileName));
     await expect(
       page.getByRole('listitem').getByText('Case_3_V3.pdf')
-    ).toBeVisible({ timeout: 5 * GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: 5 * DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User clicks upload and verifies extracted data on job form', async () => {
     await page.getByTestId('upload-btn').click();
     await expect
       .soft(page.getByLabel('Invoice Number'))
-      .toHaveValue('562', { timeout: 10 * GLOBALTIMEOUT });
+      .toHaveValue('562', { timeout: 10 * DEFAULT_TIMEOUT_IN_MS });
     await expect
       .soft(page.getByLabel('Invoice Date'))
       .toHaveValue('04-25-2021');
@@ -705,7 +706,7 @@ test.describe('AP Job Processing - ForwardingShipmentConsol', () => {
       .getByRole('row', { name: ' P Create' })
       .getByRole('textbox')
       .first()
-      .fill('AP5-' + serialnum);
+      .fill('AP5-' + QA_AUTOMATION_ID);
     await page
       .getByRole('row', { name: ' P Create' })
       .getByRole('button')
@@ -723,15 +724,15 @@ test.describe('AP Job Processing - ForwardingShipmentConsol', () => {
     await page.getByRole('button', { name: 'Create' }).click();
     await expect(
       page
-        .getByTestId('job-row-AP5-' + serialnum)
-        .getByRole('cell', { name: 'AP5-' + serialnum })
+        .getByTestId('job-row-AP5-' + QA_AUTOMATION_ID)
+        .getByRole('cell', { name: 'AP5-' + QA_AUTOMATION_ID })
         .getByRole('textbox')
-    ).toBeVisible({ timeout: GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User selects a file and verifies upload', async () => {
     await page
-      .getByTestId('job-row-AP5-' + serialnum)
+      .getByTestId('job-row-AP5-' + QA_AUTOMATION_ID)
       .getByTestId('open-job-button')
       .click();
     await page.getByTestId('upload-icon-btn').click();
@@ -740,14 +741,14 @@ test.describe('AP Job Processing - ForwardingShipmentConsol', () => {
       .setInputFiles(path.join(__apFilePath, apFileName));
     await expect(
       page.getByRole('listitem').getByText('Case_3_V3.pdf')
-    ).toBeVisible({ timeout: 5 * GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: 5 * DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User clicks upload and verifies extracted data on job form', async () => {
     await page.getByTestId('upload-btn').click();
     await expect
       .soft(page.getByLabel('Invoice Number'))
-      .toHaveValue('562', { timeout: 10 * GLOBALTIMEOUT });
+      .toHaveValue('562', { timeout: 10 * DEFAULT_TIMEOUT_IN_MS });
     await expect
       .soft(page.getByLabel('Invoice Date'))
       .toHaveValue('04-25-2021');
@@ -783,13 +784,13 @@ test.describe('AP Job Processing - ForwardingShipmentConsol', () => {
     await page.getByTestId('save-and-export-button').click();
     await page.getByTestId('open-check-shipment-info-btn').click();
     await expect(page.getByTestId('check-shipment-info-dialog')).toBeVisible({
-      timeout: GLOBALTIMEOUT,
+      timeout: DEFAULT_TIMEOUT_IN_MS,
     });
   });
 
   test('User edits form then checks the shipment using HBL as reference', async () => {
     await page.reload();
-    await page.getByLabel('Invoice Number').fill('AP3-' + serialnum);
+    await page.getByLabel('Invoice Number').fill('AP3-' + QA_AUTOMATION_ID);
     await page.getByLabel('Invoice Date').fill('04-25-2024');
     await page.getByLabel('Due Date').fill('05-25-2024');
     await page.getByLabel('Reference No').fill(' ');
@@ -803,7 +804,7 @@ test.describe('AP Job Processing - ForwardingShipmentConsol', () => {
     await page.getByTestId('open-check-shipment-info-btn').click();
     await expect
       .soft(page.getByTestId('check-shipment-info-dialog'))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect
       .soft(page.getByTestId('check-shipment-info-dialog'))
       .toContainText(
@@ -811,7 +812,7 @@ test.describe('AP Job Processing - ForwardingShipmentConsol', () => {
           consolNo +
           ' found using HBL No. ' +
           hblNo,
-        { timeout: 5 * GLOBALTIMEOUT }
+        { timeout: 5 * DEFAULT_TIMEOUT_IN_MS }
       );
   });
 
@@ -819,7 +820,7 @@ test.describe('AP Job Processing - ForwardingShipmentConsol', () => {
     await page.getByTestId('do-reconcile-btn').click();
     await expect(
       page.getByRole('heading', { name: 'Review Data to Reconcile' })
-    ).toBeVisible({ timeout: GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User clicks reconcile from data review modal and verifies Reconciliation Results modal appears', async () => {
@@ -831,11 +832,11 @@ test.describe('AP Job Processing - ForwardingShipmentConsol', () => {
           consolNo +
           ' found using HBL No. ' +
           hblNo,
-        { timeout: 5 * GLOBALTIMEOUT }
+        { timeout: 5 * DEFAULT_TIMEOUT_IN_MS }
       );
     await expect
       .soft(page.getByRole('heading', { name: 'Reconciliation Results' }))
-      .toBeVisible({ timeout: GLOBALTIMEOUT });
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect.soft(page.getByText('Invoice DataCharge')).toBeVisible();
     await expect.soft(page.getByText('Expected DataCharge')).toBeVisible();
   });
@@ -846,7 +847,8 @@ test.describe('AP Job Processing - ForwardingShipmentConsol', () => {
     await expect
       .soft(page.locator('#notesContainer'))
       .toContainText(
-        'Successfully reconciled AP invoice. Invoice number: AP3-' + serialnum
+        'Successfully reconciled AP invoice. Invoice number: AP3-' +
+          QA_AUTOMATION_ID
       );
     await expect
       .soft(page.locator('#notesContainer'))

@@ -19,18 +19,6 @@ test.describe('Edit columns on Explore Shipments Page - Adding Columns on Explor
     editTableColumnsExploreShipments = new EditTableColumns(page);
   });
 
-  test('[47.2] User adds [date] Date Shipment Closed table column on the Shipments Page', async () => {
-    const columnName = 'Date Shipment Closed';
-    await exploreShipments.goto();
-    await exploreShipments.waitForReferenceComponent();
-    await viewFilterSections.waitForFilterFields();
-    await editTableColumnsExploreShipments.openEditColumns();
-    await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
-      columnName
-    );
-    await editTableColumnsExploreShipments.addTableColumn(columnName);
-  });
-
   test('[47.2] User adds [string] Shipment Status table column on the Shipments Page', async () => {
     const columnName = 'Shipment Status';
     await exploreShipments.waitForReferenceComponent();

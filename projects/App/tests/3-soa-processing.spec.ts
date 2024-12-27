@@ -1,8 +1,7 @@
 import { test, Page, expect } from '@playwright/test';
 import * as path from 'path';
-import { serialnum } from '../../constants';
+import { DEFAULT_TIMEOUT_IN_MS, QA_AUTOMATION_ID } from '../../constants';
 
-const GLOBALTIMEOUT = 60000;
 const __testFilePath = '../fixtures';
 const soaFileName = 'Sample SOA - HerculeanOcean Logistics.pdf';
 
@@ -20,7 +19,7 @@ test.describe('SOA Processing - Upload a SOA file', () => {
       .getByRole('row', { name: ' P Create' })
       .getByRole('textbox')
       .first()
-      .fill('SOA1-' + serialnum);
+      .fill('SOA1-' + QA_AUTOMATION_ID);
     await page
       .getByRole('row', { name: ' P Create' })
       .getByRole('button')
@@ -38,15 +37,15 @@ test.describe('SOA Processing - Upload a SOA file', () => {
     await page.getByRole('button', { name: 'Create' }).click();
     await expect(
       page
-        .getByTestId('job-row-SOA1-' + serialnum)
-        .getByRole('cell', { name: 'SOA1-' + serialnum })
+        .getByTestId('job-row-SOA1-' + QA_AUTOMATION_ID)
+        .getByRole('cell', { name: 'SOA1-' + QA_AUTOMATION_ID })
         .getByRole('textbox')
-    ).toBeVisible({ timeout: GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User selects a file and verifies upload', async () => {
     await page
-      .getByTestId('job-row-SOA1-' + serialnum)
+      .getByTestId('job-row-SOA1-' + QA_AUTOMATION_ID)
       .getByTestId('open-job-button')
       .click();
     await page.getByTestId('upload-icon-btn').click();
@@ -55,10 +54,10 @@ test.describe('SOA Processing - Upload a SOA file', () => {
       .setInputFiles(path.join(__testFilePath, soaFileName));
     await expect(
       page.getByText('Sample SOA - HerculeanOcean Logistics-page 1..pdf')
-    ).toBeVisible({ timeout: 5 * GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: 5 * DEFAULT_TIMEOUT_IN_MS });
     await expect(
       page.getByText('Sample SOA - HerculeanOcean Logistics-page 2..pdf')
-    ).toBeVisible({ timeout: 5 * GLOBALTIMEOUT });
+    ).toBeVisible({ timeout: 5 * DEFAULT_TIMEOUT_IN_MS });
   });
 
   test('User verifies the information on the job form', async () => {
@@ -67,7 +66,7 @@ test.describe('SOA Processing - Upload a SOA file', () => {
     await page.getByTestId('upload-btn').click();
     await expect
       .soft(page.getByText('Herculean Ocean Logistics (HEROCEEWR)Vendor'))
-      .toBeVisible({ timeout: 5 * GLOBALTIMEOUT });
+      .toBeVisible({ timeout: 5 * DEFAULT_TIMEOUT_IN_MS });
     await expect
       .soft(page.getByText('Steamship LineVendor Type'))
       .toBeVisible();
@@ -89,7 +88,7 @@ test.describe('SOA Processing - Upload a SOA file', () => {
     await page.getByTestId('edit-line-item-table').click();
     await page.getByRole('tab', { name: 'Main SOA' }).click();
     await page.locator('.htCommentCell').first().click();
-    await page.keyboard.type('invoicenumber1' + serialnum);
+    await page.keyboard.type('invoicenumber1' + QA_AUTOMATION_ID);
 
     await page.locator('td:nth-child(3)').first().click();
     await page.keyboard.type('S00004884');
