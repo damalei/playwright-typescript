@@ -2,9 +2,6 @@ import { Locator, Page } from '@playwright/test';
 import { DEFAULT_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
 import { waitForChartPageLoad, waitForFilterSectionToLoad, waitforTablePageLoad } from "../../utils";
 
-const GLOBALTIMEOUT = 60000;
-const DEFAULT_GLOBAL_TIMEOUT_MS = GLOBALTIMEOUT;
-
 export class GlobalFilterSection {
   readonly page: Page;
   readonly basicViewButton: Locator;
