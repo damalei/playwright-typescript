@@ -1,4 +1,3 @@
-
 import { test, Page, expect } from '@playwright/test';
 import { ExploreOrganizations } from '../models/exploreOrganizations';
 import { ExplorePayableInvoices } from '../models/explorePayableInvoices';
@@ -6,7 +5,7 @@ import { ExploreShipments } from '../models/exploreShipments'
 import { waitForFilterSectionToLoad, waitforTablePageLoad } from '../../utils';
 import { DEFAULT_TIMEOUT_IN_MS } from '../../constants';
 
-test.describe('Clicks on revenue invoices link with org type... ', () => {
+test.describe('[16.2] Clicks on revenue invoices link with org type... ', () => {
     test('Shipper', async ({ page }) => {
       const exOrg = new ExploreOrganizations(page)
       const pay = new ExplorePayableInvoices(page)
@@ -103,7 +102,7 @@ test.describe('Clicks on revenue invoices link with org type... ', () => {
     })
 })
 
-test.describe('Clicks on Shipments link with org type... ', () => {
+test.describe('[16.3] Clicks on Shipments link with org type... ', () => {
   test('Shipper', async ({ page }) => {
     const exOrg = new ExploreOrganizations(page)
     const ship = new ExploreShipments(page)
