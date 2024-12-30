@@ -4,6 +4,7 @@ export class SideMenu {
   readonly page: Page;
   readonly userProfile: Locator;
   readonly dashboardBuilderOption: Locator;
+  readonly apiSummary: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -11,5 +12,6 @@ export class SideMenu {
     this.dashboardBuilderOption = page
       .locator('span')
       .filter({ hasText: 'Dashboard Builder' });
+    this.apiSummary = page.getByTestId('account-user-api-partner-list');
   }
 }
