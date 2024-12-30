@@ -8,14 +8,14 @@ const xpathUserManagementButton = '//button[text()="Save"]'
 const dash1 = 'QA Chart Collection'
 const dash2 = 'QA Test Template'
 
-test.describe('User Edit dashboard list on side menu ', () => {
+test.describe('[33]User Edit dashboard list on side menu ', () => {
     let page: Page;
     test.beforeAll(async ({ browser }) => {
       page = await browser.newPage();
       await page.goto('https://passive-dashboard.expedock.com/');
     });
 
-    test('add dashboards', async () => {
+    test('[33.1] add dashboards', async () => {
         const side = new SideMenu(page)
         const user = new UserManagement(page)
         await page.goto(FREIGHT_BI_BASE_URL)
@@ -34,14 +34,14 @@ test.describe('User Edit dashboard list on side menu ', () => {
         await expect.soft(page.locator(`//span[text()='${dash2}']`)).toBeVisible()
     })
 
-    test('verify dashboard is in the correct order', async () => {
+    test('[33.3] verify dashboard is in the correct order', async () => {
         const side = new SideMenu(page)
         const menuList = await side.listWrapperBusiness.locator('li')
         const expectList = [`${dash1}`, `${dash2}`]
         await expect(menuList).toContainText(expectList)
     })
 
-    test('remove dashboards', async () => {
+    test('[33.2] remove dashboards', async () => {
         const side = new SideMenu(page)
         const user = new UserManagement(page)
         await page.goto(FREIGHT_BI_BASE_URL)
