@@ -9,7 +9,8 @@ test.describe('[21] Load dashboard and filter settings', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
+    const context = await browser.newContext();
+    page = await context.newPage();
     await logInAuth(
       page,
       `${process.env.FREIGHT_BI_CLIENT3_USER}`,
