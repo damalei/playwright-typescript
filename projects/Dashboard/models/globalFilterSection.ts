@@ -16,6 +16,8 @@ export class GlobalFilterSection {
   readonly advanceFilterContainerAccordion: Locator;
   readonly advanceUpdateFiltersButton: Locator;
   readonly selectorOrgType: Locator;
+  readonly fieldTransportMode: Locator;
+  readonly fieldBranch: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -34,6 +36,10 @@ export class GlobalFilterSection {
       name: 'Update Filters',
     });
     this.selectorOrgType = page.getByTitle("ORG TYPE").locator('input')
+    this.fieldTransportMode = page.getByTestId(
+      'Transport Mode-custom-multiple-text-field'
+    );
+    this.fieldBranch = page.getByTestId('Branch-custom-multiple-text-field');
   }
 
   async goto() {
@@ -127,3 +133,41 @@ export class GlobalFilterSection {
     await this.selectorOrgType.press('ArrowDown')
     await this.selectorOrgType.press('Enter')
 }}
+
+  async checkSelector(selectorName: string, selectorValue: string) {
+    const exists =
+      (await this.page
+        .locator(`//div[contains(@title, ${selectorName})]`)
+        .locator(`//input[contains(@value, ${selectorValue})]`)
+        .count()) > 0;
+    return exists;
+  }
+
+  async checkFilterFieldChip(fieldName: string, fieldValue: string) {
+    const exists =
+      (await this.page
+        .locator(
+          `//*[contains(@data-testid, '${fieldName}-custom-multiple-text-field')]`
+        )
+        .getByText(fieldValue)
+        .count()) > 0;
+    return exists;
+  }
+
+  async checkFilterFieldText(fieldName: string, fieldValue: string) {
+    const exists1 =
+      (await this.page
+        .getByLabel(`${fieldName}`)
+        .locator('..')
+        .locator(`//input[contains(@value, '${fieldValue}')]`)
+        .count()) > 0;
+    const exists2 =
+      (await this.page
+        .locator(`//label[contains(text(), '${fieldName}')]`)
+        .locator('..')
+        .getByText(`${fieldValue}`)
+        .count()) > 0;
+    const exists = exists1 || exists2;
+    return exists;
+  }
+}
