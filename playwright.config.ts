@@ -75,7 +75,7 @@ export default defineConfig({
       testDir: './projects/Dashboard/tests',
       // testtestMatch: './App/*.spec.ts',
       testMatch: /.*.spec.ts/,
-      testIgnore: '/4-column-save.spec.ts',
+      testIgnore: '*-nologin.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
         storageState: 'playwright/.auth/client.json',
@@ -86,6 +86,22 @@ export default defineConfig({
       },
       dependencies: ['dashboard-setup'],
     },
+
+    {
+      name: 'dashboard-main-tests-nologin',
+      testDir: './projects/Dashboard/tests',
+      // testtestMatch: './App/*.spec.ts',
+      testMatch: '*-nologin.spec.ts',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/client.json',
+        viewport: {
+          width: 1920,
+          height: 1080,
+        },
+      },
+    },
+
 
     {
       name: 'shipper-setup',

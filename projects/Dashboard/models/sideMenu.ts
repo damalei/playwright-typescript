@@ -5,6 +5,8 @@ export class SideMenu {
   readonly userProfile: Locator;
   readonly dashboardBuilderOption: Locator;
   readonly userManagement: Locator;
+  readonly apiSummary: Locator;
+
 
   constructor(page: Page) {
     this.page = page;
@@ -15,5 +17,6 @@ export class SideMenu {
       this.userManagement = page
       .locator("span")
       .filter({ hasText: "User Management" });
+    this.apiSummary = page.getByTestId('account-user-api-partner-list');
   }
 }
