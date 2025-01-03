@@ -44,6 +44,12 @@ export const waitForSnackBar = async (page: Page, loadTimeoutMs: number) => {
   });
 };
 
+export const waitForElementToHide = async (page: Page, loadTimeoutMs: number, locator: string) => {
+  await expect(page.locator(locator)).toBeHidden({
+    timeout: loadTimeoutMs,
+  });
+};
+
 export const logInAuth = async (page: Page, user: string, pass: string) => {
   await page.goto(`https://${process.env.ENV}-dashboard.expedock.com/`);
   await page.locator('#username').fill(user);
