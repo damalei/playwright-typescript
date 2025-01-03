@@ -1,4 +1,5 @@
 import { test, Page, expect } from '@playwright/test';
+import { DEFAULT_TIMEOUT_IN_MS } from './constants.ts';
 
 export function setGlobalData(url: string) {
   //const localData = 'This is the data to share globally';
@@ -46,5 +47,18 @@ export const waitForSnackBar = async (page: Page, loadTimeoutMs: number) => {
 export const waitForElementToHide = async (page: Page, loadTimeoutMs: number, locator: string) => {
   await expect(page.locator(locator)).toBeHidden({
     timeout: loadTimeoutMs,
+  });
+};
+
+export const logInAuth = async (page: Page, user: string, pass: string) => {
+  await page.goto(`https://${process.env.ENV}-dashboard.expedock.com/`);
+  await page.locator('#username').fill(user);
+  await page.locator('#password').fill(pass);
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
+  await page.waitForURL(
+    `https://${process.env.ENV}-dashboard.expedock.com/**/`
+  );
+  await expect(page.getByTestId('account-user-name')).toBeVisible({
+    timeout: DEFAULT_TIMEOUT_IN_MS,
   });
 };

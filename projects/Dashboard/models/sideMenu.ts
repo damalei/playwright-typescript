@@ -7,6 +7,7 @@ export class SideMenu {
   readonly listUserManagement: Locator
   readonly accBP: Locator;
   readonly listWrapperBusiness: Locator;
+  readonly apiSummary: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -17,6 +18,7 @@ export class SideMenu {
     this.listUserManagement = page.locator('//span[text()="User Management"]')
     this.accBP = page.locator('//span[text()="Business Performance"]')
     this.listWrapperBusiness = page.getByTestId('sidebar-tab-wrapper-BUSINESS_PERFORMANCE')
+    this.apiSummary = page.getByTestId('account-user-api-partner-list');
   }
   
 }

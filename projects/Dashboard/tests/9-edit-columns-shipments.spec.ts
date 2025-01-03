@@ -8,7 +8,7 @@ let exploreShipments;
 let viewFilterSections;
 let editTableColumnsExploreShipments;
 
-test.describe('Edit columns on Explore Shipments Page - Adding Columns on Explore Pages', () => {
+test.describe('Edit columns on Explore Shipments Page', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
@@ -19,103 +19,101 @@ test.describe('Edit columns on Explore Shipments Page - Adding Columns on Explor
     editTableColumnsExploreShipments = new EditTableColumns(page);
   });
 
-  test('[47.2] User adds [date] Date Shipment Closed table column on the Shipments Page', async () => {
-    const columnName = 'Date Shipment Closed';
-    await exploreShipments.goto();
-    await exploreShipments.waitForReferenceComponent();
-    await viewFilterSections.waitForFilterFields();
-    await editTableColumnsExploreShipments.openEditColumns();
-    await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
-      columnName
-    );
-    await editTableColumnsExploreShipments.addTableColumn(columnName);
-  });
-
-  test('[47.2] User adds [string] Shipment Status table column on the Shipments Page', async () => {
-    const columnName = 'Shipment Status';
-    await exploreShipments.waitForReferenceComponent();
-    await editTableColumnsExploreShipments.openEditColumns();
-    await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
-      columnName
-    );
-    await editTableColumnsExploreShipments.addTableColumn(columnName);
-  });
-  test('[47.2] User adds [boolean] Has Exceptions table column on the Shipments Page', async () => {
-    const columnName = 'Has Exceptions';
-    await exploreShipments.waitForReferenceComponent();
-    await editTableColumnsExploreShipments.openEditColumns();
-    await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
-        columnName
-      );
-    await editTableColumnsExploreShipments.addTableColumn(columnName);
-  });
-
-  test('[47.2] User adds [weight] Chargeable Weight table column on the Shipments Page', async () => {
-    const columnName = 'Chargeable Weight';
-    await exploreShipments.waitForReferenceComponent();
-    await editTableColumnsExploreShipments.openEditColumns();
-    await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
-      columnName
-    );
-    await editTableColumnsExploreShipments.addTableColumn(columnName);
-  });
-
-  test('[47.2] User adds [amount] Unrecognized Unposted Expenses Excl. Tax table column on the Shipments Page', async () => {
-    const columnName = 'Unrecognized Unposted Expenses Excl. Tax';
-    await exploreShipments.waitForReferenceComponent();
-    await editTableColumnsExploreShipments.openEditColumns();
-    await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
-      columnName
-    );
-    await editTableColumnsExploreShipments.addTableColumn(columnName);
-  });
-
-  test.describe('Edit columns on Explore Shipments Page - Removing Columns on Explore Pages', () => {
-    test('[47.3] User removes [default] House Bill table column on the Shipments Page', async () => {
-      const columnName = 'House Bill';
-      await exploreShipments.waitForReferenceComponent();
-      await editTableColumnsExploreShipments.openEditColumns();
-      await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
-        columnName
-      );
-      await editTableColumnsExploreShipments.removeTableColumn(columnName);
-    });
-    test('[47.3] User removes [added] Date Shipment table column on the Shipments Page', async () => {
+  test.describe('Add table columns', () => {
+    test('[47.2] User adds [date] Date Shipment Closed table column on the Shipments Page', async () => {
       const columnName = 'Date Shipment Closed';
+      await exploreShipments.goto();
       await exploreShipments.waitForReferenceComponent();
+      await viewFilterSections.waitForFilterFields();
       await editTableColumnsExploreShipments.openEditColumns();
       await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
         columnName
       );
-      await editTableColumnsExploreShipments.removeTableColumn(columnName);
+      await editTableColumnsExploreShipments.addTableColumn(columnName);
     });
-
-    test('[47.3] User removes [default] Consol Number table column on the Shipments Page', async () => {
-      const columnName = 'Consol Number';
-      await exploreShipments.waitForReferenceComponent();
-      await editTableColumnsExploreShipments.openEditColumns();
-      await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
-        columnName
-      );
-      await editTableColumnsExploreShipments.removeTableColumn(columnName);
-    });
-    test('[47.3] User removes [added] Shipment Status table column on the Shipments Page', async () => {
+    test('[47.2] User adds [string] Shipment Status table column on the Shipments Page', async () => {
       const columnName = 'Shipment Status';
       await exploreShipments.waitForReferenceComponent();
       await editTableColumnsExploreShipments.openEditColumns();
       await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
         columnName
       );
-      await editTableColumnsExploreShipments.removeTableColumn(columnName);
+      await editTableColumnsExploreShipments.addTableColumn(columnName);
     });
-    test('[47.3] User removes [default] Shipment Teus table column on the Shipments Page', async () => {
-      const columnName = 'Shipment TEUs';
+    test('[47.2] User adds [boolean] Has Exceptions table column on the Shipments Page', async () => {
+      const columnName = 'Has Exceptions';
       await exploreShipments.waitForReferenceComponent();
       await editTableColumnsExploreShipments.openEditColumns();
       await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
         columnName
       );
-      await editTableColumnsExploreShipments.removeTableColumn(columnName);
+      await editTableColumnsExploreShipments.addTableColumn(columnName);
+    });
+    test('[47.2] User adds [weight] Chargeable Weight table column on the Shipments Page', async () => {
+      const columnName = 'Chargeable Weight';
+      await exploreShipments.waitForReferenceComponent();
+      await editTableColumnsExploreShipments.openEditColumns();
+      await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
+        columnName
+      );
+      await editTableColumnsExploreShipments.addTableColumn(columnName);
+    });
+    test('[47.2] User adds [amount] Unrecognized Unposted Expenses Excl. Tax table column on the Shipments Page', async () => {
+      const columnName = 'Unrecognized Unposted Expenses Excl. Tax';
+      await exploreShipments.waitForReferenceComponent();
+      await editTableColumnsExploreShipments.openEditColumns();
+      await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
+        columnName
+      );
+      await editTableColumnsExploreShipments.addTableColumn(columnName);
+    });
+
+    test.describe('Remove table columns', () => {
+      test('[47.3] User removes [default] House Bill table column on the Shipments Page', async () => {
+        const columnName = 'House Bill';
+        await exploreShipments.waitForReferenceComponent();
+        await editTableColumnsExploreShipments.openEditColumns();
+        await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
+          columnName
+        );
+        await editTableColumnsExploreShipments.removeTableColumn(columnName);
+      });
+      test('[47.3] User removes [added] Date Shipment table column on the Shipments Page', async () => {
+        const columnName = 'Date Shipment Closed';
+        await exploreShipments.waitForReferenceComponent();
+        await editTableColumnsExploreShipments.openEditColumns();
+        await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
+          columnName
+        );
+        await editTableColumnsExploreShipments.removeTableColumn(columnName);
+      });
+      test('[47.3] User removes [default] Consol Number table column on the Shipments Page', async () => {
+        const columnName = 'Consol Number';
+        await exploreShipments.waitForReferenceComponent();
+        await editTableColumnsExploreShipments.openEditColumns();
+        await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
+          columnName
+        );
+        await editTableColumnsExploreShipments.removeTableColumn(columnName);
+      });
+      test('[47.3] User removes [added] Shipment Status table column on the Shipments Page', async () => {
+        const columnName = 'Shipment Status';
+        await exploreShipments.waitForReferenceComponent();
+        await editTableColumnsExploreShipments.openEditColumns();
+        await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
+          columnName
+        );
+        await editTableColumnsExploreShipments.removeTableColumn(columnName);
+      });
+      test('[47.3] User removes [default] Shipment Teus table column on the Shipments Page', async () => {
+        const columnName = 'Shipment TEUs';
+        await exploreShipments.waitForReferenceComponent();
+        await editTableColumnsExploreShipments.openEditColumns();
+        await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(
+          columnName
+        );
+        await editTableColumnsExploreShipments.removeTableColumn(columnName);
+      });
     });
   });
 });
