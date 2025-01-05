@@ -20,5 +20,9 @@ export class SideMenu {
     this.listWrapperBusiness = page.getByTestId('sidebar-tab-wrapper-BUSINESS_PERFORMANCE')
     this.apiSummary = page.getByTestId('account-user-api-partner-list');
   }
+
+  async clickOnDashboardName(dashboardName: string) {
+    this.page.locator(`//span[text()="${dashboardName}"]`).click()
+  }
   
 }
