@@ -4,20 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "format": "prettier --write \"**/*.{ts,tsx,js,json,css,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,css,md,yml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,css,md,yml}\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.46.0",
-    "@types/node": "^22.3.0"
+    "@types/node": "^22.3.0",
+    "prettier": "^3.4.2"
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
     "@types/node": "^22.3.0",
+    "dotenv": "^16.4.5",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-playwright": "^2.1.0",
-    "prettier": "^3.3.3"
+    "eslint-plugin-playwright": "^2.1.0"
   }
 }

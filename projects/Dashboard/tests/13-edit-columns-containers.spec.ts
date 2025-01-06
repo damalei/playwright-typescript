@@ -42,7 +42,7 @@ test.describe('Edit Columns on Explore Containers', () => {
       );
       await editTableColumnsExploreContainers.addTableColumn(columnName);
     });
-    
+
     test('[53.2] User adds Container Seal Number table column on the Explore Organizations Page', async () => {
       const columnName = 'Container Seal Number';
       await exploreContainers.waitForReferenceComponent();

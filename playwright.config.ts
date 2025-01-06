@@ -102,7 +102,6 @@ export default defineConfig({
       },
     },
 
-
     {
       name: 'shipper-setup',
       testDir: './projects/Shipper/tests',

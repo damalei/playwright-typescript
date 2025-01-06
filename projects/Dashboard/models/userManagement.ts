@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { Locator, Page } from '@playwright/test';
 
 export class UserManagement {
   readonly page: Page;
@@ -10,33 +10,41 @@ export class UserManagement {
 
   constructor(page: Page) {
     this.page = page;
-    this.emailSearchField = page.locator('label').getByText('Email').locator('//following-sibling::div').locator('input')
-    this.searchButton = page.getByRole('button', {name: 'Search'})
-    this.referenceComponent = page.locator('//h5[text()="Manage Users"]')
-    this.buttonSave = page.getByRole('button', {name: 'Save'})
-    }
+    this.emailSearchField = page
+      .locator('label')
+      .getByText('Email')
+      .locator('//following-sibling::div')
+      .locator('input');
+    this.searchButton = page.getByRole('button', { name: 'Search' });
+    this.referenceComponent = page.locator('//h5[text()="Manage Users"]');
+    this.buttonSave = page.getByRole('button', { name: 'Save' });
+  }
 
-    async searchEmail(email: string){
-        await this.emailSearchField.fill(email)
-        await this.searchButton.click()
-        await this.waitForReferenceComponent()
-    }
+  async searchEmail(email: string) {
+    await this.emailSearchField.fill(email);
+    await this.searchButton.click();
+    await this.waitForReferenceComponent();
+  }
 
-    async clickEditAccess(email: string){
-        await this.page.locator(`//td[text()="${email}"]`).locator('..').locator('//button[@aria-label="edit"]').click()
-    }
-    
-    async waitForReferenceComponent() {
-        await this.referenceComponent.waitFor({ state: 'visible' });
-      }
+  async clickEditAccess(email: string) {
+    await this.page
+      .locator(`//td[text()="${email}"]`)
+      .locator('..')
+      .locator('//button[@aria-label="edit"]')
+      .click();
+  }
 
-    async inputDashboard(section: string, dashboard){
-      await this.page.getByLabel(section).click()
-      const field = this.page.getByLabel(section).locator('..').locator('input')
-      await field.pressSequentially(dashboard)
-      await this.page.keyboard.press('Space')
-      await this.page.keyboard.press('Backspace')
-      await this.page.keyboard.press('ArrowDown')
-      await this.page.keyboard.press('Enter')
-    }
+  async waitForReferenceComponent() {
+    await this.referenceComponent.waitFor({ state: 'visible' });
+  }
+
+  async inputDashboard(section: string, dashboard) {
+    await this.page.getByLabel(section).click();
+    const field = this.page.getByLabel(section).locator('..').locator('input');
+    await field.pressSequentially(dashboard);
+    await this.page.keyboard.press('Space');
+    await this.page.keyboard.press('Backspace');
+    await this.page.keyboard.press('ArrowDown');
+    await this.page.keyboard.press('Enter');
+  }
 }

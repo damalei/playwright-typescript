@@ -29,9 +29,7 @@ test.describe('Edit Columns on Explore Organizations', () => {
       await editTableColumnsExploreOrganizations.toggleTableColumnVisibilityEyeIcon(
         columnName
       );
-      await editTableColumnsExploreOrganizations.addTableColumn(
-        columnName
-      );
+      await editTableColumnsExploreOrganizations.addTableColumn(columnName);
     });
 
     test('[53.2] User adds Posted Revenue Tax Amount table column on the Explore Organizations Page', async () => {
@@ -42,9 +40,7 @@ test.describe('Edit Columns on Explore Organizations', () => {
       await editTableColumnsExploreOrganizations.toggleTableColumnVisibilityEyeIcon(
         columnName
       );
-      await editTableColumnsExploreOrganizations.addTableColumn(
-        columnName
-      );
+      await editTableColumnsExploreOrganizations.addTableColumn(columnName);
     });
     test('[53.2] User adds Unrecognized Posted Profit % incl. Tax table column on the Explore Organizations Page', async () => {
       const columnName = 'Unrecognized Posted Profit % incl. Tax';
@@ -54,9 +50,7 @@ test.describe('Edit Columns on Explore Organizations', () => {
       await editTableColumnsExploreOrganizations.toggleTableColumnVisibilityEyeIcon(
         columnName
       );
-      await editTableColumnsExploreOrganizations.addTableColumn(
-        columnName
-      );
+      await editTableColumnsExploreOrganizations.addTableColumn(columnName);
     });
 
     test('[53.2] User adds Data Last Retrieved On table column on the Explore Organizations Page', async () => {
@@ -67,9 +61,7 @@ test.describe('Edit Columns on Explore Organizations', () => {
       await editTableColumnsExploreOrganizations.toggleTableColumnVisibilityEyeIcon(
         columnName
       );
-      await editTableColumnsExploreOrganizations.addTableColumn(
-        columnName
-      );
+      await editTableColumnsExploreOrganizations.addTableColumn(columnName);
     });
   });
   test.describe('Remove Table Columns', () => {
@@ -80,9 +72,7 @@ test.describe('Edit Columns on Explore Organizations', () => {
       await editTableColumnsExploreOrganizations.toggleTableColumnVisibilityEyeIcon(
         columnName
       );
-      await editTableColumnsExploreOrganizations.removeTableColumn(
-        columnName
-      );
+      await editTableColumnsExploreOrganizations.removeTableColumn(columnName);
     });
 
     test('[53.3] User removes [added]Data Last Retrieved On table column on the Explore Organizations Page', async () => {
@@ -92,9 +82,7 @@ test.describe('Edit Columns on Explore Organizations', () => {
       await editTableColumnsExploreOrganizations.toggleTableColumnVisibilityEyeIcon(
         columnName
       );
-      await editTableColumnsExploreOrganizations.removeTableColumn(
-        columnName
-      );
+      await editTableColumnsExploreOrganizations.removeTableColumn(columnName);
     });
 
     test('[53.3] User removes [default] Latest AR Post Date table column on the Explore Organizations Page', async () => {
@@ -104,9 +92,7 @@ test.describe('Edit Columns on Explore Organizations', () => {
       await editTableColumnsExploreOrganizations.toggleTableColumnVisibilityEyeIcon(
         columnName
       );
-      await editTableColumnsExploreOrganizations.removeTableColumn(
-        columnName
-      );
+      await editTableColumnsExploreOrganizations.removeTableColumn(columnName);
     });
 
     test('[53.3] User removes [added] Unrecognized Posted Profit % incl. Tax table column on the Explore Organizations Page', async () => {
@@ -116,9 +102,7 @@ test.describe('Edit Columns on Explore Organizations', () => {
       await editTableColumnsExploreOrganizations.toggleTableColumnVisibilityEyeIcon(
         columnName
       );
-      await editTableColumnsExploreOrganizations.removeTableColumn(
-        columnName
-      );
+      await editTableColumnsExploreOrganizations.removeTableColumn(columnName);
     });
 
     test('[53.3] User removes [default]Receivable Invoices table column on the Explore Organizations Page', async () => {
@@ -128,9 +112,7 @@ test.describe('Edit Columns on Explore Organizations', () => {
       await editTableColumnsExploreOrganizations.toggleTableColumnVisibilityEyeIcon(
         columnName
       );
-      await editTableColumnsExploreOrganizations.removeTableColumn(
-        columnName
-      );
+      await editTableColumnsExploreOrganizations.removeTableColumn(columnName);
     });
 
     test('[53.3] User removes [default]Payable Invoices table column on the Explore Organizations Page', async () => {
@@ -140,10 +122,7 @@ test.describe('Edit Columns on Explore Organizations', () => {
       await editTableColumnsExploreOrganizations.toggleTableColumnVisibilityEyeIcon(
         columnName
       );
-      await editTableColumnsExploreOrganizations.removeTableColumn(
-        columnName
-      );
+      await editTableColumnsExploreOrganizations.removeTableColumn(columnName);
     });
-
   });
 });

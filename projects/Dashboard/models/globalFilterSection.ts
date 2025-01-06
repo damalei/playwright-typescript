@@ -35,7 +35,7 @@ export class GlobalFilterSection {
     this.advanceUpdateFiltersButton = page.getByRole('button', {
       name: 'Update Filters',
     });
-    this.selectorOrgType = page.getByTitle("ORG TYPE").locator('input')
+    this.selectorOrgType = page.getByTitle('ORG TYPE').locator('input');
     this.fieldTransportMode = page.getByTestId(
       'Transport Mode-custom-multiple-text-field'
     );
@@ -129,10 +129,10 @@ export class GlobalFilterSection {
   }
 
   async setOrgType(orgType: string) {
-    await this.selectorOrgType.fill(`${orgType}`)
-    await this.selectorOrgType.press('ArrowDown')
-    await this.selectorOrgType.press('Enter')
-}}
+    await this.selectorOrgType.fill(`${orgType}`);
+    await this.selectorOrgType.press('ArrowDown');
+    await this.selectorOrgType.press('Enter');
+  }
 
   async checkSelector(selectorName: string, selectorValue: string) {
     const exists =
