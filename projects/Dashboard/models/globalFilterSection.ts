@@ -135,22 +135,13 @@ export class GlobalFilterSection {
   }
 
   async checkSelector(selectorName: string, selectorValue: string) {
-    const exists =
-      (await this.page
-        .locator(`//div[contains(@title, ${selectorName})]`)
-        .locator(`//input[contains(@value, ${selectorValue})]`)
-        .count()) > 0;
+    const exists = (await this.page.locator(`//div[contains(@title, ${selectorName})]`).locator(`//input[contains(@value, ${selectorValue})]`).count()) > 0;
     return exists;
   }
 
   async checkFilterFieldChip(fieldName: string, fieldValue: string) {
     const exists =
-      (await this.page
-        .locator(
-          `//*[contains(@data-testid, '${fieldName}-custom-multiple-text-field')]`
-        )
-        .getByText(fieldValue)
-        .count()) > 0;
+      (await this.page.locator(`//*[contains(@data-testid, '${fieldName}-custom-multiple-text-field')]`).getByText(fieldValue).count()) > 0;
     return exists;
   }
 

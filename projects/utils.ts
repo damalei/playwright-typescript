@@ -44,6 +44,12 @@ export const waitForSnackBar = async (page: Page, loadTimeoutMs: number) => {
   });
 };
 
+export const waitForAdvanceSnackBar = async (page: Page, loadTimeoutMs: number) => {
+  await expect(page.getByTestId('advanced-snackbar-message')).toBeVisible({
+    timeout: loadTimeoutMs,
+  });
+};
+
 export const waitForElementToHide = async (
   page: Page,
   loadTimeoutMs: number,
@@ -65,4 +71,9 @@ export const logInAuth = async (page: Page, user: string, pass: string) => {
   await expect(page.getByTestId('account-user-name')).toBeVisible({
     timeout: DEFAULT_TIMEOUT_IN_MS,
   });
-};
+}
+
+export function areListsEqual<T>(list1: T[], list2: T[]): boolean {
+  if (list1.length !== list2.length) return false;
+  return list1.every((value, index) => value === list2[index]);
+}
