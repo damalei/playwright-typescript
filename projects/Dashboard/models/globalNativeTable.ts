@@ -1,6 +1,6 @@
 import { Locator, Page } from '@playwright/test';
-import { waitforTablePageLoad, waitForFilterSectionToLoad } from '../../utils'
-import { DEFAULT_TIMEOUT_IN_MS } from '../../constants'
+import { waitforTablePageLoad, waitForFilterSectionToLoad } from '../../utils';
+import { DEFAULT_TIMEOUT_IN_MS } from '../../constants';
 
 export class GlobalNativeTable {
   readonly page: Page;
@@ -83,41 +83,64 @@ export class GlobalNativeTable {
     }
   }
 
-  async dragSourceToTargetColumn(page: Page, sourceIndex: number, targetIndex: number) {
-    await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS)
-    await waitforTablePageLoad(page, DEFAULT_TIMEOUT_IN_MS)
-    const tableHeaderList = await this.page.getByTestId('table-header').locator('th').allTextContents()
-    const sourceName = tableHeaderList[sourceIndex].replace(/\(.*?\)/g, "").trim()
-    const targetName = tableHeaderList[targetIndex].replace(/\(.*?\)/g, "").trim()
-    console.log(sourceName)
-    console.log(targetName)
-    await this.editColumnButton.click()
-    const columnPopper = this.page.getByTestId('edit-columns-popper')
-    const source = columnPopper.locator(`//span[text()='${sourceName}']`).locator('..').locator('..').locator('..')
-    const target = columnPopper.locator(`//span[text()='${targetName}']`).locator('..').locator('..').locator('..')
-    await source.focus()
-    await target.focus()
-    await source.dragTo(target)
+  async dragSourceToTargetColumn(
+    page: Page,
+    sourceIndex: number,
+    targetIndex: number
+  ) {
+    await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    await waitforTablePageLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    const tableHeaderList = await this.page
+      .getByTestId('table-header')
+      .locator('th')
+      .allTextContents();
+    const sourceName = tableHeaderList[sourceIndex]
+      .replace(/\(.*?\)/g, '')
+      .trim();
+    const targetName = tableHeaderList[targetIndex]
+      .replace(/\(.*?\)/g, '')
+      .trim();
+    console.log(sourceName);
+    console.log(targetName);
+    await this.editColumnButton.click();
+    const columnPopper = this.page.getByTestId('edit-columns-popper');
+    const source = columnPopper
+      .locator(`//span[text()='${sourceName}']`)
+      .locator('..')
+      .locator('..')
+      .locator('..');
+    const target = columnPopper
+      .locator(`//span[text()='${targetName}']`)
+      .locator('..')
+      .locator('..')
+      .locator('..');
+    await source.focus();
+    await target.focus();
+    await source.dragTo(target);
     await source.hover();
     await this.page.mouse.down();
-    const box = (await target.boundingBox())!
-    await this.page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
+    const box = (await target.boundingBox())!;
+    await this.page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
     await target.hover();
     await this.page.mouse.up();
-    await this.editColumnButton.click()
-    const newTableHeaderList = await this.page.getByTestId('table-header').locator('th').allTextContents()
-    return newTableHeaderList
+    await this.editColumnButton.click();
+    const newTableHeaderList = await this.page
+      .getByTestId('table-header')
+      .locator('th')
+      .allTextContents();
+    return newTableHeaderList;
   }
 
-  async swapColumns(page: Page, sourceIndex: number, targetIndex: number){
-    await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS)
-    await waitforTablePageLoad(page, DEFAULT_TIMEOUT_IN_MS)
-    const tableHeaderList = await page.getByTestId('table-header').locator('th').allTextContents()
-    const temp = tableHeaderList[sourceIndex]
-    tableHeaderList[sourceIndex] = tableHeaderList[targetIndex]
-    tableHeaderList[targetIndex] = temp
+  async swapColumns(page: Page, sourceIndex: number, targetIndex: number) {
+    await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    await waitforTablePageLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    const tableHeaderList = await page
+      .getByTestId('table-header')
+      .locator('th')
+      .allTextContents();
+    const temp = tableHeaderList[sourceIndex];
+    tableHeaderList[sourceIndex] = tableHeaderList[targetIndex];
+    tableHeaderList[targetIndex] = temp;
     return tableHeaderList;
   }
-
-
 }
