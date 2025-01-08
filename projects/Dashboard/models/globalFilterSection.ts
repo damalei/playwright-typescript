@@ -35,7 +35,7 @@ export class GlobalFilterSection {
     this.advanceUpdateFiltersButton = page.getByRole('button', {
       name: 'Update Filters',
     });
-    this.selectorOrgType = page.getByTitle("ORG TYPE").locator('input')
+    this.selectorOrgType = page.getByTitle('ORG TYPE').locator('input');
     this.fieldTransportMode = page.getByTestId(
       'Transport Mode-custom-multiple-text-field'
     );
@@ -129,19 +129,28 @@ export class GlobalFilterSection {
   }
 
   async setOrgType(orgType: string) {
-    await this.selectorOrgType.fill(`${orgType}`)
-    await this.selectorOrgType.press('ArrowDown')
-    await this.selectorOrgType.press('Enter')
-}
+    await this.selectorOrgType.fill(`${orgType}`);
+    await this.selectorOrgType.press('ArrowDown');
+    await this.selectorOrgType.press('Enter');
+  }
 
   async checkSelector(selectorName: string, selectorValue: string) {
-    const exists = (await this.page.locator(`//div[contains(@title, ${selectorName})]`).locator(`//input[contains(@value, ${selectorValue})]`).count()) > 0;
+    const exists =
+      (await this.page
+        .locator(`//div[contains(@title, ${selectorName})]`)
+        .locator(`//input[contains(@value, ${selectorValue})]`)
+        .count()) > 0;
     return exists;
   }
 
   async checkFilterFieldChip(fieldName: string, fieldValue: string) {
     const exists =
-      (await this.page.locator(`//*[contains(@data-testid, '${fieldName}-custom-multiple-text-field')]`).getByText(fieldValue).count()) > 0;
+      (await this.page
+        .locator(
+          `//*[contains(@data-testid, '${fieldName}-custom-multiple-text-field')]`
+        )
+        .getByText(fieldValue)
+        .count()) > 0;
     return exists;
   }
 
