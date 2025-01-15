@@ -26,22 +26,38 @@ export class DashboardBuilder {
   constructor(page: Page) {
     this.page = page;
     this.GlobalFilterSection = new GlobalFilterSection(page);
-    this.ModalAddCard = new ModalAddCard(page)
+    this.ModalAddCard = new ModalAddCard(page);
     this.searchDashboard = page.getByPlaceholder('Search dashboards');
     this.buttonEditDashboard = page.getByRole('button', {
       name: 'Edit Dashboard',
     });
     this.buttonSave = page.getByRole('button', { name: 'Save', exact: true });
-    this.buttonCreateDashboard = page.getByTestId('create-dashboard-button')
-    this.inputCreateDashboard = page.getByPlaceholder('Name your new dashboard')
-    this.buttonSubmitCreateDashboard = page.getByTestId('create-dashboard-submit-button')
-    this.buttonAddCard = page.getByRole('button', { name: 'Add Card'})
+    this.buttonCreateDashboard = page.getByTestId('create-dashboard-button');
+    this.inputCreateDashboard = page.getByPlaceholder(
+      'Name your new dashboard'
+    );
+    this.buttonSubmitCreateDashboard = page.getByTestId(
+      'create-dashboard-submit-button'
+    );
+    this.buttonAddCard = page.getByRole('button', { name: 'Add Card' });
     this.inputSearchDashboard = page.getByPlaceholder('Search dashboards');
-    this.listButtonDashboardDelete = page.locator('//button[@aria-label="delete"]')
-    this.buttonDeleteDashboardConfirm = page.getByRole('button', { name: 'Delete' })
-    this.buttonDuplicateDashboard = page.getByText('Duplicate', { exact: true })
-    this.inputName = page. getByLabel('Name', { exact: true }).locator('..').locator('input')
-    this.inputDisplayName = page.getByLabel('Display name', { exact: true }).locator('..').locator('input')
+    this.listButtonDashboardDelete = page.locator(
+      '//button[@aria-label="delete"]'
+    );
+    this.buttonDeleteDashboardConfirm = page.getByRole('button', {
+      name: 'Delete',
+    });
+    this.buttonDuplicateDashboard = page.getByText('Duplicate', {
+      exact: true,
+    });
+    this.inputName = page
+      .getByLabel('Name', { exact: true })
+      .locator('..')
+      .locator('input');
+    this.inputDisplayName = page
+      .getByLabel('Display name', { exact: true })
+      .locator('..')
+      .locator('input');
   }
 
   async loadDashboard(dashboard: string) {
@@ -86,19 +102,19 @@ export class DashboardBuilder {
 
   async goto() {
     await this.page.goto(FREIGHT_BI_BASE_URL + '/dashboard-builder/');
-    await waitForFilterSectionToLoad(this.page, DEFAULT_TIMEOUT_IN_MS)
+    await waitForFilterSectionToLoad(this.page, DEFAULT_TIMEOUT_IN_MS);
   }
 
-  async clickLazyLoad(
-    page: Page,
-    chartName: string
-  ){  await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS)
-      await this.page.getByTestId(`lazy-load-${chartName}`).click()
+  async clickLazyLoad(page: Page, chartName: string) {
+    await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    await this.page.getByTestId(`lazy-load-${chartName}`).click();
   }
 
-  async clickDuplicateDashboard(page: Page, dashboard: string){
+  async clickDuplicateDashboard(page: Page, dashboard: string) {
     await this.searchDashboard.fill(dashboard);
-    await this.page.getByTestId(`dashboard-builder-tab-${dashboard}`).getByTestId('ContentCopyIcon').click()
+    await this.page
+      .getByTestId(`dashboard-builder-tab-${dashboard}`)
+      .getByTestId('ContentCopyIcon')
+      .click();
   }
-
 }

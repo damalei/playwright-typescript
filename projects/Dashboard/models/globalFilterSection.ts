@@ -41,7 +41,7 @@ export class GlobalFilterSection {
       'Transport Mode-custom-multiple-text-field'
     );
     this.fieldBranch = page.getByTestId('Branch-custom-multiple-text-field');
-    this.buttonAdvanceUpdateFilters = page.getByTestId('update-filters-button')
+    this.buttonAdvanceUpdateFilters = page.getByTestId('update-filters-button');
   }
 
   async goto() {
@@ -172,5 +172,4 @@ export class GlobalFilterSection {
     const exists = exists1 || exists2;
     return exists;
   }
-
 }

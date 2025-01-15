@@ -51,8 +51,10 @@ export class UserManagement {
 
   async goto() {
     await this.page.goto(FREIGHT_BI_BASE_URL + '/user-management');
-    await expect(this.page.getByRole('button', { name: 'Create New User'})).toBeVisible({
-        timeout: DEFAULT_TIMEOUT_IN_MS,
-      });
+    await expect(
+      this.page.getByRole('button', { name: 'Create New User' })
+    ).toBeVisible({
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
   }
 }

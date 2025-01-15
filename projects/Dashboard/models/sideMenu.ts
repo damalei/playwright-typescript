@@ -31,6 +31,6 @@ export class SideMenu {
 
   async clickOnDashboardName(dashboardName: string) {
     await this.page.locator(`//span[text()="${dashboardName}"]`).click();
-    await waitForFilterSectionToLoad(this.page, DEFAULT_TIMEOUT_IN_MS)
+    await waitForFilterSectionToLoad(this.page, DEFAULT_TIMEOUT_IN_MS);
   }
 }

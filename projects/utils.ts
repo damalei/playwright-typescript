@@ -39,7 +39,9 @@ export const waitForFilterSectionToLoad = async (
 };
 
 export const waitForSnackBar = async (page: Page, loadTimeoutMs: number) => {
-  await expect(page.locator('//div[@id="notistack-snackbar"]').first()).toBeVisible({
+  await expect(
+    page.locator('//div[@id="notistack-snackbar"]').first()
+  ).toBeVisible({
     timeout: loadTimeoutMs,
   });
 };
