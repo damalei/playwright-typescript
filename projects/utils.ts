@@ -1,4 +1,4 @@
-import { test, Page, expect } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { DEFAULT_TIMEOUT_IN_MS } from './constants.ts';
 
 export function setGlobalData(url: string) {
@@ -39,7 +39,7 @@ export const waitForFilterSectionToLoad = async (
 };
 
 export const waitForSnackBar = async (page: Page, loadTimeoutMs: number) => {
-  await expect(page.locator('//div[@id="notistack-snackbar"]')).toBeVisible({
+  await expect(page.locator('//div[@id="notistack-snackbar"]').first()).toBeVisible({
     timeout: loadTimeoutMs,
   });
 };
