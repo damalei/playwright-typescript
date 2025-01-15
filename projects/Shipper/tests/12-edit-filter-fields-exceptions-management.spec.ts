@@ -5,7 +5,7 @@ import { EditFilterFields } from '../models/editFilterFields.ts';
 let loginPage;
 let editFilterFields;
 
-test.describe('User edits filter fields on Exceptions Management', () => {
+test.describe('TS 12 - User edits filter fields on Exceptions Management', () => {
   let page: Page;
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
@@ -32,47 +32,47 @@ test.describe('User edits filter fields on Exceptions Management', () => {
 
       if (filterFields === 'Shipper Name') {
         await editFilterFields.updateFiltersFields();
-        await editFilterFields.checkAddedFilterFields();
+        await editFilterFields.checkAddedFilterFieldsExceptionManagement();
       }
     }
   });
 
   test('[12.2] User saves added Filter Fields', async () => {
     await editFilterFields.saveViewDashboard();
-    await editFilterFields.navigateDashboardtoCheck();
-    await editFilterFields.checkAddedFilterFields();
+    await editFilterFields.navigateDashboardBackToExceptionManagement();
+    await editFilterFields.checkAddedFilterFieldsExceptionManagement();
   });
 
   test('[12.3] User removes added Filter Fields', async () => {
     await editFilterFields.editFilterFields();
-    await editFilterFields.deleteFilterChip();
+    await editFilterFields.deleteFilterChipExceptionManagement();
     await editFilterFields.updateFiltersFields();
-    await editFilterFields.checkDeletedFilterChips();
+    await editFilterFields.checkDeletedFilterChipsExceptionManagement();
     await editFilterFields.saveViewDashboard();
-    await editFilterFields.navigateDashboardtoCheck();
-    await editFilterFields.checkDeletedFilterChips();
+    await editFilterFields.navigateDashboardBackToExceptionManagement();
+    await editFilterFields.checkDeletedFilterChipsExceptionManagement();
   });
 
   test('[12.4] User saves added Filter value', async () => {
-    await editFilterFields.addFilterValues();
-    await editFilterFields.checkAddedFilterValues();
+    await editFilterFields.addFilterValuesExceptionManagement();
+    await editFilterFields.checkAddedFilterValuesExceptionManagement();
     await editFilterFields.saveViewDashboard();
-    await editFilterFields.navigateDashboardtoCheck();
-    await editFilterFields.checkAddedFilterValues();
+    await editFilterFields.navigateDashboardBackToExceptionManagement();
+    await editFilterFields.checkAddedFilterValuesExceptionManagement();
   });
 
   test('[12.5] User removes added Filter value', async () => {
-    await editFilterFields.deleteFilterValues();
+    await editFilterFields.deleteFilterValuesExceptionManagement();
     await editFilterFields.saveViewDashboard();
-    await editFilterFields.navigateDashboardtoCheck();
-    await editFilterFields.checkDeletedFilterValues();
+    await editFilterFields.navigateDashboardBackToExceptionManagement();
+    await editFilterFields.checkDeletedFilterValuesExceptionManagement();
   });
 
   test.afterAll('[12.X] | Reverting dashboard to original state', async () => {
     await editFilterFields.editFilterFields();
-    await editFilterFields.deleteRemainingFilterChip();
+    await editFilterFields.deleteRemainingFilterChipExceptionManagement();
     await editFilterFields.updateFiltersFields();
     await editFilterFields.saveViewDashboard();
-    await editFilterFields.checkDeleteRemainingFilterChip();
+    await editFilterFields.checkDeleteRemainingFilterChipExceptionManagement();
   });
 });

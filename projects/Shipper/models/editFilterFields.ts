@@ -9,7 +9,7 @@ export class EditFilterFields {
   readonly updateFilterFieldsBtn: Locator;
   readonly shipmentWeightFilterChip: Locator;
   readonly saveDashboardView: Locator;
-  readonly hasExcpetionsChip: Locator;
+  readonly hasExceptionsChip: Locator;
   readonly shipperNameChip: Locator;
   readonly pageLastUpdatedOnChip: Locator;
   readonly saveViewBtn: Locator;
@@ -37,6 +37,18 @@ export class EditFilterFields {
   readonly failedToArriveDrilldown: Locator;
   readonly pageLastUpdatedFilterLocator: Locator;
   readonly shipmentWeightFilterLocator: Locator;
+  readonly chargeableWeightFilterChip: Locator;
+  readonly lastLegArrivalStatusFilterChip: Locator;
+  readonly exploreContainersDashboard: Locator;
+  readonly containerNumbers: Locator;
+  readonly lastLegArrivalStatusValue: Locator;
+  readonly hasExceptionsValue: Locator;
+  readonly lastLegArrivalStatusValueChip: Locator;
+  readonly hasExceptionsValueChip: Locator;
+  readonly hasExceptionsFilterValueLocator: Locator;
+  readonly lastLegArrivalStatusFilterValueLocator: Locator;
+  readonly chargeableWeightFilterLocator: Locator;
+  readonly lastLegArrivalStatusFilterLocator: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -45,7 +57,10 @@ export class EditFilterFields {
     this.searchFilter = page.getByPlaceholder('Search Filter');
     this.updateFilterFieldsBtn = page.getByTestId('save-filters-button');
     this.shipmentWeightFilterChip = page.getByText('Shipment Weight- KG');
-    this.hasExcpetionsChip = page
+    this.containerNumbers = page.getByTestId(
+      'table-body-0-container_container_number_display'
+    );
+    this.hasExceptionsChip = page
       .getByTestId('Has Exceptions-custom-multiple-text-field')
       .locator('div');
     this.shipperNameChip = page
@@ -57,6 +72,7 @@ export class EditFilterFields {
     this.saveDashboardView = page.getByTestId('save-view-modal-save-button');
     this.saveViewBtn = page.getByTestId('save-view-button');
     this.exploreShipmentsDashboard = page.getByText('Explore Shipments');
+    this.exploreContainersDashboard = page.getByText('Explore Containers');
     this.exceptionManagementDashboard = page.getByText(
       'Exceptions Management',
       { exact: true }
@@ -68,7 +84,7 @@ export class EditFilterFields {
       'span:has-text("Has Exceptions") + *'
     );
     this.pageLastUpdatedFilterLocator = page.locator(
-      'span:has-text("Page Last") + *'
+      'span:has-text("Page Last Updated On") + *'
     );
     this.shipmentWeightFilterLocator = page.locator(
       'span:has-text("Shipment Weight") + *'
@@ -76,15 +92,28 @@ export class EditFilterFields {
     this.shipperNameFilterLocator = page.locator(
       'span:has-text("Shipper Name") + *'
     );
+    this.chargeableWeightFilterLocator = page.locator(
+      'span:has-text("Chargeable Weight") + *'
+    );
+    this.lastLegArrivalStatusFilterLocator = page.locator(
+      'span:has-text("Last Leg Arrival Status") + *'
+    );
+
     this.saveViewModal = page.getByRole('dialog');
-    this.saveViewSuccessNote = page.getByText('Your "Exceptions Management');
+    this.saveViewSuccessNote = page.getByText('has been updated');
     this.filterFields = page.getByTestId('filters');
     this.transportModeFilter = page
       .getByTestId('Transport Mode-custom-multiple-text-field')
-      .locator('div');
-    this.transportModeSea = page.getByText('SEA', { exact: true });
+      .getByTestId('ExpandMoreIcon');
+    this.transportModeSea = page.getByText('SEASea Freight');
     this.shipmentWeightValue = page.getByLabel('value');
     this.transportModeFilterLocator = page.locator('span:has-text("Sea") + *');
+    this.hasExceptionsFilterValueLocator = page.locator(
+      'span:has-text("True") + *'
+    );
+    this.lastLegArrivalStatusFilterValueLocator = page.locator(
+      'span:has-text("Delayed") + *'
+    );
     this.dischargeFilterValueLocator = page.locator(
       'span:has-text("NLAMS") + *'
     );
@@ -105,6 +134,16 @@ export class EditFilterFields {
     this.shipmentWeightFilterValueChip = page.getByText('Shipment Weight1 KG');
     this.failedToDepartDrilldown = page.getByText('Failed to depart (Past 3');
     this.failedToArriveDrilldown = page.getByText('Failed to arrive (Past 3');
+    this.chargeableWeightFilterChip = page.getByText('Chargeable Weight- KG');
+    this.lastLegArrivalStatusFilterChip = page.getByText(
+      'Last Leg Arrival Status'
+    );
+    this.lastLegArrivalStatusValue = page.getByText('Delayed');
+    this.hasExceptionsValue = page.getByText('True');
+    this.lastLegArrivalStatusValueChip = page.getByRole('button', {
+      name: 'Delayed',
+    });
+    this.hasExceptionsValueChip = page.getByRole('button', { name: 'True' });
   }
 
   async waitForExceptionManagement() {
@@ -113,6 +152,20 @@ export class EditFilterFields {
     await this.filterFields.waitFor({ state: 'visible' });
     await this.failedToDepartDrilldown.waitFor({ state: 'visible' });
     await this.failedToArriveDrilldown.waitFor({ state: 'visible' });
+  }
+
+  async gotoExploreShipmentsDashboard() {
+    await this.exploreShipmentsDashboard.click();
+    await expect(this.shipmentsForwarderReference).toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+  }
+
+  async gotoExploreContainersDashboard() {
+    await this.exploreContainersDashboard.click();
+    await expect(this.containerNumbers).toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
   }
 
   async editFilterFields() {
@@ -124,6 +177,7 @@ export class EditFilterFields {
 
   async addFilterFields() {
     this.addFilterBtn.click();
+    await this.page.waitForLoadState('load');
   }
 
   async searchFilterFields(filterFieldName: string) {
@@ -137,8 +191,8 @@ export class EditFilterFields {
   }
 
   async updateFiltersFields() {
+    await this.page.waitForLoadState('load');
     await this.updateFilterFieldsBtn.click();
-    await this.waitForExceptionManagement();
   }
 
   async saveViewDashboard() {
@@ -150,13 +204,12 @@ export class EditFilterFields {
     await expect(this.saveViewSuccessNote).toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
-    await this.waitForExceptionManagement();
   }
 
-  async checkAddedFilterFields() {
+  async checkAddedFilterFieldsExceptionManagement() {
     const filterChips = [
       this.shipmentWeightFilterChip,
-      this.hasExcpetionsChip,
+      this.hasExceptionsChip,
       this.pageLastUpdatedOnChip,
       this.shipperNameChip,
     ];
@@ -168,13 +221,13 @@ export class EditFilterFields {
     }
   }
 
-  async deleteFilterChip() {
+  async deleteFilterChipExceptionManagement() {
     await this.hasExceptionsFilterLocator.click();
     await this.shipperNameFilterLocator.click();
     await this.waitForExceptionManagement();
   }
 
-  async checkDeletedFilterChips() {
+  async checkDeletedFilterChipsExceptionManagement() {
     await expect(this.hasExceptionsFilterLocator).not.toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
@@ -183,7 +236,7 @@ export class EditFilterFields {
     });
   }
 
-  async navigateDashboardtoCheck() {
+  async navigateDashboardBackToExceptionManagement() {
     await this.exploreShipmentsDashboard.click();
     await expect(this.shipmentsForwarderReference).toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
@@ -192,7 +245,8 @@ export class EditFilterFields {
     await this.waitForExceptionManagement();
   }
 
-  async addFilterValues() {
+  async addFilterValuesExceptionManagement() {
+    await this.waitForExceptionManagement();
     await this.transportModeFilter.click();
     await this.transportModeSea.click();
     await this.shipmentWeightFilterChip.click();
@@ -202,7 +256,16 @@ export class EditFilterFields {
     await this.waitForExceptionManagement();
   }
 
-  async checkAddedFilterValues() {
+  async navigateDashboardBackToExploreShipments() {
+    await this.exceptionManagementDashboard.click();
+    await this.waitForExceptionManagement();
+    await this.exploreShipmentsDashboard.click();
+    await expect(this.shipmentsForwarderReference).toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+  }
+
+  async checkAddedFilterValuesExceptionManagement() {
     const filterValueChips = [
       this.dischargePortFilterValueChip,
       this.transportModeFilterValueChip,
@@ -215,7 +278,7 @@ export class EditFilterFields {
     }
   }
 
-  async deleteFilterValues() {
+  async deleteFilterValuesExceptionManagement() {
     await this.transportModeFilterLocator.click();
     await this.dischargeFilterValueLocator.click();
     await this.shipmentWeightFilterValueChip.click();
@@ -223,7 +286,7 @@ export class EditFilterFields {
     await this.waitForExceptionManagement();
   }
 
-  async checkDeletedFilterValues() {
+  async checkDeletedFilterValuesExceptionManagement() {
     await expect(this.transportModeFilterValueChip).not.toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
@@ -235,17 +298,116 @@ export class EditFilterFields {
     });
   }
 
-  async deleteRemainingFilterChip() {
+  async deleteRemainingFilterChipExceptionManagement() {
     await this.pageLastUpdatedFilterLocator.click();
     await this.shipmentWeightFilterLocator.click();
     await this.waitForExceptionManagement();
   }
 
-  async checkDeleteRemainingFilterChip() {
+  async checkDeleteRemainingFilterChipExceptionManagement() {
     await expect(this.shipmentWeightFilterChip).not.toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
     await expect(this.pageLastUpdatedOnChip).not.toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+  }
+
+  async navigateDashboardBackToExploreContainers() {
+    await this.exploreShipmentsDashboard.click();
+    await expect(this.shipmentsForwarderReference).toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    await this.exploreContainersDashboard.click();
+    await expect(this.containerNumbers).toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+  }
+
+  async checkAddedFilterFieldsExplorePages() {
+    const filterChips = [
+      this.chargeableWeightFilterChip,
+      this.lastLegArrivalStatusFilterChip,
+      this.pageLastUpdatedOnChip,
+      this.shipperNameChip,
+    ];
+    for (const addedFilterchip of filterChips) {
+      await expect(addedFilterchip).toBeVisible({
+        timeout: DASHBOARD_TIMEOUT_IN_MS,
+      });
+    }
+  }
+
+  async deleteFilterChipExplorePages() {
+    await this.pageLastUpdatedFilterLocator.click();
+    await this.shipperNameFilterLocator.click();
+    await this.page.waitForLoadState('load');
+  }
+
+  async checkDeletedFilterChipsExplorePages() {
+    await expect(this.pageLastUpdatedFilterLocator).not.toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    await expect(this.shipperNameFilterLocator).not.toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+  }
+  async waitForShipmentsReferenceComponent() {
+    await this.shipmentsForwarderReference.waitFor({ state: 'visible' });
+  }
+
+  async addFilterValuesExplorePages() {
+    await this.dischargePortFilterFields.click();
+    await this.dischargePortValue.click();
+    await this.lastLegArrivalStatusFilterChip.click();
+    await this.lastLegArrivalStatusValue.click();
+    await this.hasExceptionsChip.click();
+    await this.hasExceptionsValue.click();
+  }
+
+  async checkAddedFilterValuesExplorePages() {
+    const filterValueValueChipsExplorePages = [
+      this.hasExceptionsValueChip,
+      this.dischargePortFilterValueChip,
+      this.lastLegArrivalStatusValueChip,
+    ];
+    for (const addedFilterValueChip of filterValueValueChipsExplorePages) {
+      await expect(addedFilterValueChip).toBeVisible({
+        timeout: DASHBOARD_TIMEOUT_IN_MS,
+      });
+    }
+  }
+
+  async deleteFilterValuesExplorePages() {
+    await this.dischargeFilterValueLocator.click();
+    await this.hasExceptionsFilterValueLocator.click();
+    await this.lastLegArrivalStatusFilterValueLocator.click();
+  }
+
+  async checkDeletedFilterValuesExplorePages() {
+    await expect(this.dischargeFilterValueLocator).not.toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    await expect(this.hasExceptionsFilterValueLocator).not.toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    await expect(this.lastLegArrivalStatusFilterValueLocator).not.toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+  }
+
+  async deleteRemainingFilterChipExplorePages() {
+    await this.chargeableWeightFilterLocator.click();
+    await this.hasExceptionsFilterLocator.click();
+    await this.lastLegArrivalStatusFilterLocator.click();
+  }
+
+  async checkDeleteRemainingFilterChipExplorePages() {
+    await this.filterFields.waitFor({ state: 'visible' });
+    await expect(this.chargeableWeightFilterLocator).not.toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    await expect(this.lastLegArrivalStatusFilterLocator).not.toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
   }
