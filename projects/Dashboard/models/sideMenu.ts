@@ -1,4 +1,6 @@
 import { Locator, Page } from '@playwright/test';
+import { waitForFilterSectionToLoad } from '../../utils';
+import { DEFAULT_TIMEOUT_IN_MS } from '../../constants';
 
 export class SideMenu {
   readonly page: Page;
@@ -28,6 +30,7 @@ export class SideMenu {
   }
 
   async clickOnDashboardName(dashboardName: string) {
-    this.page.locator(`//span[text()="${dashboardName}"]`).click();
+    await this.page.locator(`//span[text()="${dashboardName}"]`).click();
+    await waitForFilterSectionToLoad(this.page, DEFAULT_TIMEOUT_IN_MS);
   }
 }

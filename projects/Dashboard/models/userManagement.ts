@@ -1,4 +1,5 @@
-import { Locator, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
+import { DEFAULT_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
 
 export class UserManagement {
   readonly page: Page;
@@ -46,5 +47,14 @@ export class UserManagement {
     await this.page.keyboard.press('Backspace');
     await this.page.keyboard.press('ArrowDown');
     await this.page.keyboard.press('Enter');
+  }
+
+  async goto() {
+    await this.page.goto(FREIGHT_BI_BASE_URL + '/user-management');
+    await expect(
+      this.page.getByRole('button', { name: 'Create New User' })
+    ).toBeVisible({
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
   }
 }
