@@ -20,7 +20,7 @@ test.describe('Edit Columns on Explore Containers', () => {
   });
 
   test.describe('Add Table Columns', () => {
-    test('[53.2] User adds Shipment Transport Mode table column on the Explore Organizations Page', async () => {
+    test('[57.2] User adds Shipment Transport Mode table column on the Explore Organizations Page', async () => {
       const columnName = 'Shipment Transport Mode';
       await exploreContainers.goto();
       await exploreContainers.waitForReferenceComponent();
@@ -32,7 +32,7 @@ test.describe('Edit Columns on Explore Containers', () => {
       await editTableColumnsExploreContainers.addTableColumn(columnName);
     });
 
-    test('[53.2] User adds Shipment Failed to Arrive table column on the Explore Organizations Page', async () => {
+    test('[57.2] User adds Shipment Failed to Arrive table column on the Explore Organizations Page', async () => {
       const columnName = 'Shipment Failed to Arrive';
       await exploreContainers.waitForReferenceComponent();
       await viewFilterSection.waitForFilterFields();
@@ -43,7 +43,7 @@ test.describe('Edit Columns on Explore Containers', () => {
       await editTableColumnsExploreContainers.addTableColumn(columnName);
     });
 
-    test('[53.2] User adds Container Seal Number table column on the Explore Organizations Page', async () => {
+    test('[57.2] User adds Container Seal Number table column on the Explore Organizations Page', async () => {
       const columnName = 'Container Seal Number';
       await exploreContainers.waitForReferenceComponent();
       await viewFilterSection.waitForFilterFields();
@@ -54,7 +54,7 @@ test.describe('Edit Columns on Explore Containers', () => {
       await editTableColumnsExploreContainers.addTableColumn(columnName);
     });
 
-    test('[53.2] User adds Container Empty Needed By table column on the Explore Organizations Page', async () => {
+    test('[57.2] User adds Container Empty Needed By table column on the Explore Organizations Page', async () => {
       const columnName = 'Container Empty Needed By';
       await exploreContainers.waitForReferenceComponent();
       await viewFilterSection.waitForFilterFields();
@@ -66,7 +66,7 @@ test.describe('Edit Columns on Explore Containers', () => {
     });
 
     test.describe('Remove Table Columns', () => {
-      test('[53.3] User removes [default] Container Count & Type table column on the Explore Organizations Page', async () => {
+      test('[57.3] User removes [default] Container Count & Type table column on the Explore Organizations Page', async () => {
         const columnName = 'Container Count & Type';
         await exploreContainers.waitForReferenceComponent();
         await editTableColumnsExploreContainers.openEditColumns();
@@ -76,7 +76,7 @@ test.describe('Edit Columns on Explore Containers', () => {
         await editTableColumnsExploreContainers.removeTableColumn(columnName);
       });
 
-      test('[53.3] User removes [added]Shipment Failed to Arrive table column on the Explore Organizations Page', async () => {
+      test('[57.3] User removes [added]Shipment Failed to Arrive table column on the Explore Organizations Page', async () => {
         const columnName = 'Shipment Failed to Arrive';
         await exploreContainers.waitForReferenceComponent();
         await editTableColumnsExploreContainers.openEditColumns();
@@ -86,7 +86,7 @@ test.describe('Edit Columns on Explore Containers', () => {
         await editTableColumnsExploreContainers.removeTableColumn(columnName);
       });
 
-      test('[53.3] User removes [default] Container TEUs table column on the Explore Organizations Page', async () => {
+      test('[57.3] User removes [default] Container TEUs table column on the Explore Organizations Page', async () => {
         const columnName = 'Container TEUs';
         await exploreContainers.waitForReferenceComponent();
         await editTableColumnsExploreContainers.openEditColumns();
@@ -96,7 +96,7 @@ test.describe('Edit Columns on Explore Containers', () => {
         await editTableColumnsExploreContainers.removeTableColumn(columnName);
       });
 
-      test('[53.3] User removes [added] Shipment Transport Mode table column on the Explore Organizations Page', async () => {
+      test('[57.3] User removes [added] Shipment Transport Mode table column on the Explore Organizations Page', async () => {
         const columnName = 'Shipment Transport Mode';
         await exploreContainers.waitForReferenceComponent();
         await editTableColumnsExploreContainers.openEditColumns();
@@ -106,7 +106,7 @@ test.describe('Edit Columns on Explore Containers', () => {
         await editTableColumnsExploreContainers.removeTableColumn(columnName);
       });
 
-      test('[53.3] User removes [default] Goods Volume of Container-Shipment Pair table column on the Explore Organizations Page', async () => {
+      test('[57.3] User removes [default] Goods Volume of Container-Shipment Pair table column on the Explore Organizations Page', async () => {
         const columnName = 'Goods Volume of Container-Shipment Pair';
         await exploreContainers.waitForReferenceComponent();
         await editTableColumnsExploreContainers.openEditColumns();

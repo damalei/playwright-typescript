@@ -82,7 +82,7 @@ test.describe('Default Column check on Shipper', () => {
     });
   });
 
-  test('Shipments page', async () => {
+  test('14.1 Shipments page', async () => {
     test.slow;
     await page.getByText('Shipments', { exact: true }).click();
     for (const column of shipColumns) {
@@ -92,7 +92,7 @@ test.describe('Default Column check on Shipper', () => {
     }
   });
 
-  test('Containers page', async () => {
+  test('45.1 Containers page', async () => {
     test.slow;
     await page.getByText('Containers', { exact: true }).click();
     for (const column of contColumns) {
