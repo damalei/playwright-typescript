@@ -1,4 +1,4 @@
-name: Manual Test RUn
+name: Manual Test Run
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
