@@ -22,7 +22,6 @@ export class UserManagement {
       .getByText('Email')
       .locator('//following-sibling::div')
       .locator('input');
-
     this.confirmBtn = page.getByRole('button', { name: 'Confirm' });
     this.searchButton = page.getByRole('button', { name: 'Search' });
     this.referenceComponent = page.locator('//h5[text()="Manage Users"]');
@@ -80,5 +79,12 @@ export class UserManagement {
   async confirmDashboardChange() {
     await this.confirmBtn.waitFor({ state: 'visible' });
     await this.confirmBtn.click();
+  }
+
+  async checkSandboxChips(label: string, chip: string) {
+    const chipLabel = this.page.getByLabel(label, { exact: true });
+    await chipLabel.waitFor({ state: 'visible' });
+    const isChipVisible = await chipLabel.locator('..').getByText(chip, { exact: true }).isVisible();
+    return isChipVisible;
   }
 }

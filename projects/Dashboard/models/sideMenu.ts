@@ -9,8 +9,11 @@ export class SideMenu {
   readonly userManagement: Locator;
   readonly listUserManagement: Locator;
   readonly accBP: Locator;
+  readonly accOperations: Locator
+  readonly accAccounting: Locator;
   readonly listWrapperBusiness: Locator;
   readonly apiSummary: Locator;
+
 
   constructor(page: Page) {
     this.page = page;
@@ -23,6 +26,8 @@ export class SideMenu {
       .filter({ hasText: 'User Management' });
     this.listUserManagement = page.locator('//span[text()="User Management"]');
     this.accBP = page.locator('//span[text()="Business Performance"]');
+    this.accOperations = page.locator('//span[text()="Operations"]');
+    this.accAccounting = page.locator('//span[text()="Accounting"]');
     this.listWrapperBusiness = page.getByTestId(
       'sidebar-tab-wrapper-BUSINESS_PERFORMANCE'
     );

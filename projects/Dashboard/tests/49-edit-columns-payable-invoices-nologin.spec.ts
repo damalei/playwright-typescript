@@ -12,7 +12,7 @@ const { chromium } = require('playwright');
 
 let newHeaderList: string[];
 let sortedColumnText: string;
-let pay: ExplorePayableInvoices;
+export let pay: ExplorePayableInvoices;
 const indexToRemove = 3;
 const indexToAdd = 1;
 

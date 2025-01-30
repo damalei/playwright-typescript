@@ -22,6 +22,7 @@ export class GlobalFilterSection {
   readonly infoIcon: Locator;
   readonly buttonSaveModal: Locator;
   readonly buttonPickerOk: Locator;
+  readonly accSandboxingFilters: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -51,6 +52,7 @@ export class GlobalFilterSection {
       .getByTestId('tz-selector')
       .locator('..')
       .getByRole('button', { name: 'Ok' });
+    this.accSandboxingFilters = page.getByTestId('sandboxing-filters');
   }
 
   async goto() {
