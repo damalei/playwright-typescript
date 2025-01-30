@@ -55,7 +55,7 @@ test.describe('[26] User Management: Sandboxing', () => {
     await expect.soft(page.getByTestId('sandboxing-filterchip').getByText('Department is FIA')).toBeVisible();
   });
 
-  test('[26.2] Admin user saves while sandboxing is enabled', async () => {
+  test('[26.3] Admin user saves while sandboxing is enabled', async () => {
     const pay = new ExplorePayableInvoices(page);
     await pay.globalFilterSection.setBasicTextFilter('Transport Mode','AIR','SEA')
     await pay.globalFilterSection.saveViewButton.click();
@@ -78,7 +78,7 @@ test.describe('[26] User Management: Sandboxing', () => {
     await expect.soft(seaChip).toBe(true);
   });
 
-  test('[26.3] Admin User disables sandboxing', async () => {
+  test('[26.2] Admin User disables sandboxing', async () => {
     const user = new UserManagement(page);
     const pay = new ExplorePayableInvoices(page);
     const globalFilterSection = new GlobalFilterSection(page);
