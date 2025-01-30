@@ -19,6 +19,8 @@ export class GlobalFilterSection {
   readonly fieldTransportMode: Locator;
   readonly fieldBranch: Locator;
   readonly buttonAdvanceUpdateFilters: Locator;
+  readonly infoIcon: Locator;
+  readonly buttonSaveModal: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -42,6 +44,8 @@ export class GlobalFilterSection {
     );
     this.fieldBranch = page.getByTestId('Branch-custom-multiple-text-field');
     this.buttonAdvanceUpdateFilters = page.getByTestId('update-filters-button');
+    this.infoIcon = page.getByTestId('InfoIcon');
+    this.buttonSaveModal = page.getByTestId('save-view-modal-save-button');
   }
 
   async goto() {
@@ -146,6 +150,7 @@ export class GlobalFilterSection {
   }
 
   async checkFilterFieldChip(fieldName: string, fieldValue: string) {
+    await this.page.locator('label').filter({ hasText: fieldName }).click();
     const exists =
       (await this.page
         .locator(
@@ -153,6 +158,7 @@ export class GlobalFilterSection {
         )
         .getByText(fieldValue)
         .count()) > 0;
+    await this.page.locator('label').filter({ hasText: fieldName }).click();
     return exists;
   }
 
