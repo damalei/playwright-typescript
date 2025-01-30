@@ -28,9 +28,11 @@ export class UserManagement {
     this.inputDepartment = page.getByLabel('Department');
     this.inputOperator = page.getByLabel('Operator');
     this.inputSalesRep = page.getByLabel('Sales Rep');
-    this.toggleSandbox = page.getByText('Can only access shipments they are assigned to').locator('..').locator('//input[@type="checkbox"]');
+    this.toggleSandbox = page
+      .getByText('Can only access shipments they are assigned to')
+      .locator('..')
+      .locator('//input[@type="checkbox"]');
   }
-
 
   async searchEmail(email: string) {
     await this.emailSearchField.fill(email);
@@ -52,7 +54,10 @@ export class UserManagement {
 
   async inputDashboard(section: string, dashboard) {
     await this.page.getByLabel(section, { exact: true }).click();
-    const field = this.page.getByLabel(section, { exact: true }).locator('..').locator('input');
+    const field = this.page
+      .getByLabel(section, { exact: true })
+      .locator('..')
+      .locator('input');
     await field.pressSequentially(dashboard);
     await this.page.keyboard.press('Space');
     await this.page.keyboard.press('Backspace');

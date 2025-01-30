@@ -2,7 +2,7 @@ import { test, Page, expect } from '@playwright/test';
 import {
   waitForAdvanceSnackBar,
   waitForElementToHide,
-  waitForFilterSectionToLoad
+  waitForFilterSectionToLoad,
 } from '../../utils';
 import { DEFAULT_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
 import { UserManagement } from '../models/userManagement';
@@ -34,37 +34,61 @@ test.describe('[26] User Management: Sandboxing', () => {
     await user.waitForReferenceComponent();
     await user.searchEmail(`${process.env.FREIGHT_BI_CLIENT_USER}`);
     await user.clickEditAccess(`${process.env.FREIGHT_BI_CLIENT_USER}`);
-    await user.inputDashboard('Sales Rep','Rui Aguiar (RA)')
-    await user.inputDashboard('Operator','Jig Young (JY)')
-    await user.inputDashboard('Branch','MNL')
-    await user.inputDashboard('Department','FIA')
+    await user.inputDashboard('Sales Rep', 'Rui Aguiar (RA)');
+    await user.inputDashboard('Operator', 'Jig Young (JY)');
+    await user.inputDashboard('Branch', 'MNL');
+    await user.inputDashboard('Department', 'FIA');
     await user.toggleSandbox.click();
     await user.buttonSave.click();
     await waitForElementToHide(
-        page,
-        DEFAULT_TIMEOUT_IN_MS,
-        '//button[text()="Save"]'
-      );
+      page,
+      DEFAULT_TIMEOUT_IN_MS,
+      '//button[text()="Save"]'
+    );
     await pay.goto();
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
     await expect.soft(pay.globalFilterSection.infoIcon).toBeVisible();
     await pay.globalFilterSection.infoIcon.click();
-    await expect.soft(page.getByTestId('sandboxing-filterchip').getByText('Operator is Jig Young (JY)')).toBeVisible();
-    await expect.soft(page.getByTestId('sandboxing-filterchip').getByText('Sales Rep is Rui Aguiar (RA)')).toBeVisible();
-    await expect.soft(page.getByTestId('sandboxing-filterchip').getByText('Branch is MNL')).toBeVisible();
-    await expect.soft(page.getByTestId('sandboxing-filterchip').getByText('Department is FIA')).toBeVisible();
+    await expect
+      .soft(
+        page
+          .getByTestId('sandboxing-filterchip')
+          .getByText('Operator is Jig Young (JY)')
+      )
+      .toBeVisible();
+    await expect
+      .soft(
+        page
+          .getByTestId('sandboxing-filterchip')
+          .getByText('Sales Rep is Rui Aguiar (RA)')
+      )
+      .toBeVisible();
+    await expect
+      .soft(
+        page.getByTestId('sandboxing-filterchip').getByText('Branch is MNL')
+      )
+      .toBeVisible();
+    await expect
+      .soft(
+        page.getByTestId('sandboxing-filterchip').getByText('Department is FIA')
+      )
+      .toBeVisible();
   });
 
   test('[26.3] Admin user saves while sandboxing is enabled', async () => {
     const pay = new ExplorePayableInvoices(page);
-    await pay.globalFilterSection.setBasicTextFilter('Transport Mode','AIR','SEA')
+    await pay.globalFilterSection.setBasicTextFilter(
+      'Transport Mode',
+      'AIR',
+      'SEA'
+    );
     await pay.globalFilterSection.saveViewButton.click();
     await pay.globalFilterSection.buttonSaveModal.click();
     await waitForAdvanceSnackBar(page, DEFAULT_TIMEOUT_IN_MS);
     const ship = new ExploreShipments(page);
-    await ship.goto()
+    await ship.goto();
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
-    pay.goto()
+    pay.goto();
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
     const airChip = await pay.globalFilterSection.checkFilterFieldChip(
       'Transport Mode',
@@ -86,17 +110,17 @@ test.describe('[26] User Management: Sandboxing', () => {
     await user.waitForReferenceComponent();
     await user.searchEmail(`${process.env.FREIGHT_BI_CLIENT_USER}`);
     await user.clickEditAccess(`${process.env.FREIGHT_BI_CLIENT_USER}`);
-    await user.inputDashboard('Sales Rep','Rui Aguiar (RA)')
-    await user.inputDashboard('Operator','Jig Young (JY)')
-    await user.inputDashboard('Branch','MNL')
-    await user.inputDashboard('Department','FIA')
+    await user.inputDashboard('Sales Rep', 'Rui Aguiar (RA)');
+    await user.inputDashboard('Operator', 'Jig Young (JY)');
+    await user.inputDashboard('Branch', 'MNL');
+    await user.inputDashboard('Department', 'FIA');
     await user.toggleSandbox.click();
     await user.buttonSave.click();
     await waitForElementToHide(
-        page,
-        DEFAULT_TIMEOUT_IN_MS,
-        '//button[text()="Save"]'
-      );
+      page,
+      DEFAULT_TIMEOUT_IN_MS,
+      '//button[text()="Save"]'
+    );
     await page.reload();
     await user.waitForReferenceComponent();
     await pay.goto();
@@ -111,6 +135,6 @@ test.describe('[26] User Management: Sandboxing', () => {
     );
     await expect.soft(pay.globalFilterSection.infoIcon).not.toBeVisible();
     await expect.soft(airChip).toBe(true);
-    await expect.soft(seaChip).toBe(true);  
+    await expect.soft(seaChip).toBe(true);
   });
 });
