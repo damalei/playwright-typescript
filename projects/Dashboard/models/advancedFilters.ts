@@ -1,4 +1,5 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, expect, Page } from '@playwright/test';
+import { DEFAULT_TIMEOUT_IN_MS } from '../../constants';
 
 export class AdvancedFilterView {
   readonly page: Page;
@@ -24,6 +25,8 @@ export class AdvancedFilterView {
   readonly setShipmentWeightFilterValue: Locator;
   readonly advancedUpdateFiltersBtn: Locator;
   readonly saveAdvanceFiltersBtn: Locator;
+  readonly saveViewDialogBox: Locator;
+  readonly saveViewBtnUpdateView: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -67,6 +70,11 @@ export class AdvancedFilterView {
     this.setShipmentWeightFilterValue = page.getByLabel('value');
     this.advancedUpdateFiltersBtn = page.getByTestId('update-filters-button');
     this.saveAdvanceFiltersBtn = page.getByTestId('save-view-button');
+    this.saveViewDialogBox = page.getByRole('dialog');
+    this.saveViewBtnUpdateView = page.getByTestId(
+      'save-view-modal-save-button'
+    );
+
     this.transportModeFilterLocator = page.locator(
       'span:has-text("Transport Mode") + *'
     );
@@ -131,6 +139,10 @@ export class AdvancedFilterView {
 
   async saveAdvancedFiltersBtn() {
     await this.saveAdvanceFiltersBtn.click();
+    await expect(this.saveViewDialogBox).toBeVisible({
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
+    await this.saveViewBtnUpdateView.click();
   }
 
   async removeAdvanceFilters() {
