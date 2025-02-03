@@ -32,6 +32,15 @@ export class AccountControl {
   readonly setOrgCodetoENGV: Locator;
   readonly updateOrganizationBtn: Locator;
   readonly setOrgCodeToDefault: Locator;
+  readonly approveButton: Locator;
+  readonly approveAndCreateUserButton: Locator;
+  readonly shipperOrgDropdown: Locator;
+  readonly sendResetPasswordButton: Locator;
+  readonly editUserButton: Locator;
+  readonly approvedTabButton: Locator;
+  readonly toApproveTabButton: Locator;
+  readonly domainInput: Locator;
+  readonly shipperPortalUserManagement: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -81,6 +90,23 @@ export class AccountControl {
     this.setOrgCodeToDefault = page.getByRole('option', { name: 'XYZAB' });
     this.updateOrganizationBtn = page.getByRole('button', {
       name: 'Update Organization',
+    });
+    this.approveButton = page.getByRole('button', { name: 'Approve' }).first();
+    this.approveAndCreateUserButton = page.getByRole('button', {
+      name: 'Approve and Create User',
+    });
+    this.shipperOrgDropdown = page.getByRole('combobox', {
+      name: 'Shipper Facing Organization',
+    });
+    this.sendResetPasswordButton = page.getByRole('button', {
+      name: 'Send Reset Password Email',
+    });
+    this.editUserButton = page.getByRole('button', { name: 'Edit' });
+    this.approvedTabButton = page.getByRole('tab', { name: 'Approved' });
+    this.toApproveTabButton = page.getByRole('tab', { name: 'To Approve' });
+    this.domainInput = page.getByLabel('Domain (Optional)');
+    this.shipperPortalUserManagement = page.getByRole('link', {
+      name: 'Shipper Portal User Management',
     });
   }
 
@@ -165,6 +191,39 @@ export class AccountControl {
     await this.editOrgCode.fill('XYZAB');
     await this.setOrgCodeToDefault.waitFor({ state: 'visible' });
     await this.setOrgCodeToDefault.click();
+    await this.updateOrganizationBtn.click();
+  }
+
+  async approveUser(organization: string) {
+    await this.approveButton.click();
+    await this.shipperOrgDropdown.click();
+    await this.page.getByRole('option', { name: organization }).click();
+    await this.approveAndCreateUserButton.click();
+  }
+
+  async goToShipperPortalUserManagement() {
+    await this.dashboardUserManagementSettings.click();
+    await this.shipperPortalUserManagement.click();
+    await this.toApproveTabButton.waitFor({ state: 'visible' });
+  }
+
+  async goToApprovedTab() {
+    await this.approvedTabButton.click();
+  }
+
+  async sendResetPasswordEmail() {
+    await this.sendResetPasswordButton.click();
+  }
+
+  async editUserOrganization(organization: string) {
+    await this.editUserButton.click();
+    await this.shipperOrgDropdown.click();
+    await this.page.getByRole('option', { name: organization }).click();
+    await this.updateOrganizationBtn.click();
+  }
+
+  async setDomainForAutoApproval(domain: string) {
+    await this.domainInput.fill(domain);
     await this.updateOrganizationBtn.click();
   }
 }
