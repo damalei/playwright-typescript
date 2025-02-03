@@ -8,6 +8,11 @@ export class UserManagement {
   readonly referenceComponent: Locator;
   readonly manageUserdiv: Locator;
   readonly buttonSave: Locator;
+  readonly inputSalesRep: Locator;
+  readonly inputOperator: Locator;
+  readonly inputBranch: Locator;
+  readonly inputDepartment: Locator;
+  readonly toggleSandbox: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -19,6 +24,14 @@ export class UserManagement {
     this.searchButton = page.getByRole('button', { name: 'Search' });
     this.referenceComponent = page.locator('//h5[text()="Manage Users"]');
     this.buttonSave = page.getByRole('button', { name: 'Save' });
+    this.inputBranch = page.getByLabel('Branch');
+    this.inputDepartment = page.getByLabel('Department');
+    this.inputOperator = page.getByLabel('Operator');
+    this.inputSalesRep = page.getByLabel('Sales Rep');
+    this.toggleSandbox = page
+      .getByText('Can only access shipments they are assigned to')
+      .locator('..')
+      .locator('//input[@type="checkbox"]');
   }
 
   async searchEmail(email: string) {
@@ -40,8 +53,11 @@ export class UserManagement {
   }
 
   async inputDashboard(section: string, dashboard) {
-    await this.page.getByLabel(section).click();
-    const field = this.page.getByLabel(section).locator('..').locator('input');
+    await this.page.getByLabel(section, { exact: true }).click();
+    const field = this.page
+      .getByLabel(section, { exact: true })
+      .locator('..')
+      .locator('input');
     await field.pressSequentially(dashboard);
     await this.page.keyboard.press('Space');
     await this.page.keyboard.press('Backspace');
