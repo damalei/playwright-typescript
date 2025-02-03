@@ -28,7 +28,28 @@ Install the necessary npm packages by running:
 npm ci
 ```
 
-### 3. Set the Environment
+This will also automatically set up the pre-commit hooks.
+
+### 3. Pre-commit Hooks
+
+This repository uses pre-commit hooks to ensure code quality. They are automatically installed when you run `npm install` or `npm ci`. The hooks will:
+
+1. Format all staged files using Prettier
+2. Run Playwright tests only on changed/new test files
+
+This ensures that:
+
+- All committed code follows consistent formatting
+- Only working tests are committed
+- Test runs are fast since only changed tests are executed
+
+To skip the pre-commit hooks in exceptional cases (not recommended), you can use:
+
+```sh
+git commit --no-verify
+```
+
+### 4. Set the Environment
 
 Set the environment to run on:
 
@@ -46,11 +67,12 @@ Set the environment to run on:
      $env:ENV="staging"
      ```
 
-3. Run the Tests
-   Run the whole test suite in all projects by executing the following command:
+### 5. Run the Tests
 
-   ```sh
-   npx playwright test --headed --workers=1
-   ```
+Run the whole test suite in all projects by executing the following command:
+
+```sh
+npx playwright test --headed --workers=1
+```
 
 Note: Parallelizing tests is a work in progress (WIP).
