@@ -60,7 +60,6 @@ test.describe('[21] Load dashboard and filter settings', () => {
     await expect.soft(airChip).toBe(true);
     await expect.soft(dateText).toBe(true);
     await expect.soft(unitText).toBe(true);
-
   });
 
   test('[21.4] User edits a dashboard and refreshes the page', async () => {
@@ -101,7 +100,7 @@ test.describe('[21] Load dashboard and filter settings', () => {
   test('[21.6] User edits a dashboard and shares the URL with another user from the same company', async () => {
     const ship = new ExploreShipments(page);
     const side = new SideMenu(page);
-    await ship.goto()
+    await ship.goto();
     const url = await page.url();
     const browser = await chromium.launch();
     const context = await browser.newContext();
