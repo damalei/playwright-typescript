@@ -47,7 +47,10 @@ export class GlobalFilterSection {
     this.buttonAdvanceUpdateFilters = page.getByTestId('update-filters-button');
     this.infoIcon = page.getByTestId('InfoIcon');
     this.buttonSaveModal = page.getByTestId('save-view-modal-save-button');
-    this.buttonPickerOk = page.getByTestId('tz-selector').locator('..').getByRole('button', {name: 'Ok'})
+    this.buttonPickerOk = page
+      .getByTestId('tz-selector')
+      .locator('..')
+      .getByRole('button', { name: 'Ok' });
   }
 
   async goto() {
@@ -118,11 +121,13 @@ export class GlobalFilterSection {
     const boundingBox = label.locator('..').locator('..');
     const closeIcon = await boundingBox.getByTestId('CloseIcon').count();
     if (closeIcon > 0) {
-      await boundingBox.getByTestId('CloseIcon').click()
+      await boundingBox.getByTestId('CloseIcon').click();
     } else {
-      await boundingBox.locator('//span[contains(@aria-label, "close-circle")]').click();
+      await boundingBox
+        .locator('//span[contains(@aria-label, "close-circle")]')
+        .click();
     }
-    await this.buttonPickerOk.click()
+    await this.buttonPickerOk.click();
   }
 
   async removeBasicTextFilter(filtername: string, el_count: number) {

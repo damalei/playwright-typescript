@@ -121,7 +121,7 @@ export class DashboardBuilder {
   }
 
   async checkElement(page: Page, element: Locator) {
-    const status = await element.count() > 0;
+    const status = (await element.count()) > 0;
     return status;
   }
 }

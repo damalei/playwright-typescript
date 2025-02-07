@@ -1,7 +1,15 @@
 import { test, Page, expect } from '@playwright/test';
-import { waitForAdvanceSnackBar, waitForFilterSectionToLoad, waitForSnackBar } from '../../utils';
+import {
+  waitForAdvanceSnackBar,
+  waitForFilterSectionToLoad,
+  waitForSnackBar,
+} from '../../utils';
 import { SideMenu } from '../models/sideMenu';
-import { DASHBOARD_TIMEOUT_IN_MS, DEFAULT_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
+import {
+  DASHBOARD_TIMEOUT_IN_MS,
+  DEFAULT_TIMEOUT_IN_MS,
+  FREIGHT_BI_BASE_URL,
+} from '../../constants';
 import { DashboardBuilder } from '../models/dashboardBuilder';
 import { getFormattedDate } from '../../utils';
 
@@ -104,18 +112,25 @@ test.describe('Edit and save filters VALUES on Dashboard Builder', () => {
     await waitForSnackBar(dashbuild.page, 10000);
     await dashbuild.exitAndReturnDashboard(dashboard1, dashboard2);
     await dashbuild.globalFilterSection.advanceViewButton.click();
-    const date = await getFormattedDate()
-    const today_relative = await dashbuild.checkElement(page, page.locator('span', { hasText: 'Shipment ETD is Today' }))
-    const today_date = await dashbuild.checkElement(page, page.locator('span', { hasText: `Shipment ETD is between ${date} and ${date}` }))
+    const date = await getFormattedDate();
+    const today_relative = await dashbuild.checkElement(
+      page,
+      page.locator('span', { hasText: 'Shipment ETD is Today' })
+    );
+    const today_date = await dashbuild.checkElement(
+      page,
+      page.locator('span', {
+        hasText: `Shipment ETD is between ${date} and ${date}`,
+      })
+    );
     await expect
       .soft(
         page.locator('span', {
-
           hasText: 'Transport Mode is SEA and 1 other filters',
         })
       )
       .toBeVisible();
-    await expect.soft(today_relative || today_date).toBe(true)
+    await expect.soft(today_relative || today_date).toBe(true);
     await expect
       .soft(page.locator('span', { hasText: 'Container Mode is FCL' }))
       .toBeVisible();
