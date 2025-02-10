@@ -57,6 +57,7 @@ test.describe('[33]User Edit dashboard list on side menu ', () => {
     await user.inputDashboard('Business Performance', `${dash1}`);
     await user.inputDashboard('Business Performance', `${dash2}`);
     await user.buttonSave.click();
+    await user.confirmDashboardChange();
     await waitForElementToHide(
       page,
       DEFAULT_TIMEOUT_IN_MS,
