@@ -11,6 +11,7 @@ export class ExplorePayableInvoices {
   readonly referenceComponent: Locator;
   readonly columnInvoiceNumber: Locator;
   readonly payableInvoicePageHeader: Locator;
+  readonly jobNumber: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -21,6 +22,7 @@ export class ExplorePayableInvoices {
     this.payableInvoicePageHeader = page.locator(
       'h5[data-testid="header-title"]'
     );
+    this.jobNumber = page.getByTestId('job_numbers').first()
   }
 
   async goto() {

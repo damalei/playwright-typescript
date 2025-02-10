@@ -13,6 +13,7 @@ export class ExploreOrganizations {
   readonly seePayableInvoices: Locator;
   readonly defaultOrgType: Locator;
   readonly orgTypeSelector: Locator;
+  readonly orgTypeOpen: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -25,6 +26,7 @@ export class ExploreOrganizations {
     this.defaultOrgType = page.locator(
       'input[role="combobox"][aria-autocomplete="list"][value="Local Client"]'
     );
+    this.orgTypeOpen = page.getByTitle('ORG TYPE').getByLabel('Open')
   }
   async goto() {
     await this.page.goto(
@@ -93,4 +95,10 @@ export class ExploreOrganizations {
     );
     expect(totalExpensesExclTaxAmount).toBe(invoiceExclTaxSumAmount);
   }
+
+  async setOrgtype(page: Page, orgType: string) {
+    await this.orgTypeOpen.click()
+    await page.getByRole('option', {name: orgType}).click()
+}
+
 }
