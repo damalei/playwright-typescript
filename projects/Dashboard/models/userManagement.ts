@@ -13,6 +13,7 @@ export class UserManagement {
   readonly inputBranch: Locator;
   readonly inputDepartment: Locator;
   readonly toggleSandbox: Locator;
+  readonly confirmBtn: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -21,6 +22,8 @@ export class UserManagement {
       .getByText('Email')
       .locator('//following-sibling::div')
       .locator('input');
+
+    this.confirmBtn = page.getByRole('button', { name: 'Confirm' });
     this.searchButton = page.getByRole('button', { name: 'Search' });
     this.referenceComponent = page.locator('//h5[text()="Manage Users"]');
     this.buttonSave = page.getByRole('button', { name: 'Save' });
@@ -72,5 +75,10 @@ export class UserManagement {
     ).toBeVisible({
       timeout: DEFAULT_TIMEOUT_IN_MS,
     });
+  }
+
+  async confirmDashboardChange() {
+    await this.confirmBtn.waitFor({ state: 'visible' });
+    await this.confirmBtn.click();
   }
 }
