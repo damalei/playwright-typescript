@@ -26,7 +26,7 @@ export class ExploreOrganizations {
     this.defaultOrgType = page.locator(
       'input[role="combobox"][aria-autocomplete="list"][value="Local Client"]'
     );
-    this.orgTypeOpen = page.getByTitle('ORG TYPE').getByLabel('Open')
+    this.orgTypeOpen = page.getByTitle('ORG TYPE').getByLabel('Open');
   }
   async goto() {
     await this.page.goto(
@@ -97,8 +97,7 @@ export class ExploreOrganizations {
   }
 
   async setOrgtype(page: Page, orgType: string) {
-    await this.orgTypeOpen.click()
-    await page.getByRole('option', {name: orgType}).click()
-}
-
+    await this.orgTypeOpen.click();
+    await page.getByRole('option', { name: orgType }).click();
+  }
 }

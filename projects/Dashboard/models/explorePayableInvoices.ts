@@ -22,7 +22,7 @@ export class ExplorePayableInvoices {
     this.payableInvoicePageHeader = page.locator(
       'h5[data-testid="header-title"]'
     );
-    this.jobNumber = page.getByTestId('job_numbers').first()
+    this.jobNumber = page.getByTestId('job_numbers').first();
   }
 
   async goto() {
