@@ -82,3 +82,11 @@ export function areListsEqual<T>(list1: T[], list2: T[]): boolean {
   if (list1.length !== list2.length) return false;
   return list1.every((value, index) => value === list2[index]);
 }
+
+export function getFormattedDate(): string {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year} ${month} ${day}`;
+}

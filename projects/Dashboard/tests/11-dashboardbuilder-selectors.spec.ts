@@ -47,7 +47,7 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
     await dashbuild.buttonEditDashboard.click();
     await dashbuild.clickSelectorToggle('ORG TYPE');
     await dashbuild.setSelectorValue('ORG TYPE', 'Shipper');
-    await dashbuild.GlobalFilterSection.saveViewButton.click();
+    await dashbuild.globalFilterSection.saveViewButton.click();
     await dashbuild.buttonSave.click();
     await expect.soft(page.locator('//h6[text()="ORG TYPE"]')).toBeVisible();
     await expect.soft(page.locator('//input[@value="Shipper"]')).toBeVisible();
@@ -86,7 +86,7 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
     await dashbuild.buttonEditDashboard.click();
     await dashbuild.setSelectorValue('ORG TYPE', 'Creditor');
-    await dashbuild.GlobalFilterSection.saveViewButton.click();
+    await dashbuild.globalFilterSection.saveViewButton.click();
     await dashbuild.buttonSave.click();
     await page.goto(FREIGHT_BI_BASE_URL);
     await side.accBP.click();
@@ -104,7 +104,7 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
     await dashbuild.buttonEditDashboard.click();
     await dashbuild.clickSelectorToggle('ORG TYPE');
-    await dashbuild.GlobalFilterSection.saveViewButton.click();
+    await dashbuild.globalFilterSection.saveViewButton.click();
     await dashbuild.buttonSave.click();
     await page.goto(FREIGHT_BI_BASE_URL);
     await side.accBP.click();
@@ -137,7 +137,7 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
       await dashbuild.clickSelectorToggle('WEIGHT');
       await dashbuild.clickSelectorToggle('VOLUME');
       await dashbuild.clickSelectorToggle('GROUP BY DATE');
-      await dashbuild.GlobalFilterSection.saveViewButton.click();
+      await dashbuild.globalFilterSection.saveViewButton.click();
       await dashbuild.buttonSave.click();
       await page.goto(FREIGHT_BI_BASE_URL);
       await side.accBP.click();

@@ -1,8 +1,17 @@
 import { test, Page, expect } from '@playwright/test';
-import { waitForFilterSectionToLoad, waitForSnackBar } from '../../utils';
+import {
+  waitForAdvanceSnackBar,
+  waitForFilterSectionToLoad,
+  waitForSnackBar,
+} from '../../utils';
 import { SideMenu } from '../models/sideMenu';
-import { DASHBOARD_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
+import {
+  DASHBOARD_TIMEOUT_IN_MS,
+  DEFAULT_TIMEOUT_IN_MS,
+  FREIGHT_BI_BASE_URL,
+} from '../../constants';
 import { DashboardBuilder } from '../models/dashboardBuilder';
+import { getFormattedDate } from '../../utils';
 
 const dashboard2 =
   FREIGHT_BI_BASE_URL +
@@ -24,15 +33,15 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
     await side.userProfile.click();
     await side.dashboardBuilderOption.click();
     await dashbuild.loadDashboard('QA Test Template');
-    await dashbuild.GlobalFilterSection.editBasicFiltersButton.click();
-    await dashbuild.GlobalFilterSection.addFilterFieldButton.click();
-    await dashbuild.GlobalFilterSection.clickFilterField(
+    await dashbuild.globalFilterSection.editBasicFiltersButton.click();
+    await dashbuild.globalFilterSection.addFilterFieldButton.click();
+    await dashbuild.globalFilterSection.clickFilterField(
       'Page Last Updated On'
     );
-    await dashbuild.GlobalFilterSection.updateFilterField.click();
-    await dashbuild.GlobalFilterSection.page.reload();
+    await dashbuild.globalFilterSection.updateFilterField.click();
+    await dashbuild.globalFilterSection.page.reload();
     await waitForFilterSectionToLoad(
-      dashbuild.GlobalFilterSection.page,
+      dashbuild.globalFilterSection.page,
       DASHBOARD_TIMEOUT_IN_MS
     );
     await expect
@@ -42,11 +51,11 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
 
   test('[10.2] User saves filter fields from the basic', async () => {
     const dashbuild = new DashboardBuilder(page);
-    await dashbuild.GlobalFilterSection.saveViewButton.click();
+    await dashbuild.globalFilterSection.saveViewButton.click();
     await waitForSnackBar(dashbuild.page, 10000);
     await dashbuild.exitAndReturnDashboard(dashboard1, dashboard2);
     await waitForFilterSectionToLoad(
-      dashbuild.GlobalFilterSection.page,
+      dashbuild.globalFilterSection.page,
       DASHBOARD_TIMEOUT_IN_MS
     );
     await expect
@@ -57,14 +66,14 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
   test('[10.3] User removes filter fields from the basic', async () => {
     const dashbuild = new DashboardBuilder(page);
     await page.goto(dashboard2);
-    await dashbuild.GlobalFilterSection.editBasicFiltersButton.click();
-    await dashbuild.GlobalFilterSection.lastFilterFieldClear.click();
-    await dashbuild.GlobalFilterSection.updateFilterField.click();
-    await dashbuild.GlobalFilterSection.saveViewButton.click();
+    await dashbuild.globalFilterSection.editBasicFiltersButton.click();
+    await dashbuild.globalFilterSection.lastFilterFieldClear.click();
+    await dashbuild.globalFilterSection.updateFilterField.click();
+    await dashbuild.globalFilterSection.saveViewButton.click();
     await waitForSnackBar(dashbuild.page, 10000);
     await dashbuild.exitAndReturnDashboard(dashboard1, dashboard2);
     await waitForFilterSectionToLoad(
-      dashbuild.GlobalFilterSection.page,
+      dashbuild.globalFilterSection.page,
       DASHBOARD_TIMEOUT_IN_MS
     );
     await expect
@@ -83,26 +92,37 @@ test.describe('Edit and save filters VALUES on Dashboard Builder', () => {
   test('[10.4] User saves a filter value from the basic and advance view', async () => {
     const dashbuild = new DashboardBuilder(page);
     await page.goto(dashboard2);
-    await dashbuild.GlobalFilterSection.setBasicTextFilter(
+    await dashbuild.globalFilterSection.setBasicTextFilter(
       'Transport Mode',
       'SEA',
       'AIR'
     );
-    await dashbuild.GlobalFilterSection.setBasicDateFilter(
+    await dashbuild.globalFilterSection.setBasicDateFilter(
       'Shipment ETD',
       'Today'
     );
-    await dashbuild.GlobalFilterSection.advanceViewButton.click();
-    await dashbuild.GlobalFilterSection.setAdvanceTextFilter(
+    await dashbuild.globalFilterSection.advanceViewButton.click();
+    await dashbuild.globalFilterSection.setAdvanceTextFilter(
       0,
       'Container Mode',
       'FCL'
     );
-    await dashbuild.GlobalFilterSection.advanceUpdateFiltersButton.click();
-    await dashbuild.GlobalFilterSection.saveViewButton.click();
+    await dashbuild.globalFilterSection.advanceUpdateFiltersButton.click();
+    await dashbuild.globalFilterSection.saveViewButton.click();
     await waitForSnackBar(dashbuild.page, 10000);
     await dashbuild.exitAndReturnDashboard(dashboard1, dashboard2);
-    await dashbuild.GlobalFilterSection.advanceViewButton.click();
+    await dashbuild.globalFilterSection.advanceViewButton.click();
+    const date = await getFormattedDate();
+    const today_relative = await dashbuild.checkElement(
+      page,
+      page.locator('span', { hasText: 'Shipment ETD is Today' })
+    );
+    const today_date = await dashbuild.checkElement(
+      page,
+      page.locator('span', {
+        hasText: `Shipment ETD is between ${date} and ${date}`,
+      })
+    );
     await expect
       .soft(
         page.locator('span', {
@@ -110,9 +130,7 @@ test.describe('Edit and save filters VALUES on Dashboard Builder', () => {
         })
       )
       .toBeVisible();
-    await expect
-      .soft(page.locator('span', { hasText: 'Shipment ETD is Today' }))
-      .toBeVisible();
+    await expect.soft(today_relative || today_date).toBe(true);
     await expect
       .soft(page.locator('span', { hasText: 'Container Mode is FCL' }))
       .toBeVisible();
@@ -120,22 +138,22 @@ test.describe('Edit and save filters VALUES on Dashboard Builder', () => {
 
   test('[10.5] User removes and saves a filter value from the basic and advance view', async () => {
     const dashbuild = new DashboardBuilder(page);
-    await dashbuild.GlobalFilterSection.basicViewButton.click();
-    await dashbuild.GlobalFilterSection.removeBasicDateFilter('Shipment ETD');
-    await dashbuild.GlobalFilterSection.removeBasicTextFilter(
+    await dashbuild.globalFilterSection.basicViewButton.click();
+    await dashbuild.globalFilterSection.removeBasicDateFilter('Shipment ETD');
+    await dashbuild.globalFilterSection.removeBasicTextFilter(
       'Transport Mode',
       2
     );
-    await dashbuild.GlobalFilterSection.advanceViewButton.click();
-    await dashbuild.GlobalFilterSection.removeAdvanceTextFilter(
+    await dashbuild.globalFilterSection.advanceViewButton.click();
+    await dashbuild.globalFilterSection.removeAdvanceTextFilter(
       'Container Mode'
     );
-    await dashbuild.GlobalFilterSection.saveViewButton.click();
+    await dashbuild.globalFilterSection.saveViewButton.click();
     await waitForSnackBar(dashbuild.page, 10000);
     await dashbuild.exitAndReturnDashboard(dashboard1, dashboard2);
-    await dashbuild.GlobalFilterSection.advanceViewButton.click();
+    await dashbuild.globalFilterSection.advanceViewButton.click();
     await expect
-      .soft(dashbuild.GlobalFilterSection.advanceEditFiltersButton)
+      .soft(dashbuild.globalFilterSection.advanceEditFiltersButton)
       .toBeVisible();
     await expect
       .soft(

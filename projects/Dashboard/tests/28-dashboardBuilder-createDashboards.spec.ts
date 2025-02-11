@@ -257,11 +257,11 @@ test.describe('[28] Dashboard Builder: Create/Edit Dashboards', () => {
     await dash.setSelectorValue('CURRENCY', 'PHP');
     await dash.setSelectorValue('WEIGHT', 'LB');
     await dash.setSelectorValue('PERIOD', 'Daily');
-    await dash.GlobalFilterSection.editBasicFiltersButton.click();
-    await dash.GlobalFilterSection.addFilterFieldButton.click();
-    await dash.GlobalFilterSection.clickFilterField('Page Last Updated On');
-    await dash.GlobalFilterSection.updateFilterField.click();
-    await dash.GlobalFilterSection.saveViewButton.click();
+    await dash.globalFilterSection.editBasicFiltersButton.click();
+    await dash.globalFilterSection.addFilterFieldButton.click();
+    await dash.globalFilterSection.clickFilterField('Page Last Updated On');
+    await dash.globalFilterSection.updateFilterField.click();
+    await dash.globalFilterSection.saveViewButton.click();
     await dash.buttonSave.click();
     await waitForSnackBar(page, DEFAULT_TIMEOUT_IN_MS);
     await user.goto();
