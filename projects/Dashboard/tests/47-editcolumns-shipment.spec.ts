@@ -36,6 +36,26 @@ test.describe('[47] Edit columns on the Shipments page', () => {
     await expect.soft(listState).toBe(true);
   });
 
+  test('[47.6] User shares columns to another user with edits (add, remove, rearrange, and sort)', async () => {
+    const ship = new ExploreShipments(page);
+    const pay = new ExplorePayableInvoices(page);
+    const expectedHeaderList = newHeaderList;
+    await ship.globalFilterSection.saveViewButton.click();
+    await waitForAdvanceSnackBar(page, DEFAULT_TIMEOUT_IN_MS);
+    await pay.goto();
+    await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    await waitforTablePageLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    await ship.goto();
+    await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    await waitforTablePageLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    const savedHeaderList = await page
+      .getByTestId('table-header')
+      .locator('th')
+      .allTextContents();
+    const listState = await areListsEqual(expectedHeaderList, savedHeaderList);
+    await expect.soft(listState).toBe(true);
+  });
+
   test('[47.4] User saves columns', async () => {
     const ship = new ExploreShipments(page);
     const pay = new ExplorePayableInvoices(page);
@@ -55,4 +75,6 @@ test.describe('[47] Edit columns on the Shipments page', () => {
     const listState = await areListsEqual(expectedHeaderList, savedHeaderList);
     await expect.soft(listState).toBe(true);
   });
+
+
 });
