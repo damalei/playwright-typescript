@@ -6,7 +6,7 @@ import { DEFAULT_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
 
 export class DashboardBuilder {
   readonly page: Page;
-  readonly GlobalFilterSection: GlobalFilterSection;
+  readonly globalFilterSection: GlobalFilterSection;
   readonly ModalAddCard: ModalAddCard;
   readonly searchDashboard: Locator;
   readonly snackBar: Locator;
@@ -22,10 +22,11 @@ export class DashboardBuilder {
   readonly buttonDuplicateDashboard: Locator;
   readonly inputDisplayName: Locator;
   readonly inputName: Locator;
+  readonly buttonSaveModal: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.GlobalFilterSection = new GlobalFilterSection(page);
+    this.globalFilterSection = new GlobalFilterSection(page);
     this.ModalAddCard = new ModalAddCard(page);
     this.searchDashboard = page.getByPlaceholder('Search dashboards');
     this.buttonEditDashboard = page.getByRole('button', {
@@ -58,6 +59,7 @@ export class DashboardBuilder {
       .getByLabel('Display name', { exact: true })
       .locator('..')
       .locator('input');
+    this.buttonSaveModal = page.getByTestId('save-view-modal-save-button');
   }
 
   async loadDashboard(dashboard: string) {
@@ -116,5 +118,10 @@ export class DashboardBuilder {
       .getByTestId(`dashboard-builder-tab-${dashboard}`)
       .getByTestId('ContentCopyIcon')
       .click();
+  }
+
+  async checkElement(page: Page, element: Locator) {
+    const status = (await element.count()) > 0;
+    return status;
   }
 }

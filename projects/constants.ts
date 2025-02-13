@@ -1,6 +1,7 @@
 export const QA_AUTOMATION_ID = 'QAREGTEST20240816053079';
 export const DEFAULT_TIMEOUT_IN_MS = 60000;
 export const DASHBOARD_TIMEOUT_IN_MS = 300000;
+export const __saveFilePath = 'C:/Users/';
 
 export const APP_BASE_URL = `https://${process.env.ENV}-app.expedock.com/`;
 export const FREIGHT_BI_BASE_URL = `https://${process.env.ENV}-dashboard.expedock.com`;
