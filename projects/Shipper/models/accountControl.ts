@@ -21,7 +21,7 @@ export class AccountControl {
   readonly dashboardOrganizationManagementHeader: Locator;
   readonly exceptionManagementHeader: Locator;
   readonly setOrgCodeXYZAB: Locator;
-  readonly setOrgCodeENGV: Locator;
+  readonly setOrgCodeDOCT: Locator;
   readonly searchShipmentsSideMenu: Locator;
   readonly searchShipmentsShipper: Locator;
   readonly trackShipmentBtn: Locator;
@@ -29,7 +29,7 @@ export class AccountControl {
   readonly editOrgBtn: Locator;
   readonly editOrgName: Locator;
   readonly editOrgCode: Locator;
-  readonly setOrgCodetoENGV: Locator;
+  readonly setOrgCodetoDOCT: Locator;
   readonly updateOrganizationBtn: Locator;
   readonly setOrgCodeToDefault: Locator;
 
@@ -61,7 +61,7 @@ export class AccountControl {
     );
     this.loginBtn = page.getByRole('button', { name: 'LOG IN' });
     this.setOrgCodeXYZAB = page.locator('span:has-text("XYZAB") + *');
-    this.setOrgCodeENGV = page.locator('span:has-text("ENGV") + *');
+    this.setOrgCodeDOCT = page.locator('span:has-text("DOCT") + *');
 
     this.searchShipmentsSideMenu = page.getByText('Search Shipments');
     this.searchShipmentsShipper = page.getByTestId('shipper-search-shipments');
@@ -77,7 +77,7 @@ export class AccountControl {
     this.editOrgCode = page.getByRole('combobox', {
       name: 'Enter at least 3 characters',
     });
-    this.setOrgCodetoENGV = page.getByRole('option', { name: 'ENGV' });
+    this.setOrgCodetoDOCT = page.getByRole('option', { name: 'DOCT' });
     this.setOrgCodeToDefault = page.getByRole('option', { name: 'XYZAB' });
     this.updateOrganizationBtn = page.getByRole('button', {
       name: 'Update Organization',
@@ -117,7 +117,9 @@ export class AccountControl {
 
   async searchShipperPortalShipments() {
     await this.searchShipmentsSideMenu.click();
-    await this.searchShipmentsShipper.fill('S00290118');
+    await this.searchShipmentsShipper.fill(
+      `${process.env.SHIPPER_VIZ_VALID_SHIPPER_REFERENCE}`
+    );
     await this.trackShipmentBtn.click();
   }
 
@@ -142,7 +144,7 @@ export class AccountControl {
   }
 
   async removeSetOrg2() {
-    await this.setOrgCodeENGV.click();
+    await this.setOrgCodeDOCT.click();
   }
 
   async searchShipperOrg() {
@@ -153,9 +155,9 @@ export class AccountControl {
   async editShipperPortalOrg() {
     await this.editOrgName.fill('Automation Test Organization Edited');
     await this.removeSetOrg();
-    await this.editOrgCode.fill('ENGV');
-    await this.setOrgCodetoENGV.waitFor({ state: 'visible' });
-    await this.setOrgCodetoENGV.click();
+    await this.editOrgCode.fill('DOCT');
+    await this.setOrgCodetoDOCT.waitFor({ state: 'visible' });
+    await this.setOrgCodetoDOCT.click();
     await this.updateOrganizationBtn.click();
   }
 

@@ -133,8 +133,12 @@ export class SignUpPage {
       state: 'visible',
       timeout: DEFAULT_TIMEOUT_IN_MS,
     });
-    await this.fbiLoginEmail.fill(`${process.env.FREIGHT_BI_CLIENT_USER}`);
-    await this.fbiLoginPass.fill(`${process.env.FREIGHT_BI_CLIENT_PASS}`);
+    await this.fbiLoginEmail.fill(
+      `${process.env.FREIGHT_BI_CLIENT_USER_DASHDEMO_ADMIN}`
+    );
+    await this.fbiLoginPass.fill(
+      `${process.env.FREIGHT_BI_CLIENT_PASS_DASHDEMO_ADMIN_PASS}`
+    );
     await this.fbiLoginBtn.click();
     await expect(this.fbidashboardSideMenu).toBeVisible({
       timeout: DEFAULT_TIMEOUT_IN_MS,

@@ -31,6 +31,7 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
     await user.clickEditAccess(`${process.env.FREIGHT_BI_CLIENT_USER}`);
     await user.inputDashboard('Business Performance', 'QA Test Template');
     await user.buttonSave.click();
+    await user.confirmDashboardChange();
     await waitForElementToHide(
       page,
       DEFAULT_TIMEOUT_IN_MS,

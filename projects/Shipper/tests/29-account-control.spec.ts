@@ -45,7 +45,7 @@ test.describe('ShipperViz Account Control', () => {
     await accountControl.searchShipperOrg();
     await accountControl.editShipperPortalOrg();
     await expect
-      .soft(page.getByRole('cell', { name: 'ENGV' }))
+      .soft(page.getByRole('cell', { name: 'DOCT' }))
       .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect
       .soft(
