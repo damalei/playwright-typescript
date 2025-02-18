@@ -37,6 +37,7 @@ export class SignUpPage {
   readonly exceptionManagementsPaywall: Locator;
   readonly approvedAccountAccessNote: Locator;
   readonly closeApprovedAccessNoteModalBtn: Locator;
+  readonly approvedTabButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -98,6 +99,7 @@ export class SignUpPage {
     this.closeApprovedAccessNoteModalBtn = page.getByTestId(
       'paywall-request-modal-close'
     );
+    this.approvedTabButton = page.getByRole('tab', { name: 'Approved' });
   }
 
   async gotoShipperVizSignUp() {
@@ -181,6 +183,26 @@ export class SignUpPage {
     expect(shipperUserSearchResultsPaywallFeature).toContain(
       'PaywallFeature.LANDING_PAGE'
     );
+  }
+
+  async fillSignUpFormAutoApproval(
+    email: string,
+    organization: string,
+    fullName: string
+  ): Promise<void> {
+    await this.requestAccountBtn.click();
+    await this.requestAccountEmail.fill(email);
+    await this.requestAccountOrganization.fill(organization);
+    await this.requestAccountFullName.fill(fullName);
+    await this.submitRequestBtn.click();
+  }
+  async checkAutoApproval(email: string) {
+    await this.approvedTabButton.click();
+    await this.shipperUserSearchBar.fill(email);
+    const emailLocator = this.page.locator(`text=${email}`);
+    await expect(emailLocator).toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
   }
 
   async fillRequestAccountFormOnPaywalls() {
