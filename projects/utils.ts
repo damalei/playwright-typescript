@@ -82,3 +82,43 @@ export function areListsEqual<T>(list1: T[], list2: T[]): boolean {
   if (list1.length !== list2.length) return false;
   return list1.every((value, index) => value === list2[index]);
 }
+
+export const waitDashboardLoad = async (
+  page: Page
+  // loadTimeoutMs: number
+) => {
+  // let gridCount = 1
+  // let chartCount = 0
+  // while (gridCount != chartCount){
+    // let gridCount =  await page.locator(`//div[contains(@class, "react-grid-item")]`).count
+    // let chartCount = await page.locator(`//div[contains(@data-testid, "data-component-")]`).count
+    // await expect.poll(async () => page.locator('div').count()).toBeGreaterThanOrEqual(chartCount);
+    // console.log(`${gridCount} : ${chartCount}`)
+    // await page.waitForLoadState('load', { timeout: 600000 });
+
+    await page.waitForTimeout(60000)
+
+    let isEqual = false;
+    let expandCount = 1
+    let downloadCount
+    const timeout = 60000; // Polling timeout
+    const pollingInterval = 500; // Polling every 500ms
+    const startTime = Date.now();
+  
+    while (!isEqual && Date.now() - startTime < timeout) {
+      // gridCount =  await page.locator(`//div[contains(@class, "react-grid-item")]`).count
+      expandCount =  await page.getByTestId('data-component-expand-button').count()
+      downloadCount = await page.getByTestId('download-btn').count()
+      // gridCount = await page.getByTestId('data-component-Revenue').count()
+      // chartCount = await page.locator(`//div[contains(@data-testid, "data-component-")]`).count
+      console.log(`${expandCount} : ${downloadCount}`)
+      
+      // Check if the element is visible
+      isEqual = expandCount == downloadCount
+      
+      if (!isEqual) {
+        // Wait for a short period before polling again
+        await page.waitForTimeout(pollingInterval);
+      }
+    }
+  }
