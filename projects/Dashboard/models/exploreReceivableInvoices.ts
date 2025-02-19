@@ -6,10 +6,12 @@ import {
   FREIGHT_BI_BASE_URL,
   __saveFilePath,
 } from '../../constants';
+import { GlobalFilterSection } from './globalFilterSection';
 
 export class ExploreReceivableInvoices {
   readonly page: Page;
   readonly globalNativeTable: GlobalNativeTable;
+  readonly globalFilterSection: GlobalFilterSection;
   readonly referenceComponent: Locator;
   readonly columnInvoiceNumber: Locator;
   readonly jobNumber: Locator;
@@ -18,6 +20,7 @@ export class ExploreReceivableInvoices {
   constructor(page: Page) {
     this.page = page;
     this.globalNativeTable = new GlobalNativeTable(page);
+    this.globalFilterSection = new GlobalFilterSection(page);
     this.referenceComponent = page.getByTestId('invoice_number').first();
     this.columnInvoiceNumber = page.getByTestId('table-header-invoice_number');
     this.jobNumber = page.getByTestId('job_numbers').first();
