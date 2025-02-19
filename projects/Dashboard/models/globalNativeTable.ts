@@ -12,12 +12,11 @@ export class GlobalNativeTable {
   readonly saveButton: Locator;
   readonly tableBody: Locator;
   readonly footer: Locator;
+  readonly menuEditColumn: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.columnHeader = page.locator(
-      `//*[contains(@data-testid, "table-header-")]`
-    );
+    this.columnHeader = page.getByTestId('table-header');
     this.table = page.getByTestId('table');
     this.editColumnButton = page.getByRole('button', { name: 'Edit Columns' });
     this.editDisableAll = page.getByRole('button', { name: 'Disable All' });
@@ -25,6 +24,7 @@ export class GlobalNativeTable {
     this.saveButton = page.getByRole('button', { name: 'Save' });
     this.tableBody = page.getByTestId('table-body');
     this.footer = page.getByTestId('filtered-shipments-footer');
+    this.menuEditColumn = page.getByTestId('edit-columns-popper');
   }
 
   async getColumnElements() {
@@ -38,9 +38,8 @@ export class GlobalNativeTable {
   }
 
   async clickColumnHeader(columnName: string) {
-    await this.page.locator('span', { hasText: `${columnName}` })
-      .scrollIntoViewIfNeeded;
-    await this.page.locator('span', { hasText: `${columnName}` }).click();
+    await this.columnHeader.getByText(columnName).scrollIntoViewIfNeeded();
+    await this.columnHeader.getByText(columnName).click();
   }
 
   async parseCellAmount(rowNum: number, columnTestID: string) {
@@ -100,9 +99,8 @@ export class GlobalNativeTable {
     const targetName = tableHeaderList[targetIndex]
       .replace(/\(.*?\)/g, '')
       .trim();
-    console.log(sourceName);
-    console.log(targetName);
     await this.editColumnButton.click();
+    await page.waitForTimeout(2000);
     const columnPopper = this.page.getByTestId('edit-columns-popper');
     const source = columnPopper
       .locator(`//span[text()='${sourceName}']`)
@@ -118,29 +116,31 @@ export class GlobalNativeTable {
     await target.focus();
     await source.dragTo(target);
     await source.hover();
+    await page.waitForTimeout(2000);
     await this.page.mouse.down();
     const box = (await target.boundingBox())!;
     await this.page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
     await target.hover();
     await this.page.mouse.up();
     await this.editColumnButton.click();
-    const newTableHeaderList = await this.page
-      .getByTestId('table-header')
-      .locator('th')
-      .allTextContents();
+    const newTableHeaderList = await this.getHeaderList(page);
     return newTableHeaderList;
   }
 
   async swapColumns(page: Page, sourceIndex: number, targetIndex: number) {
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
     await waitforTablePageLoad(page, DEFAULT_TIMEOUT_IN_MS);
-    const tableHeaderList = await page
-      .getByTestId('table-header')
-      .locator('th')
-      .allTextContents();
+    const tableHeaderList = await this.getHeaderList(page);
     const temp = tableHeaderList[sourceIndex];
     tableHeaderList[sourceIndex] = tableHeaderList[targetIndex];
     tableHeaderList[targetIndex] = temp;
     return tableHeaderList;
+  }
+
+  async getHeaderList(page: Page) {
+    return await page
+      .getByTestId('table-header')
+      .locator('th')
+      .allTextContents();
   }
 }

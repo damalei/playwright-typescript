@@ -1,8 +1,8 @@
 import { expect, test, Page } from '@playwright/test';
-import { FREIGHT_BI_BASE_URL, DEFAULT_TIMEOUT_IN_MS } from '../../constants';
+import { DEFAULT_TIMEOUT_IN_MS } from '../../constants';
 import { waitForFilterSectionToLoad, logInAuth } from '../../utils';
 import { ExploreShipments } from '../models/exploreShipments';
-import { ExplorePayableInvoices } from '../models/explorePayableInvoices';
+import { ExplorePayableInvoices } from '../models/ExplorePayableInvoices';
 import { SideMenu } from '../models/sideMenu';
 const { chromium } = require('playwright');
 
