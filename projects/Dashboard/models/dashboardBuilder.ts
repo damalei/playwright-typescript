@@ -23,6 +23,7 @@ export class DashboardBuilder {
   readonly inputDisplayName: Locator;
   readonly inputName: Locator;
   readonly buttonSaveModal: Locator;
+  readonly listDashboard: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -60,13 +61,17 @@ export class DashboardBuilder {
       .locator('..')
       .locator('input');
     this.buttonSaveModal = page.getByTestId('save-view-modal-save-button');
+    this.listDashboard = page.getByTestId('custom-dashboards-list-tabs');
   }
 
   async loadDashboard(dashboard: string) {
     await this.searchDashboard.fill(dashboard);
     await this.page.getByTestId(`dashboard-builder-tab-${dashboard}`).click();
     await waitForFilterSectionToLoad(this.page, DEFAULT_TIMEOUT_IN_MS);
-    // await this.page.waitForTimeout(2000)
+    await this.page
+      .getByTestId('header-title')
+      .getByText(dashboard, { exact: true })
+      .waitFor({ state: 'visible', timeout: DEFAULT_TIMEOUT_IN_MS });
   }
 
   async exitAndReturnDashboard(dashboard1: string, dashboard2: string) {
@@ -123,5 +128,14 @@ export class DashboardBuilder {
   async checkElement(page: Page, element: Locator) {
     const status = (await element.count()) > 0;
     return status;
+  }
+
+  async clickDeleteDashboardFromList(page: Page, dashboard: string) {
+    await this.searchDashboard.fill(dashboard);
+    await this.listDashboard
+      .getByText(dashboard, { exact: true })
+      .locator('..')
+      .getByTestId('DeleteOutlineIcon')
+      .click();
   }
 }
