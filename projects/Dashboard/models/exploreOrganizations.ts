@@ -55,7 +55,7 @@ export class ExploreOrganizations {
 
   async orgTypeUnitSelector(orgType: string) {
     await this.orgTypeSelector.click();
-    const orgTypeValue = this.page.locator(`text=${orgType}`);
+    const orgTypeValue = this.page.getByRole('option', { name: `${orgType}` });
     await orgTypeValue.click();
   }
   async getDrilldownOrganizationParsedAmounts(
