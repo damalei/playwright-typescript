@@ -39,8 +39,16 @@ test.describe.serial('[53] Edit columns on the Organizations page', () => {
   });
 
   test('[53.5] User rearranges columns', async () => {
-    const expectedHeaderList = await org.globalNativeTable.swapColumns(page, 1, 2);
-    newHeaderList = await org.globalNativeTable.dragSourceToTargetColumn(page, 1, 2);
+    const expectedHeaderList = await org.globalNativeTable.swapColumns(
+      page,
+      1,
+      2
+    );
+    newHeaderList = await org.globalNativeTable.dragSourceToTargetColumn(
+      page,
+      1,
+      2
+    );
     const listState = await areListsEqual(expectedHeaderList, newHeaderList);
     await expect.soft(listState).toBe(true);
   });
@@ -55,47 +63,62 @@ test.describe.serial('[53] Edit columns on the Organizations page', () => {
     await org.goto();
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
     await waitforTablePageLoad(page, DEFAULT_TIMEOUT_IN_MS);
-    const savedHeaderList = await org.globalNativeTable.getHeaderList(page)
+    const savedHeaderList = await org.globalNativeTable.getHeaderList(page);
     const listState = await areListsEqual(expectedHeaderList, savedHeaderList);
     await expect.soft(listState).toBe(true);
   });
 
   test('53.X User removes a column', async () => {
-    const nItemText = newHeaderList[indexToRemove].replace(/\(.*?\)/g, '').trim();
+    const nItemText = newHeaderList[indexToRemove]
+      .replace(/\(.*?\)/g, '')
+      .trim();
     await org.globalNativeTable.editColumnButton.click();
     await org.globalNativeTable.menuEditColumn
       .locator(`//span[text()='${nItemText}']/ancestor::*[3]`)
       .getByTestId('VisibilityIcon')
       .click();
     await org.globalNativeTable.editColumnButton.click();
-    await expect.soft(org.globalNativeTable.columnHeader.getByText(nItemText, {exact: true})).not.toBeVisible();
-  })
+    await expect
+      .soft(
+        org.globalNativeTable.columnHeader.getByText(nItemText, { exact: true })
+      )
+      .not.toBeVisible();
+  });
 
   test('53.X User adds a column', async () => {
     await org.globalNativeTable.editColumnButton.click();
-    const addedItem = await org.globalNativeTable.menuEditColumn
-      .getByTestId('VisibilityOffIcon')
-      .nth(indexToAdd)
-      .locator('//preceding-sibling::*[2]')
-      .textContent() || '';
+    const addedItem =
+      (await org.globalNativeTable.menuEditColumn
+        .getByTestId('VisibilityOffIcon')
+        .nth(indexToAdd)
+        .locator('//preceding-sibling::*[2]')
+        .textContent()) || '';
     await org.globalNativeTable.menuEditColumn
       .getByTestId('VisibilityOffIcon')
       .nth(indexToAdd)
       .click();
     await org.globalNativeTable.editColumnButton.click();
-    await expect.soft(org.globalNativeTable.columnHeader.getByText(addedItem)).toBeVisible();
-  })
+    await expect
+      .soft(org.globalNativeTable.columnHeader.getByText(addedItem))
+      .toBeVisible();
+  });
 
   test('53.X User sorts a column', async () => {
     const firstSortIcon = await org.globalNativeTable.columnHeader
       .getByTestId('selector-icon')
       .nth(1);
-    sortedColumnText = await firstSortIcon.locator('..').textContent() || '';
+    sortedColumnText = (await firstSortIcon.locator('..').textContent()) || '';
     await firstSortIcon.click();
     await expect
-      .soft(page.getByTestId('table-header').getByText(sortedColumnText).locator('..').getByTestId('down-icon'))
+      .soft(
+        page
+          .getByTestId('table-header')
+          .getByText(sortedColumnText)
+          .locator('..')
+          .getByTestId('down-icon')
+      )
       .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
-  })
+  });
 
   test('[53.6] User shares columns to another user with edits (add, remove, rearrange, and sort)', async () => {
     const shareUrlHeaderlList = await org.globalNativeTable.getHeaderList(page);
@@ -112,10 +135,19 @@ test.describe.serial('[53] Edit columns on the Organizations page', () => {
     await waitForFilterSectionToLoad(page1, DEFAULT_TIMEOUT_IN_MS);
     await waitforTablePageLoad(page1, DEFAULT_TIMEOUT_IN_MS);
     const newPageHeaderList = await org.globalNativeTable.getHeaderList(page1);
-    const listState = await areListsEqual(shareUrlHeaderlList, newPageHeaderList);
+    const listState = await areListsEqual(
+      shareUrlHeaderlList,
+      newPageHeaderList
+    );
     await expect.soft(listState).toBe(true);
     await expect
-      .soft(page1.getByTestId('table-header').getByText(sortedColumnText).locator('..').getByTestId('down-icon'))
+      .soft(
+        page1
+          .getByTestId('table-header')
+          .getByText(sortedColumnText)
+          .locator('..')
+          .getByTestId('down-icon')
+      )
       .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 });

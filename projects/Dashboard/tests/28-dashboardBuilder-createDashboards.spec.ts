@@ -8,8 +8,10 @@ import { SideMenu } from '../models/sideMenu';
 import { DEFAULT_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
 import { DashboardBuilder } from '../models/dashboardBuilder';
 import { UserManagement } from '../models/userManagement';
+import { getFormattedDateTime } from '../../utils';
 
-const dashboardTitle = 'QA Test TC28';
+let dashboardTitle;
+let dateNow;
 const linequery = `
 select
     date(date_trunc('months', date_shipment_created)) as period, sum(ar_amount) as revenue
@@ -24,27 +26,16 @@ const chartName2 = 'Line Chart with AIR filter';
 const chartName3 = 'Line Chart with SEA filter';
 const xpathUserManagementButton = '//button[text()="Save"]';
 
-test.describe('[28] Dashboard Builder: Create/Edit Dashboards', () => {
+test.describe.serial('[28] Dashboard Builder: Create/Edit Dashboards', () => {
   let page: Page;
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     await page.goto(FREIGHT_BI_BASE_URL);
   });
 
-  test.afterAll(async ({ browser }) => {
-    const dash = new DashboardBuilder(page);
-    await dash.goto();
-    await dash.inputSearchDashboard.fill(`${dashboardTitle} copy edited`);
-    await dash.listButtonDashboardDelete.first().click();
-    await dash.buttonDeleteDashboardConfirm.click();
-    await waitForSnackBar(page, DEFAULT_TIMEOUT_IN_MS);
-    await dash.inputSearchDashboard.fill(dashboardTitle);
-    await dash.listButtonDashboardDelete.first().click();
-    await dash.buttonDeleteDashboardConfirm.click();
-    await waitForSnackBar(page, DEFAULT_TIMEOUT_IN_MS);
-  });
-
   test('[28.X] Admin user creates a dashboard', async () => {
+    dateNow = getFormattedDateTime();
+    dashboardTitle = `QA Test TC28 ${dateNow}`;
     const dash = new DashboardBuilder(page);
     const side = new SideMenu(page);
     await side.userProfile.click();
@@ -272,6 +263,12 @@ test.describe('[28] Dashboard Builder: Create/Edit Dashboards', () => {
       `${dashboardTitle} copy edited`
     );
     await user.buttonSave.click();
+    const confirmButton = page.getByText('Confirm');
+    try {
+      await confirmButton.click();
+    } catch (error) {
+      console.log('Element not found, continuing...');
+    }
     await waitForElementToHide(
       page,
       DEFAULT_TIMEOUT_IN_MS,
@@ -295,5 +292,21 @@ test.describe('[28] Dashboard Builder: Create/Edit Dashboards', () => {
     await expect
       .soft(page.getByTestId(`data-component-${chartName3} copy`))
       .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
+  });
+
+  test.afterAll(async ({ browser }) => {
+    const dash = new DashboardBuilder(page);
+    await dash.goto();
+    await dash.inputSearchDashboard.fill(`${dashboardTitle} copy edited`);
+    await dash.clickDeleteDashboardFromList(
+      page,
+      `${dashboardTitle} copy edited`
+    );
+    await dash.buttonDeleteDashboardConfirm.click();
+    await waitForSnackBar(page, DEFAULT_TIMEOUT_IN_MS);
+    await dash.inputSearchDashboard.fill(dashboardTitle);
+    await dash.clickDeleteDashboardFromList(page, dashboardTitle);
+    await dash.buttonDeleteDashboardConfirm.click();
+    await waitForSnackBar(page, DEFAULT_TIMEOUT_IN_MS);
   });
 });
