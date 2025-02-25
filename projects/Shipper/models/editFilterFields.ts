@@ -1,6 +1,9 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { DASHBOARD_TIMEOUT_IN_MS } from '../../constants';
 
+let dischargePortKey;
+let dischargePortValue;
+
 export class EditFilterFields {
   readonly page: Page;
   readonly editFilterFieldsBtn: Locator;
@@ -26,11 +29,9 @@ export class EditFilterFields {
   readonly shipmentWeightValue: Locator;
   readonly transportModeFilterLocator: Locator;
   readonly drilldownTableShipmentsArriving: Locator;
-  readonly dischargeFilterValueLocator: Locator;
   readonly dischargePortValue: Locator;
   readonly dischargePortFilterFields: Locator;
   readonly deleteFilterValueBtn: Locator;
-  readonly dischargePortFilterValueChip: Locator;
   readonly transportModeFilterValueChip: Locator;
   readonly shipmentWeightFilterValueChip: Locator;
   readonly failedToDepartDrilldown: Locator;
@@ -49,6 +50,8 @@ export class EditFilterFields {
   readonly lastLegArrivalStatusFilterValueLocator: Locator;
   readonly chargeableWeightFilterLocator: Locator;
   readonly lastLegArrivalStatusFilterLocator: Locator;
+  readonly dischargePortFilterValueChip: (key: string) => Locator;
+  readonly dischargeFilterValueLocator: (key: string) => Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -98,7 +101,6 @@ export class EditFilterFields {
     this.lastLegArrivalStatusFilterLocator = page.locator(
       'span:has-text("Last Leg Arrival Status") + *'
     );
-
     this.saveViewModal = page.getByRole('dialog');
     this.saveViewSuccessNote = page.getByText('has been updated');
     this.filterFields = page.getByTestId('filters');
@@ -114,20 +116,17 @@ export class EditFilterFields {
     this.lastLegArrivalStatusFilterValueLocator = page.locator(
       'span:has-text("Delayed") + *'
     );
-    this.dischargeFilterValueLocator = page.locator(
-      'span:has-text("NLAMS") + *'
-    );
+    this.dischargeFilterValueLocator = (key: string) =>
+      page.locator('span:has-text("' + key + '") + *');
     this.drilldownTableShipmentsArriving = page
       .getByText('Estimated Time of Arrival (')
       .first();
-    this.dischargePortValue = page.getByText('NLAMSAmsterdam');
     this.dischargePortFilterFields = page
       .getByTestId('Discharge Port-custom-multiple-text-field')
       .locator('div');
     this.deleteFilterValueBtn = page.getByText('Delete');
-    this.dischargePortFilterValueChip = page.getByRole('button', {
-      name: 'NLAMS',
-    });
+    this.dischargePortFilterValueChip = (key: string) =>
+      page.getByRole('button', { name: key });
     this.transportModeFilterValueChip = page.getByRole('button', {
       name: 'SEA',
     });
@@ -251,8 +250,10 @@ export class EditFilterFields {
     await this.transportModeSea.click();
     await this.shipmentWeightFilterChip.click();
     await this.shipmentWeightValue.fill('1');
-    await this.dischargePortFilterFields.click();
-    await this.dischargePortValue.click();
+    await this.clickDropdownValue(
+      'Discharge Port-custom-multiple-text-field',
+      0
+    );
     await this.waitForExceptionManagement();
   }
 
@@ -267,7 +268,7 @@ export class EditFilterFields {
 
   async checkAddedFilterValuesExceptionManagement() {
     const filterValueChips = [
-      this.dischargePortFilterValueChip,
+      this.dischargePortFilterValueChip(dischargePortKey),
       this.transportModeFilterValueChip,
       this.shipmentWeightFilterValueChip,
     ];
@@ -280,7 +281,7 @@ export class EditFilterFields {
 
   async deleteFilterValuesExceptionManagement() {
     await this.transportModeFilterLocator.click();
-    await this.dischargeFilterValueLocator.click();
+    await this.dischargeFilterValueLocator(dischargePortKey).click();
     await this.shipmentWeightFilterValueChip.click();
     await this.deleteFilterValueBtn.click();
     await this.waitForExceptionManagement();
@@ -290,7 +291,9 @@ export class EditFilterFields {
     await expect(this.transportModeFilterValueChip).not.toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
-    await expect(this.dischargePortFilterValueChip).not.toBeVisible({
+    await expect(
+      this.dischargePortFilterValueChip(dischargePortKey)
+    ).not.toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
     await expect(this.shipmentWeightFilterValueChip).not.toBeVisible({
@@ -357,8 +360,10 @@ export class EditFilterFields {
   }
 
   async addFilterValuesExplorePages() {
-    await this.dischargePortFilterFields.click();
-    await this.dischargePortValue.click();
+    await this.clickDropdownValue(
+      'Discharge Port-custom-multiple-text-field',
+      0
+    );
     await this.lastLegArrivalStatusFilterChip.click();
     await this.lastLegArrivalStatusValue.click();
     await this.hasExceptionsChip.click();
@@ -368,7 +373,7 @@ export class EditFilterFields {
   async checkAddedFilterValuesExplorePages() {
     const filterValueValueChipsExplorePages = [
       this.hasExceptionsValueChip,
-      this.dischargePortFilterValueChip,
+      this.dischargePortFilterValueChip(dischargePortKey),
       this.lastLegArrivalStatusValueChip,
     ];
     for (const addedFilterValueChip of filterValueValueChipsExplorePages) {
@@ -379,13 +384,15 @@ export class EditFilterFields {
   }
 
   async deleteFilterValuesExplorePages() {
-    await this.dischargeFilterValueLocator.click();
+    await this.dischargeFilterValueLocator(dischargePortKey).click();
     await this.hasExceptionsFilterValueLocator.click();
     await this.lastLegArrivalStatusFilterValueLocator.click();
   }
 
   async checkDeletedFilterValuesExplorePages() {
-    await expect(this.dischargeFilterValueLocator).not.toBeVisible({
+    await expect(
+      this.dischargeFilterValueLocator(dischargePortKey)
+    ).not.toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
     await expect(this.hasExceptionsFilterValueLocator).not.toBeVisible({
@@ -410,5 +417,59 @@ export class EditFilterFields {
     await expect(this.lastLegArrivalStatusFilterLocator).not.toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
+  }
+
+  async getDropdownRowsAsDict(
+    fieldTestId: string
+  ): Promise<Record<string, string>> {
+    const field = this.page.getByTestId(fieldTestId);
+    const dropdownRows = this.page.locator('[class*="a1-dropdownRow"]');
+    const count = await dropdownRows.count();
+    console.log(count);
+    const dict: Record<string, string> = {};
+
+    for (let i = 0; i < count; i++) {
+      const row = dropdownRows.nth(i);
+      const divs = row.locator('div');
+      const key = await divs.nth(0).textContent();
+      const value = await divs.nth(1).textContent();
+
+      if (key && value) {
+        dict[key.trim()] = value.trim();
+      }
+    }
+
+    return dict;
+  }
+
+  async getDropdownKeyValue(
+    fieldTestId: string,
+    optionNumber: number
+  ): Promise<{ key: string; value: string } | null> {
+    const dict = await this.getDropdownRowsAsDict(fieldTestId);
+    const keys = Object.keys(dict);
+
+    if (keys.length > 0) {
+      const nKey = keys[optionNumber];
+      return {
+        key: nKey,
+        value: dict[nKey],
+      };
+    }
+
+    return null;
+  }
+
+  async clickDropdownValue(fieldTestId: string, optionNumber: number) {
+    await this.page.getByTestId(fieldTestId).click();
+    const result = await this.getDropdownKeyValue(fieldTestId, optionNumber);
+    if (!result) throw new Error('No dropdown value found');
+    dischargePortKey = result.key.replace(' ', '');
+    dischargePortValue = result.value.replace(' ', '');
+    await this.page
+      .getByTestId(fieldTestId)
+      .getByText(`${dischargePortKey}${dischargePortValue}`)
+      .click();
+    return { key: dischargePortKey, value: dischargePortValue };
   }
 }
