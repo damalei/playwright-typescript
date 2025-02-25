@@ -23,7 +23,8 @@ const indexToAdd = 1;
  * index to add is can be any number as long as it is not the same column that was removed
  */
 
-test.describe.serial('[51] Edit columns on the Receivable Invoices page', () => {
+test.describe
+  .serial('[51] Edit columns on the Receivable Invoices page', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
@@ -39,8 +40,16 @@ test.describe.serial('[51] Edit columns on the Receivable Invoices page', () => 
   });
 
   test('[51.5] User rearranges columns', async () => {
-    const expectedHeaderList = await rec.globalNativeTable.swapColumns(page, 1, 2);
-    newHeaderList = await rec.globalNativeTable.dragSourceToTargetColumn(page, 1, 2);
+    const expectedHeaderList = await rec.globalNativeTable.swapColumns(
+      page,
+      1,
+      2
+    );
+    newHeaderList = await rec.globalNativeTable.dragSourceToTargetColumn(
+      page,
+      1,
+      2
+    );
     const listState = await areListsEqual(expectedHeaderList, newHeaderList);
     await expect.soft(listState).toBe(true);
   });
@@ -55,47 +64,62 @@ test.describe.serial('[51] Edit columns on the Receivable Invoices page', () => 
     await rec.goto();
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
     await waitforTablePageLoad(page, DEFAULT_TIMEOUT_IN_MS);
-    const savedHeaderList = await rec.globalNativeTable.getHeaderList(page)
+    const savedHeaderList = await rec.globalNativeTable.getHeaderList(page);
     const listState = await areListsEqual(expectedHeaderList, savedHeaderList);
     await expect.soft(listState).toBe(true);
   });
 
   test('51.X User removes a column', async () => {
-    const nItemText = newHeaderList[indexToRemove].replace(/\(.*?\)/g, '').trim();
+    const nItemText = newHeaderList[indexToRemove]
+      .replace(/\(.*?\)/g, '')
+      .trim();
     await rec.globalNativeTable.editColumnButton.click();
     await rec.globalNativeTable.menuEditColumn
       .locator(`//span[text()='${nItemText}']/ancestor::*[3]`)
       .getByTestId('VisibilityIcon')
       .click();
     await rec.globalNativeTable.editColumnButton.click();
-    await expect.soft(rec.globalNativeTable.columnHeader.getByText(nItemText, {exact: true})).not.toBeVisible();
-  })
+    await expect
+      .soft(
+        rec.globalNativeTable.columnHeader.getByText(nItemText, { exact: true })
+      )
+      .not.toBeVisible();
+  });
 
   test('51.X User adds a column', async () => {
     await rec.globalNativeTable.editColumnButton.click();
-    const addedItem = await rec.globalNativeTable.menuEditColumn
-      .getByTestId('VisibilityOffIcon')
-      .nth(indexToAdd)
-      .locator('//preceding-sibling::*[2]')
-      .textContent() || '';
+    const addedItem =
+      (await rec.globalNativeTable.menuEditColumn
+        .getByTestId('VisibilityOffIcon')
+        .nth(indexToAdd)
+        .locator('//preceding-sibling::*[2]')
+        .textContent()) || '';
     await rec.globalNativeTable.menuEditColumn
       .getByTestId('VisibilityOffIcon')
       .nth(indexToAdd)
       .click();
     await rec.globalNativeTable.editColumnButton.click();
-    await expect.soft(rec.globalNativeTable.columnHeader.getByText(addedItem)).toBeVisible();
-  })
+    await expect
+      .soft(rec.globalNativeTable.columnHeader.getByText(addedItem))
+      .toBeVisible();
+  });
 
   test('51.X User sorts a column', async () => {
     const firstSortIcon = await rec.globalNativeTable.columnHeader
       .getByTestId('selector-icon')
       .nth(1);
-    sortedColumnText = await firstSortIcon.locator('..').textContent() || '';
+    sortedColumnText = (await firstSortIcon.locator('..').textContent()) || '';
     await firstSortIcon.click();
     await expect
-      .soft(page.getByTestId('table-header').getByText(sortedColumnText).locator('..').getByTestId('down-icon'))
+      .soft(
+        page
+          .getByTestId('table-header')
+          .getByText(sortedColumnText)
+          .locator('..')
+          .getByTestId('down-icon')
+      )
       .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
-  })
+  });
 
   test('[51.6] User shares columns to another user with edits (add, remove, rearrange, and sort)', async () => {
     const shareUrlHeaderlList = await rec.globalNativeTable.getHeaderList(page);
@@ -112,10 +136,19 @@ test.describe.serial('[51] Edit columns on the Receivable Invoices page', () => 
     await waitForFilterSectionToLoad(page1, DEFAULT_TIMEOUT_IN_MS);
     await waitforTablePageLoad(page1, DEFAULT_TIMEOUT_IN_MS);
     const newPageHeaderList = await rec.globalNativeTable.getHeaderList(page1);
-    const listState = await areListsEqual(shareUrlHeaderlList, newPageHeaderList);
+    const listState = await areListsEqual(
+      shareUrlHeaderlList,
+      newPageHeaderList
+    );
     await expect.soft(listState).toBe(true);
     await expect
-      .soft(page1.getByTestId('table-header').getByText(sortedColumnText).locator('..').getByTestId('down-icon'))
+      .soft(
+        page1
+          .getByTestId('table-header')
+          .getByText(sortedColumnText)
+          .locator('..')
+          .getByTestId('down-icon')
+      )
       .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 });

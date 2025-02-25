@@ -39,8 +39,16 @@ test.describe.serial('[57] Edit columns on the Containers page', () => {
   });
 
   test('[57.5] User rearranges columns', async () => {
-    const expectedHeaderList = await con.globalNativeTable.swapColumns(page, 2, 3);
-    newHeaderList = await con.globalNativeTable.dragSourceToTargetColumn(page, 2, 3);
+    const expectedHeaderList = await con.globalNativeTable.swapColumns(
+      page,
+      2,
+      3
+    );
+    newHeaderList = await con.globalNativeTable.dragSourceToTargetColumn(
+      page,
+      2,
+      3
+    );
     const listState = await areListsEqual(expectedHeaderList, newHeaderList);
     await expect.soft(listState).toBe(true);
   });
@@ -55,7 +63,7 @@ test.describe.serial('[57] Edit columns on the Containers page', () => {
     await con.goto();
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
     await waitforTablePageLoad(page, DEFAULT_TIMEOUT_IN_MS);
-    const savedHeaderList = await con.globalNativeTable.getHeaderList(page)
+    const savedHeaderList = await con.globalNativeTable.getHeaderList(page);
     const listState = await areListsEqual(expectedHeaderList, savedHeaderList);
     await expect.soft(listState).toBe(true);
   });
@@ -69,32 +77,45 @@ test.describe.serial('[57] Edit columns on the Containers page', () => {
       .getByTestId('VisibilityIcon')
       .click();
     await con.globalNativeTable.editColumnButton.click();
-    await expect.soft(con.globalNativeTable.columnHeader.getByText(nItemText, {exact: true})).not.toBeVisible();
-  })
+    await expect
+      .soft(
+        con.globalNativeTable.columnHeader.getByText(nItemText, { exact: true })
+      )
+      .not.toBeVisible();
+  });
 
   test('57.X User adds a column', async () => {
     await con.globalNativeTable.editColumnButton.click();
-    const addedItem = await con.globalNativeTable.menuEditColumn
-      .getByTestId('VisibilityOffIcon')
-      .nth(indexToAdd)
-      .locator('//preceding-sibling::*[2]')
-      .textContent() || '';
+    const addedItem =
+      (await con.globalNativeTable.menuEditColumn
+        .getByTestId('VisibilityOffIcon')
+        .nth(indexToAdd)
+        .locator('//preceding-sibling::*[2]')
+        .textContent()) || '';
     await con.globalNativeTable.menuEditColumn
       .getByTestId('VisibilityOffIcon')
       .nth(indexToAdd)
       .click();
     await con.globalNativeTable.editColumnButton.click();
-    await expect.soft(con.globalNativeTable.columnHeader.getByText(addedItem)).toBeVisible();
+    await expect
+      .soft(con.globalNativeTable.columnHeader.getByText(addedItem))
+      .toBeVisible();
   });
 
   test('57.X User sorts a column', async () => {
     const firstSortIcon = await con.globalNativeTable.columnHeader
       .getByTestId('selector-icon')
       .nth(1);
-    sortedColumnText = await firstSortIcon.locator('..').textContent() || '';
+    sortedColumnText = (await firstSortIcon.locator('..').textContent()) || '';
     await firstSortIcon.click();
     await expect
-      .soft(page.getByTestId('table-header').getByText(sortedColumnText).locator('..').getByTestId('down-icon'))
+      .soft(
+        page
+          .getByTestId('table-header')
+          .getByText(sortedColumnText)
+          .locator('..')
+          .getByTestId('down-icon')
+      )
       .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 
@@ -113,10 +134,19 @@ test.describe.serial('[57] Edit columns on the Containers page', () => {
     await waitForFilterSectionToLoad(page1, DEFAULT_TIMEOUT_IN_MS);
     await waitforTablePageLoad(page1, DEFAULT_TIMEOUT_IN_MS);
     const newPageHeaderList = await con.globalNativeTable.getHeaderList(page1);
-    const listState = await areListsEqual(shareUrlHeaderlList, newPageHeaderList);
+    const listState = await areListsEqual(
+      shareUrlHeaderlList,
+      newPageHeaderList
+    );
     await expect.soft(listState).toBe(true);
     await expect
-      .soft(page1.getByTestId('table-header').getByText(sortedColumnText).locator('..').getByTestId('down-icon'))
+      .soft(
+        page1
+          .getByTestId('table-header')
+          .getByText(sortedColumnText)
+          .locator('..')
+          .getByTestId('down-icon')
+      )
       .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 });
