@@ -425,7 +425,6 @@ export class EditFilterFields {
     const field = this.page.getByTestId(fieldTestId);
     const dropdownRows = this.page.locator('[class*="a1-dropdownRow"]');
     const count = await dropdownRows.count();
-    console.log(count);
     const dict: Record<string, string> = {};
 
     for (let i = 0; i < count; i++) {
