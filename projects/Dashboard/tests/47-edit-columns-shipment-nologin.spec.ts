@@ -27,12 +27,12 @@ test.describe.serial('[47] Edit columns on the Shipments page', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
-    const context = await browser.newContext();
+    const context = await browser.newContext({ storageState: undefined });
     page = await context.newPage();
     await logInAuth(
       page,
-      `${process.env.FREIGHT_BI_CLIENT_USER}`,
-      `${process.env.FREIGHT_BI_CLIENT_PASS}`
+      `${process.env.FREIGHT_BI_CLIENT5_USER}`,
+      `${process.env.FREIGHT_BI_CLIENT5_PASS}`
     );
     ship = new ExploreShipments(page);
     await ship.goto();
