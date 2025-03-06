@@ -2,14 +2,22 @@ import { test, expect, Page } from '@playwright/test';
 import { LoginPage } from '../models/login.ts';
 import { SignUpPage } from '../models/signUp.ts';
 import { AccountControl } from '../models/accountControl.ts';
-import { DEFAULT_TIMEOUT_IN_MS } from '../../constants';
+import {
+  DASHBOARD_TIMEOUT_IN_MS,
+  DEFAULT_TIMEOUT_IN_MS,
+} from '../../constants';
 
 let loginPage;
 let signUpPage;
 let accountControl;
 let page: Page;
 
-test.describe('[29] ShipperViz Account Control', () => {
+test.describe.configure({
+  // mode: 'parallel',
+  timeout: DASHBOARD_TIMEOUT_IN_MS,
+});
+
+test.describe.serial('[29] ShipperViz Account Control', () => {
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     loginPage = new LoginPage(page);
@@ -29,7 +37,9 @@ test.describe('[29] ShipperViz Account Control', () => {
   test('[29.2] Admin user approves an account request from a user with multiple sign-ups from paywalls', async () => {
     await accountControl.goToShipperPortalUserManagement();
     await accountControl.clickDashboardUserAvatar();
-    await signUpPage.checkShipperVizSignUpPaywallAccess();
+    await signUpPage.checkShipperVizSignUpPaywallAccess(
+      global.SHIPPER_VIZ_USER_PAYWALL_REQUEST_EMAIL
+    );
     await accountControl.approveUser('Test Organization');
     await expect(page.getByText('An account has been created')).toBeVisible({
       timeout: DEFAULT_TIMEOUT_IN_MS,
@@ -54,97 +64,99 @@ test.describe('[29] ShipperViz Account Control', () => {
     await accountControl.clickDashboardUserAvatar();
     await signUpPage.checkAutoApproval('userjie4@test-auto-approve.com');
   });
-});
 
-test('[29.4] Admin user rejects an account request', async () => {
-  await signUpPage.gotoDashboardUserPortalManagement();
-  await accountControl.clickDashboardUserAvatar();
-  await accountControl.goPendingApprovalTab();
-  await signUpPage.checkShipperVizRequestedAccount();
-  await expect
-    .soft(page.getByRole('cell', { name: 'Approve Reject' }))
-    .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
-  await accountControl.rejectShipperVizAccount();
-  await signUpPage.gotoDashboardUserPortalManagement();
-  await accountControl.clickDashboardUserAvatar();
-  await accountControl.checkRejectedUser();
-});
-
-test('[29.5] Admin user edits user shipper organization', async () => {
-  await accountControl.gotoShipper();
-  await accountControl.accountControlLoginToShipper();
-  await accountControl.searchShipperPortalShipments();
-  await expect
-    .soft(page.getByTestId('shipment-card'))
-    .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
-
-  await signUpPage.gotoDashboard();
-  await accountControl.clickOrganizationManagement();
-  await accountControl.searchShipperOrg();
-  await accountControl.editShipperPortalOrg();
-  await expect
-    .soft(page.getByRole('cell', { name: 'DOCT' }))
-    .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
-  await expect
-    .soft(
-      page.getByRole('cell', { name: 'Automation Test Organization Edited' })
-    )
-    .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
-  await accountControl.gotoShipper();
-  await accountControl.accountControlLoginToShipper();
-  await accountControl.searchShipperPortalShipments();
-  await expect
-    .soft(page.getByText('No shipment found for'))
-    .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
-});
-
-test('[29.6] Admin user clicks "Send reset password email"', async () => {
-  await signUpPage.gotoDashboard();
-  await accountControl.goToShipperPortalUserManagement();
-  await accountControl.goToApproveTab();
-  await accountControl.sendResetPasswordEmail(
-    'jeorjie.manalaysay+dd_act_001@expedock.com'
-  );
-  await expect(page.getByText(/Successfully sent the reset/)).toBeVisible({
-    timeout: DEFAULT_TIMEOUT_IN_MS,
-  });
-});
-
-test('[29.7] Admin user assigns a user to a different shipper organization', async () => {
-  await accountControl.goToShipperPortalUserManagement();
-  await accountControl.goToApproveTab();
-  await accountControl.editUserOrganization('Demo Organization 1');
-  await expect(page.getByText('Successfully updated')).toBeVisible({
-    timeout: DEFAULT_TIMEOUT_IN_MS,
+  test('[29.4] Admin user rejects an account request', async () => {
+    await signUpPage.gotoDashboardUserPortalManagement();
+    await accountControl.clickDashboardUserAvatar();
+    await accountControl.goPendingApprovalTab();
+    await signUpPage.checkShipperVizRequestedAccount(
+      global.SHIPPER_VIZ_USER_REQUEST_EMAIL
+    );
+    await expect
+      .soft(page.getByRole('cell', { name: 'Approve Reject' }))
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
+    await accountControl.rejectShipperVizAccount();
+    await signUpPage.gotoDashboardUserPortalManagement();
+    await accountControl.clickDashboardUserAvatar();
+    await accountControl.checkRejectedUser();
   });
 
-  await accountControl.gotoShipper();
-  await accountControl.accountControlLoginToShipper();
-  await accountControl.searchShipperPortalShipments();
-  await expect(page.getByTestId('shipment-card')).toBeVisible({
-    timeout: DEFAULT_TIMEOUT_IN_MS,
+  test('[29.5] Admin user edits user shipper organization', async () => {
+    await accountControl.gotoShipper();
+    await accountControl.accountControlLoginToShipper();
+    await accountControl.searchShipperPortalShipments();
+    await expect
+      .soft(page.getByTestId('shipment-card'))
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
+
+    await signUpPage.gotoDashboard();
+    await accountControl.clickOrganizationManagement();
+    await accountControl.searchShipperOrg();
+    await accountControl.editShipperPortalOrg();
+    await expect
+      .soft(page.getByRole('cell', { name: 'DOCT' }))
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
+    await expect
+      .soft(
+        page.getByRole('cell', { name: 'Automation Test Organization Edited' })
+      )
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
+    await accountControl.gotoShipper();
+    await accountControl.accountControlLoginToShipper();
+    await accountControl.searchShipperPortalShipments();
+    await expect
+      .soft(page.getByText('No shipment found for'))
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
-});
 
-test.afterAll('[29.X] Cleanup', async () => {
-  await signUpPage.gotoDashboard();
-  await accountControl.clickOrganizationManagement();
-  await accountControl.searchShipperOrg();
-  await accountControl.revertShipperPortalOrg();
-  await expect
-    .soft(page.getByRole('cell', { name: 'XYZAB' }))
-    .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
-  await expect
-    .soft(page.getByRole('cell', { name: 'Automation Test Organization' }))
-    .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
+  test('[29.6] Admin user clicks "Send reset password email"', async () => {
+    await signUpPage.gotoDashboard();
+    await accountControl.goToShipperPortalUserManagement();
+    await accountControl.goToApproveTab();
+    await accountControl.sendResetPasswordEmail(
+      'jeorjie.manalaysay+dd_act_001@expedock.com'
+    );
+    await expect(page.getByText(/Successfully sent the reset/)).toBeVisible({
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
+  });
 
-  await accountControl.goToShipperPortalUserManagement();
-  await accountControl.goToApproveTab();
-  await accountControl.revertToDefaultOrg(
-    'jeorjie.manalaysay+dd_act_001@expedock.com'
-  );
-  await accountControl.editUserOrganization('Automation Test Organization');
-  await expect(page.getByText('Successfully updated')).toBeVisible({
-    timeout: DEFAULT_TIMEOUT_IN_MS,
+  test('[29.7] Admin user assigns a user to a different shipper organization', async () => {
+    await accountControl.goToShipperPortalUserManagement();
+    await accountControl.goToApproveTab();
+    await accountControl.editUserOrganization('Demo Organization 1');
+    await expect(page.getByText('Successfully updated')).toBeVisible({
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
+
+    await accountControl.gotoShipper();
+    await accountControl.accountControlLoginToShipper();
+    await accountControl.searchShipperPortalShipments();
+    await expect(page.getByTestId('shipment-card')).toBeVisible({
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
+  });
+
+  test.afterAll('[29.X] Cleanup', async () => {
+    await signUpPage.gotoDashboard();
+    await accountControl.clickOrganizationManagement();
+    await accountControl.searchShipperOrg();
+    await accountControl.revertShipperPortalOrg();
+    await expect
+      .soft(page.getByRole('cell', { name: 'XYZAB' }))
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
+    await expect
+      .soft(page.getByRole('cell', { name: 'Automation Test Organization' }))
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
+
+    await accountControl.goToShipperPortalUserManagement();
+    await accountControl.goToApproveTab();
+    await accountControl.revertToDefaultOrg(
+      'jeorjie.manalaysay+dd_act_001@expedock.com'
+    );
+    await accountControl.editUserOrganization('Automation Test Organization');
+    await expect(page.getByText('Successfully updated')).toBeVisible({
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
   });
 });

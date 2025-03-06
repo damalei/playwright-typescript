@@ -32,6 +32,7 @@ test.describe.serial('User signs-up on ShipperViz', () => {
 
   test('[25.2] User signs up from different paywalls - non-expedock email', async () => {
     emailPayNonExpedock = `regtestautomation_tester_${cleanDateNow}_paywall@tester.com`;
+    await signUpPage.setGlobalShipperMultPayEmail(emailPayNonExpedock);
     await signUpPage.gotoShipperVizSignUp();
     await signUpPage.searchShipmentonShipperViz();
     await signUpPage.signUpOnShipperVizPaywalls(emailPayNonExpedock);

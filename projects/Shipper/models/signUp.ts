@@ -326,10 +326,10 @@ export class SignUpPage {
   }
 
   async setGlobalShipperEmail(email: string) {
-    global.shipperEmail = email;
+    global.SHIPPER_VIZ_USER_REQUEST_EMAIL = email;
   }
 
   async setGlobalShipperMultPayEmail(email: string) {
-    global.shipperMultPayEmail = email;
+    global.SHIPPER_VIZ_USER_PAYWALL_REQUEST_EMAIL = email;
   }
 }
