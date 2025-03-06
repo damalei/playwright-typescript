@@ -115,10 +115,7 @@ export class SignUpPage {
     await expect(this.requestAccountForm).toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
-    await this.requestAccountEmail.fill(
-      // `${process.env.SHIPPER_VIZ_USER_REQUEST_EMAIL}`
-      email
-    );
+    await this.requestAccountEmail.fill(email);
     await this.requestAccountOrganization.fill(
       `${process.env.SHIPPER_VIZ_USER_REQUEST_ORG}`
     );
@@ -166,22 +163,12 @@ export class SignUpPage {
   }
 
   async checkShipperVizRequestedAccount(email: string) {
-    await this.shipperUserSearchBar.fill(
-      // `${process.env.SHIPPER_VIZ_USER_REQUEST_EMAIL}`
-      email
-    );
-    await this.page.waitForSelector(
-      // `text=${process.env.SHIPPER_VIZ_USER_REQUEST_EMAIL}`
-      `text=${email}`
-    );
+    await this.shipperUserSearchBar.fill(email);
+    await this.page.waitForSelector(`text=${email}`);
     const shipperUserSearchResults = await this.page
-      // .locator(`text=${process.env.SHIPPER_VIZ_USER_REQUEST_EMAIL}`)
       .locator(`text=${email}`)
       .textContent();
-    expect(shipperUserSearchResults).toContain(
-      // process.env.SHIPPER_VIZ_USER_REQUEST_EMAIL
-      email
-    );
+    expect(shipperUserSearchResults).toContain(email);
     const shipperUserSearchResultsPaywallFeature = await this.page
       .locator('text=PaywallFeature.LANDING_PAGE')
       .textContent();
@@ -211,10 +198,7 @@ export class SignUpPage {
   }
 
   async fillRequestAccountFormOnPaywalls(email: string) {
-    await this.requestAccountEmail.fill(
-      // `${process.env.SHIPPER_VIZ_USER_PAYWALL_REQUEST_EMAIL}`
-      email
-    );
+    await this.requestAccountEmail.fill(email);
     await this.requestAccountOrganization.fill(
       `${process.env.SHIPPER_VIZ_USER_REQUEST_ORG}`
     );
@@ -279,22 +263,12 @@ export class SignUpPage {
   }
 
   async checkShipperVizSignUpPaywallAccess(email: string) {
-    await this.shipperUserSearchBar.fill(
-      // `${process.env.SHIPPER_VIZ_USER_PAYWALL_REQUEST_EMAIL}`
-      email
-    );
-    await this.page.waitForSelector(
-      // `text=${process.env.SHIPPER_VIZ_USER_PAYWALL_REQUEST_EMAIL}`
-      `text=${email}`
-    );
+    await this.shipperUserSearchBar.fill(email);
+    await this.page.waitForSelector(`text=${email}`);
     const shipperUserSearchResults = await this.page
-      // .locator(`text=${process.env.SHIPPER_VIZ_USER_PAYWALL_REQUEST_EMAIL}`)
       .locator(`text=${email}`)
       .textContent();
-    expect(shipperUserSearchResults).toContain(
-      // process.env.SHIPPER_VIZ_USER_PAYWALL_REQUEST_EMAIL
-      email
-    );
+    expect(shipperUserSearchResults).toContain(email);
 
     const signUpFormCellCSSLocator = await this.page.locator(
       'p.MuiTypography-root.MuiTypography-body1.css-uv7mby'
