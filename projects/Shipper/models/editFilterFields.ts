@@ -252,7 +252,7 @@ export class EditFilterFields {
     await this.shipmentWeightValue.fill('1');
     await this.clickDropdownValue(
       'Discharge Port-custom-multiple-text-field',
-      2
+      0
     );
     await this.waitForExceptionManagement();
   }
@@ -362,12 +362,11 @@ export class EditFilterFields {
   async addFilterValuesExplorePages() {
     await this.clickDropdownValue(
       'Discharge Port-custom-multiple-text-field',
-      2
+      0
     );
     await this.lastLegArrivalStatusFilterChip.click();
     await this.lastLegArrivalStatusValue.click();
     await this.hasExceptionsChip.click();
-    // await this.hasExceptionsValue.click();
     await this.page
       .getByTestId('Has Exceptions-custom-multiple-text-field')
       .getByText('True')
@@ -467,12 +466,13 @@ export class EditFilterFields {
     await this.page.getByTestId(fieldTestId).click();
     const result = await this.getDropdownKeyValue(fieldTestId, optionNumber);
     if (!result) throw new Error('No dropdown value found');
-    dischargePortKey = result.key.replace(' ', '');
-    dischargePortValue = result.value.replace(' ', '');
+    dischargePortKey = result.key.trim();
+    dischargePortValue = result.value.trim();
     await this.page
       .getByTestId(fieldTestId)
       .getByText(`${dischargePortKey}${dischargePortValue}`)
       .click();
+    await this.page.getByTestId(fieldTestId).click();
     return { key: dischargePortKey, value: dischargePortValue };
   }
 }

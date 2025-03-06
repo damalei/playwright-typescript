@@ -21,6 +21,7 @@ test.describe('TS 12 - User edits filter fields on Exceptions Management', () =>
     'Page Last Updated On',
     'Shipper Name',
   ];
+
   test('[12.1] User adds Filter Fields', async () => {
     await editFilterFields.waitForExceptionManagement();
     for (const filterFields of filterFieldstoAdd) {
