@@ -252,7 +252,7 @@ export class EditFilterFields {
     await this.shipmentWeightValue.fill('1');
     await this.clickDropdownValue(
       'Discharge Port-custom-multiple-text-field',
-      0
+      2
     );
     await this.waitForExceptionManagement();
   }
@@ -362,12 +362,16 @@ export class EditFilterFields {
   async addFilterValuesExplorePages() {
     await this.clickDropdownValue(
       'Discharge Port-custom-multiple-text-field',
-      0
+      2
     );
     await this.lastLegArrivalStatusFilterChip.click();
     await this.lastLegArrivalStatusValue.click();
     await this.hasExceptionsChip.click();
-    await this.hasExceptionsValue.click();
+    // await this.hasExceptionsValue.click();
+    await this.page
+      .getByTestId('Has Exceptions-custom-multiple-text-field')
+      .getByText('True')
+      .click();
   }
 
   async checkAddedFilterValuesExplorePages() {

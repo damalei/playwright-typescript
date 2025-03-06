@@ -71,7 +71,8 @@ test.describe('User clicks edits column > save columns', () => {
   test('Payable Invoices page', async ({}) => {
     const explorePay = new ExplorePayableInvoices(page);
     await explorePay.goto();
-    await explorePay.waitForReferenceComponent();
+    // await explorePay.waitForReferenceComponent();
+    await explorePay.globalNativeTable.waitForReferenceComponent();
     await explorePay.globalNativeTable.editColumnButton.click();
     await explorePay.globalNativeTable.editDisableAll.click();
     await explorePay.globalNativeTable.saveButton.click();
@@ -87,7 +88,8 @@ test.describe('User clicks edits column > save columns', () => {
   test('Receivable Invoices page', async ({}) => {
     const exploreRec = new ExploreReceivableInvoices(page);
     await exploreRec.goto();
-    await exploreRec.waitForReferenceComponent();
+    // await exploreRec.waitForReferenceComponent();
+    await exploreRec.globalNativeTable.waitForReferenceComponent();
     await exploreRec.globalNativeTable.editColumnButton.click();
     await exploreRec.globalNativeTable.editDisableAll.click();
     await exploreRec.globalNativeTable.saveButton.click();

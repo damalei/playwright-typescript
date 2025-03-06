@@ -13,6 +13,7 @@ export class GlobalNativeTable {
   readonly tableBody: Locator;
   readonly footer: Locator;
   readonly menuEditColumn: Locator;
+  readonly referenceComponent: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -25,6 +26,7 @@ export class GlobalNativeTable {
     this.tableBody = page.getByTestId('table-body');
     this.footer = page.getByTestId('filtered-shipments-footer');
     this.menuEditColumn = page.getByTestId('edit-columns-popper');
+    this.referenceComponent = page.getByTestId('table-body-0');
   }
 
   async getColumnElements() {
@@ -89,6 +91,10 @@ export class GlobalNativeTable {
   ) {
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
     await waitforTablePageLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    await this.referenceComponent.waitFor({
+      state: 'visible',
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
     const tableHeaderList = await this.page
       .getByTestId('table-header')
       .locator('th')
@@ -142,5 +148,12 @@ export class GlobalNativeTable {
       .getByTestId('table-header')
       .locator('th')
       .allTextContents();
+  }
+
+  async waitForReferenceComponent() {
+    await this.referenceComponent.waitFor({
+      state: 'visible',
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
   }
 }

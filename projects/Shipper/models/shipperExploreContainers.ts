@@ -12,7 +12,7 @@ export class ExploreContainers {
   constructor(page: Page) {
     this.page = page;
     this.referenceComponent = page
-      .locator('[data-testid*="containerNumberDisplay"]')
+      .locator('[data-testid*="filtered-shipments-footer"]')
       .first();
     this.containersFilterFields = page.getByTestId('filters');
     this.containersHeader = page.getByText('ContainersSave');
