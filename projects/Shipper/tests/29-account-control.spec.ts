@@ -18,8 +18,16 @@ test.describe('[29] ShipperViz Account Control', () => {
   });
 
   test('[29.1] Admin user approves an account request', async () => {
+    await signUpPage.gotoShipperVizSignUp();
+    await signUpPage.requestShipperVizAccountAccountControl();
     await signUpPage.loginToDashboard();
     await accountControl.goToShipperPortalUserManagement();
+    await accountControl.clickDashboardUserAvatar();
+    await accountControl.goPendingApprovalTab();
+    await signUpPage.checkShipperVizRequestedAccountControl();
+    await expect
+      .soft(page.getByRole('cell', { name: 'Approve Reject' }))
+      .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await accountControl.approveUser('Test Organization');
     await expect(page.getByText('An account has been created')).toBeVisible({
       timeout: DEFAULT_TIMEOUT_IN_MS,
@@ -45,14 +53,14 @@ test.describe('[29] ShipperViz Account Control', () => {
     });
     await signUpPage.gotoShipperVizSignUp();
     await signUpPage.fillSignUpFormAutoApproval(
-      'userjie4@test-auto-approve.com',
+      'userjie5@test-auto-approve.com',
       'Test Org',
       'Test User'
     );
     await signUpPage.gotoDashboard();
     await signUpPage.gotoDashboardUserPortalManagement();
     await accountControl.clickDashboardUserAvatar();
-    await signUpPage.checkAutoApproval('userjie4@test-auto-approve.com');
+    await signUpPage.checkAutoApproval('userjie5@test-auto-approve.com');
   });
 });
 

@@ -1,5 +1,6 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { DASHBOARD_TIMEOUT_IN_MS } from '../../constants';
+import exp from 'constants';
 
 let dischargePortKey;
 let dischargePortValue;
@@ -42,19 +43,35 @@ export class EditFilterFields {
   readonly lastLegArrivalStatusFilterChip: Locator;
   readonly exploreContainersDashboard: Locator;
   readonly containerNumbers: Locator;
+  readonly loginEmail: Locator;
+  readonly loginPass: Locator;
+  readonly loginBtn: Locator;
+  readonly exceptionManagementHeader: Locator;
   readonly lastLegArrivalStatusValue: Locator;
   readonly hasExceptionsValue: Locator;
   readonly lastLegArrivalStatusValueChip: Locator;
   readonly hasExceptionsValueChip: Locator;
-  readonly hasExceptionsFilterValueLocator: Locator;
+  readonly hasTrueValueLocator: Locator;
   readonly lastLegArrivalStatusFilterValueLocator: Locator;
   readonly chargeableWeightFilterLocator: Locator;
   readonly lastLegArrivalStatusFilterLocator: Locator;
   readonly dischargePortFilterValueChip: (key: string) => Locator;
   readonly dischargeFilterValueLocator: (key: string) => Locator;
+  readonly: (key: string) => Locator;
+  readonly consigneeNameFilterLocator: Locator;
+  readonly originPortFilterLocator: Locator;
+  readonly originPortFilterField: Locator;
+  readonly consigneeNameFilterField: Locator;
+  readonly failedToDepartDepartDrilldown: Locator;
 
   constructor(page: Page) {
     this.page = page;
+    this.loginEmail = page.getByLabel('Email Address');
+    this.loginPass = page.getByLabel('Password');
+    this.exceptionManagementHeader = page.getByTestId(
+      'exceptions-management-header'
+    );
+    this.loginBtn = page.getByRole('button', { name: 'LOG IN' });
     this.editFilterFieldsBtn = page.getByTestId('edit-filters-button');
     this.addFilterBtn = page.getByTestId('add-filter-button');
     this.searchFilter = page.getByPlaceholder('Search Filter');
@@ -101,6 +118,15 @@ export class EditFilterFields {
     this.lastLegArrivalStatusFilterLocator = page.locator(
       'span:has-text("Last Leg Arrival Status") + *'
     );
+
+    this.consigneeNameFilterLocator = page.locator(
+      'span:has-text("Consignee Name") + *'
+    );
+
+    this.originPortFilterLocator = page.locator(
+      'span:has-text("Origin Port") + *'
+    );
+
     this.saveViewModal = page.getByRole('dialog');
     this.saveViewSuccessNote = page.getByText('has been updated');
     this.filterFields = page.getByTestId('filters');
@@ -110,9 +136,7 @@ export class EditFilterFields {
     this.transportModeSea = page.getByText('SEASea Freight');
     this.shipmentWeightValue = page.getByLabel('value');
     this.transportModeFilterLocator = page.locator('span:has-text("Sea") + *');
-    this.hasExceptionsFilterValueLocator = page.locator(
-      'span:has-text("True") + *'
-    );
+    this.hasTrueValueLocator = page.locator('span:has-text("True") + *');
     this.lastLegArrivalStatusFilterValueLocator = page.locator(
       'span:has-text("Delayed") + *'
     );
@@ -143,6 +167,14 @@ export class EditFilterFields {
       name: 'Delayed',
     });
     this.hasExceptionsValueChip = page.getByRole('button', { name: 'True' });
+    this.originPortFilterField = page
+      .locator('label')
+      .filter({ hasText: 'Origin Port' });
+    this.consigneeNameFilterField = page.getByText('Consignee Name');
+    this.failedToDepartDepartDrilldown = page
+      .locator('div')
+      .filter({ hasText: /^Failed to depart \(Past 3 months\)View shipments$/ })
+      .getByRole('button');
   }
 
   async waitForExceptionManagement() {
@@ -385,7 +417,7 @@ export class EditFilterFields {
 
   async deleteFilterValuesExplorePages() {
     await this.dischargeFilterValueLocator(dischargePortKey).click();
-    await this.hasExceptionsFilterValueLocator.click();
+    await this.hasTrueValueLocator.click();
     await this.lastLegArrivalStatusFilterValueLocator.click();
   }
 
@@ -395,7 +427,7 @@ export class EditFilterFields {
     ).not.toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
-    await expect(this.hasExceptionsFilterValueLocator).not.toBeVisible({
+    await expect(this.hasTrueValueLocator).not.toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
     await expect(this.lastLegArrivalStatusFilterValueLocator).not.toBeVisible({
@@ -470,5 +502,62 @@ export class EditFilterFields {
       .getByText(`${dischargePortKey}${dischargePortValue}`)
       .click();
     return { key: dischargePortKey, value: dischargePortValue };
+  }
+
+  async loginToShipperDrilldown() {
+    await this.loginEmail.fill(`${process.env.SHIPPER_VIZ_CLIENT2_USER}`);
+    await this.loginPass.fill(`${process.env.SHIPPER_VIZ_CLIENT2_PASS}`);
+    await this.loginBtn.click();
+    await expect(this.exceptionManagementHeader).toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    await expect(
+      this.page.getByText('Estimated Time of Arrival (').first()
+    ).toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
+  }
+
+  async removeFilterFieldsDrilldown() {
+    await this.originPortFilterLocator.click();
+    await this.consigneeNameFilterLocator.click();
+  }
+
+  async checkRemovedFilterFieldsDrilldown() {
+    await expect(this.originPortFilterField).not.toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    await expect(this.consigneeNameFilterField).not.toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+  }
+
+  async drilldownFailedToDepart() {
+    await this.failedToDepartDepartDrilldown.click();
+    await expect(this.page.getByText('Filters applied from')).toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    await expect(
+      this.page.getByTestId('table-body-0-forwarder_reference')
+    ).toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
+    await expect(
+      this.page.getByRole('link', { name: 'Exceptions Management' })
+    ).toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
+  }
+
+  async addFilterValueDrilldown() {
+    await this.transportModeFilter.click();
+    const firstOption = this.page
+      .locator('.MuiGrid-container.css-1sznya1-dropdownRow')
+      .first();
+    const optionText = await firstOption.innerText();
+    const selectedText = optionText.split('\n')[0].trim();
+    await firstOption.click();
+
+    await this.saveViewDashboard();
+    await this.navigateDashboardBackToExploreShipments();
+    const chip = this.page
+      .locator('.MuiChip-root')
+      .filter({ hasText: selectedText });
+    await expect(chip).toBeVisible();
+    await expect(this.page.getByRole('button', { name: 'True' })).toBeVisible();
   }
 }

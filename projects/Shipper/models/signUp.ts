@@ -127,6 +127,23 @@ export class SignUpPage {
     await this.submitRequestBtn.click();
   }
 
+  async requestShipperVizAccountAccountControl() {
+    await this.requestAccountBtn.click();
+    await expect(this.requestAccountForm).toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    await this.requestAccountEmail.fill(
+      `${process.env.SHIPPER_VIZ_USER2_REQUEST_EMAIL}`
+    );
+    await this.requestAccountOrganization.fill(
+      `${process.env.SHIPPER_VIZ_USER_REQUEST_ORG}`
+    );
+    await this.requestAccountFullName.fill(
+      `${process.env.SHIPPER_VIZ_USER_REQUEST_USER}`
+    );
+    await this.submitRequestBtn.click();
+  }
+
   async loginToDashboard() {
     await this.page.goto(FREIGHT_BI_BASE_URL, {
       timeout: DEFAULT_TIMEOUT_IN_MS,
@@ -176,6 +193,27 @@ export class SignUpPage {
       .textContent();
     expect(shipperUserSearchResults).toContain(
       process.env.SHIPPER_VIZ_USER_REQUEST_EMAIL
+    );
+    const shipperUserSearchResultsPaywallFeature = await this.page
+      .locator('text=PaywallFeature.LANDING_PAGE')
+      .textContent();
+    expect(shipperUserSearchResultsPaywallFeature).toContain(
+      'PaywallFeature.LANDING_PAGE'
+    );
+  }
+
+  async checkShipperVizRequestedAccountControl() {
+    await this.shipperUserSearchBar.fill(
+      `${process.env.SHIPPER_VIZ_USER2_REQUEST_EMAIL}`
+    );
+    await this.page.waitForSelector(
+      `text=${process.env.SHIPPER_VIZ_USER2_REQUEST_EMAIL}`
+    );
+    const shipperUserSearchResults = await this.page
+      .locator(`text=${process.env.SHIPPER_VIZ_USER2_REQUEST_EMAIL}`)
+      .textContent();
+    expect(shipperUserSearchResults).toContain(
+      process.env.SHIPPER_VIZ_USER2_REQUEST_EMAIL
     );
     const shipperUserSearchResultsPaywallFeature = await this.page
       .locator('text=PaywallFeature.LANDING_PAGE')
