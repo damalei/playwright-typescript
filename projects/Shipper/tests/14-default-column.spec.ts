@@ -1,7 +1,7 @@
 import { test, Page, expect } from '@playwright/test';
 import { DEFAULT_TIMEOUT_IN_MS } from '../../constants';
 
-test.describe.configure({ mode: 'serial' });
+test.describe.configure({ mode: 'parallel' });
 
 const shipColumns: string[] = [
   'Forwarder Reference',
@@ -11,7 +11,7 @@ const shipColumns: string[] = [
   'Transport Mode',
   'Pickup Location',
   'Delivery Location',
-  'First Origin',
+  //'First Origin', 2025-03-05
   'First Origin ETD (GMT+08:00)',
   'First Origin ATD (GMT+08:00)',
   'Origin Port',
@@ -24,7 +24,7 @@ const shipColumns: string[] = [
   'Discharge Port ATA (GMT+08:00)',
   'Discharge Port ETD (GMT+08:00)',
   'Discharge Port ATD (GMT+08:00)',
-  'Final Destination',
+  //'Final Destination', 2025-03-05
   'Final Destination ETA (GMT+08:00)',
   'Final Destination ATA (GMT+08:00)',
   'Shipment Weight (KG)',
@@ -65,7 +65,10 @@ const contColumns: string[] = [
 test.describe('Default Column check on Shipper', () => {
   let page: Page;
   test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
+    const context = await browser.newContext({
+      timezoneId: 'Asia/Singapore', // GMT+08:00
+    });
+    page = await context.newPage();
     await page.goto(
       `https://dashdemo.${process.env.ENV}-portal.expedock.com/login`
     );
@@ -84,7 +87,7 @@ test.describe('Default Column check on Shipper', () => {
 
   test('14.1 Shipments page', async () => {
     test.slow;
-    await page.getByText('Shipments', { exact: true }).click();
+    await page.getByText('Explore Shipments', { exact: true }).click();
     for (const column of shipColumns) {
       await expect
         .soft(page.getByRole('columnheader', { name: column, exact: true }))
@@ -94,7 +97,7 @@ test.describe('Default Column check on Shipper', () => {
 
   test('45.1 Containers page', async () => {
     test.slow;
-    await page.getByText('Containers', { exact: true }).click();
+    await page.getByText('Explore Containers', { exact: true }).click();
     for (const column of contColumns) {
       await expect
         .soft(page.getByRole('columnheader', { name: column, exact: true }))

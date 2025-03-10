@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 import { ExploreShipments } from '../models/exploreShipments';
 import { ExploreOrganizations } from '../models/exploreOrganizations';
 import { ExplorePayableInvoices } from '../models/explorePayableInvoices';
@@ -6,7 +6,7 @@ import { ExploreReceivableInvoices } from '../models/exploreReceivableInvoices';
 import { MainOrganizations } from '../models/mainOrganization';
 import { ExploreShipmentDetails } from '../models/exploreShipmentDetails';
 import { waitForFilterSectionToLoad } from '../../utils';
-
+import { logInAuth } from '../../utils';
 const GLOBALTIMEOUT = 3000000;
 const DEFAULT_GLOBAL_TIMEOUT_MS = GLOBALTIMEOUT;
 
@@ -15,7 +15,7 @@ test.describe.configure({
   timeout: DEFAULT_GLOBAL_TIMEOUT_MS,
 });
 
-test.describe('User clicks on page links', () => {
+test.describe.parallel('User clicks on page links', () => {
   test('Shipments page > Forward Reference', async ({ page }) => {
     const exploreShipments = new ExploreShipments(page);
     const exploreShipmentDetails = new ExploreShipmentDetails(page);

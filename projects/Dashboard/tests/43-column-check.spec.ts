@@ -3,7 +3,11 @@ import { ExploreShipments } from '../models/exploreShipments';
 import { ExploreOrganizations } from '../models/exploreOrganizations';
 import { ExplorePayableInvoices } from '../models/explorePayableInvoices';
 import { ExploreReceivableInvoices } from '../models/exploreReceivableInvoices';
-import { DASHBOARD_TIMEOUT_IN_MS } from '../../constants';
+import {
+  DASHBOARD_TIMEOUT_IN_MS,
+  DEFAULT_TIMEOUT_IN_MS,
+} from '../../constants';
+import { waitForFilterSectionToLoad } from '../../utils';
 
 test.describe.configure({
   mode: 'parallel',
@@ -16,7 +20,8 @@ test.describe('User clicks column names on Explore section table headers', () =>
   }) => {
     const exploreShipments = new ExploreShipments(page);
     await exploreShipments.goto();
-    await exploreShipments.waitForReferenceComponent();
+    await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    await exploreShipments.globalNativeTable.waitForReferenceComponent();
     const elements =
       await exploreShipments.globalNativeTable.getColumnElements();
     for (const element of elements) {
@@ -41,7 +46,8 @@ test.describe('User clicks column names on Explore section table headers', () =>
   }) => {
     const exploreOrganizations = new ExploreOrganizations(page);
     await exploreOrganizations.goto();
-    await exploreOrganizations.waitForReferenceComponent();
+    await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    await exploreOrganizations.globalNativeTable.waitForReferenceComponent();
     const elements =
       await exploreOrganizations.globalNativeTable.getColumnElements();
     for (const element of elements) {
@@ -66,7 +72,8 @@ test.describe('User clicks column names on Explore section table headers', () =>
   }) => {
     const explorePayableInvoices = new ExplorePayableInvoices(page);
     await explorePayableInvoices.goto();
-    await explorePayableInvoices.waitForReferenceComponent();
+    await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    await explorePayableInvoices.globalNativeTable.waitForReferenceComponent();
     const elements =
       await explorePayableInvoices.globalNativeTable.getColumnElements();
     for (const element of elements) {
@@ -74,10 +81,10 @@ test.describe('User clicks column names on Explore section table headers', () =>
         await explorePayableInvoices.globalNativeTable.clickColumnName(element);
       console.log('click' + element);
       await expect
-        .soft(explorePayableInvoices.referenceComponent)
+        .soft(explorePayableInvoices.globalNativeTable.referenceComponent)
         .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
       let isTableVisible =
-        await explorePayableInvoices.referenceComponent.isVisible();
+        await explorePayableInvoices.globalNativeTable.referenceComponent.isVisible();
       if (!isTableVisible) {
         console.error(`Error on column click: "${headerName}"`);
         explorePayableInvoices.page.reload();
@@ -91,7 +98,8 @@ test.describe('User clicks column names on Explore section table headers', () =>
   }) => {
     const exploreReceivableInvoices = new ExploreReceivableInvoices(page);
     await exploreReceivableInvoices.goto();
-    await exploreReceivableInvoices.waitForReferenceComponent();
+    await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    await exploreReceivableInvoices.globalNativeTable.waitForReferenceComponent();
     const elements =
       await exploreReceivableInvoices.globalNativeTable.getColumnElements();
     for (const element of elements) {
@@ -101,10 +109,10 @@ test.describe('User clicks column names on Explore section table headers', () =>
         );
       console.log('click' + element);
       await expect
-        .soft(exploreReceivableInvoices.referenceComponent)
+        .soft(exploreReceivableInvoices.globalNativeTable.referenceComponent)
         .toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
       let isTableVisible =
-        await exploreReceivableInvoices.referenceComponent.isVisible();
+        await exploreReceivableInvoices.globalNativeTable.referenceComponent.isVisible();
       if (!isTableVisible) {
         console.error(`Error on column click: "${headerName}"`);
         exploreReceivableInvoices.page.reload();

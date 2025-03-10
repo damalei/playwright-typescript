@@ -11,7 +11,7 @@ import { GlobalFilterSection } from '../models/globalFilterSection';
 import { ExploreShipments } from '../models/exploreShipments';
 import { SideMenu } from '../models/sideMenu';
 
-test.describe('[26] User Management: Sandboxing', () => {
+test.describe.serial('[26] User Management: Sandboxing', () => {
   let page: Page;
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();

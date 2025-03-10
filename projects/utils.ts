@@ -110,3 +110,8 @@ export function removeTextBetweenPatterns(
   const regex = new RegExp(`${startPattern}.(.+?)${endPattern}`);
   return text.replace(regex, startPattern);
 }
+
+export function removeSpacesAndColons(text: string): string {
+  return text.replace(/[\s:]/g, '');
+}
+

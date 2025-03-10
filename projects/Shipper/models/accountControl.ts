@@ -140,9 +140,7 @@ export class AccountControl {
   }
 
   async checkRejectedUser() {
-    await this.shipperUserSearchBar.fill(
-      `${process.env.SHIPPER_VIZ_USER_REQUEST_EMAIL}`
-    );
+    await this.shipperUserSearchBar.fill(global.SHIPPER_VIZ_USER_REQUEST_EMAIL);
     await expect(this.searchResultsRejectedUser).toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });

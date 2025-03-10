@@ -2,7 +2,11 @@ import { Locator, Page } from '@playwright/test';
 import { waitforTablePageLoad } from '../../utils';
 import { GlobalNativeTable } from './globalNativeTable';
 import { GlobalFilterSection } from './globalFilterSection';
-import { DEFAULT_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
+import {
+  DASHBOARD_TIMEOUT_IN_MS,
+  DEFAULT_TIMEOUT_IN_MS,
+  FREIGHT_BI_BASE_URL,
+} from '../../constants';
 
 export class ExploreShipments {
   readonly page: Page;
@@ -27,6 +31,9 @@ export class ExploreShipments {
   }
 
   async waitForReferenceComponent() {
-    await this.referenceComponent.waitFor({ state: 'visible' });
+    await this.referenceComponent.waitFor({
+      state: 'visible',
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
   }
 }
