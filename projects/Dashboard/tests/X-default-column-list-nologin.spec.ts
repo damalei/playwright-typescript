@@ -1,5 +1,5 @@
 import { test, Page, expect } from '@playwright/test';
-
+import { logInAuth } from '../../utils';
 test.describe.configure({ mode: 'serial' });
 
 const orgColumns: string[] = [
@@ -109,14 +109,23 @@ const shipColumns: string[] = [
   'Profit % incl. Tax',
 ];
 
-test.describe('Default Column check', () => {
+test.describe('[M.1] Default Column check', () => {
   let page: Page;
   test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
+    const context = await browser.newContext({
+      storageState: undefined,
+      timezoneId: 'Asia/Singapore',
+    });
+    page = await context.newPage();
+    await logInAuth(
+      page,
+      `${process.env.FREIGHT_BI_CLIENT4_USER}`,
+      `${process.env.FREIGHT_BI_CLIENT4_PASS}`
+    );
     await page.goto('https://passive-dashboard.expedock.com/');
   });
 
-  test('Explore > Organization', async () => {
+  test('[47.1] Explore > Organization', async () => {
     test.slow;
     await page
       .getByTestId('menu-item-explore')
@@ -131,7 +140,7 @@ test.describe('Default Column check', () => {
     }
   });
 
-  test('Explore > Payable Invoices', async () => {
+  test('[49.1] Explore > Payable Invoices', async () => {
     test.slow;
     await page
       .getByRole('link', { name: 'Payable Invoices', exact: true })
@@ -143,7 +152,7 @@ test.describe('Default Column check', () => {
     }
   });
 
-  test('Explore > Receivable Invoices', async () => {
+  test('[51.1] Explore > Receivable Invoices', async () => {
     test.slow;
     await page
       .getByRole('link', { name: 'Receivable Invoices', exact: true })
@@ -155,12 +164,9 @@ test.describe('Default Column check', () => {
     }
   });
 
-  test('Explore > Shipments', async () => {
+  test('[53.1]Explore > Shipments', async () => {
     test.slow;
     await page.getByRole('link', { name: 'Shipments', exact: true }).click();
-    // await rcvColumns.forEach(async (column) => {
-    //     await expect.soft(page.getByRole('columnheader', { name: column, exact: true })).toBeVisible();
-    //     });
     for (const column of shipColumns) {
       await expect
         .soft(page.getByRole('columnheader', { name: column, exact: true }))

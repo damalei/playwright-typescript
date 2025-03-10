@@ -101,3 +101,17 @@ export function getFormattedDateTime(): string {
   const seconds = date.getSeconds().toString().padStart(2, '0');
   return `${year} ${month} ${day} ${hours}:${minutes}:${seconds}`;
 }
+
+export function removeTextBetweenPatterns(
+  text: string,
+  startPattern: string,
+  endPattern: string
+): string {
+  const regex = new RegExp(`${startPattern}.(.+?)${endPattern}`);
+  return text.replace(regex, startPattern);
+}
+
+export function removeSpacesAndColons(text: string): string {
+  return text.replace(/[\s:]/g, '');
+}
+

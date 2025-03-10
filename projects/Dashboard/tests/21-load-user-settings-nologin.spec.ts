@@ -2,15 +2,15 @@ import { expect, test, Page } from '@playwright/test';
 import { DEFAULT_TIMEOUT_IN_MS } from '../../constants';
 import { waitForFilterSectionToLoad, logInAuth } from '../../utils';
 import { ExploreShipments } from '../models/exploreShipments';
-import { ExplorePayableInvoices } from '../models/ExplorePayableInvoices';
+import { ExplorePayableInvoices } from '../models/explorePayableInvoices';
 import { SideMenu } from '../models/sideMenu';
 const { chromium } = require('playwright');
 
-test.describe('[21] Load dashboard and filter settings', () => {
+test.describe.serial('[21] Load dashboard and filter settings', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
-    const context = await browser.newContext();
+    const context = await browser.newContext({ storageState: undefined });
     page = await context.newPage();
     await logInAuth(
       page,
@@ -103,8 +103,8 @@ test.describe('[21] Load dashboard and filter settings', () => {
     await ship.goto();
     const url = await page.url();
     const browser = await chromium.launch();
-    const context = await browser.newContext();
-    const page1 = await context.newPage();
+    const context1 = await browser.newContext({ storageState: undefined });
+    const page1 = await context1.newPage();
 
     await logInAuth(
       page1,

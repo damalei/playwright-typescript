@@ -2,7 +2,11 @@ import { Locator, Page } from '@playwright/test';
 import { GlobalFilterSection } from './globalFilterSection';
 import { ModalAddCard } from './modalAddCard';
 import { waitForFilterSectionToLoad } from '../../utils';
-import { DEFAULT_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
+import {
+  DEFAULT_TIMEOUT_IN_MS,
+  DASHBOARD_TIMEOUT_IN_MS,
+  FREIGHT_BI_BASE_URL,
+} from '../../constants';
 
 export class DashboardBuilder {
   readonly page: Page;
@@ -114,7 +118,9 @@ export class DashboardBuilder {
 
   async clickLazyLoad(page: Page, chartName: string) {
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
-    await this.page.getByTestId(`lazy-load-${chartName}`).click();
+    await this.page
+      .getByTestId(`lazy-load-${chartName}`)
+      .click({ timeout: DEFAULT_TIMEOUT_IN_MS });
   }
 
   async clickDuplicateDashboard(page: Page, dashboard: string) {

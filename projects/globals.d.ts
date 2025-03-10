@@ -6,6 +6,8 @@ declare global {
     interface Global {
       testTaskUrl: string;
       shipperUrl: string;
+      shipperEmail: string;
+      shipperMultPayEmail: string;
     }
   }
 }

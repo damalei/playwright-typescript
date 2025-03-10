@@ -5,10 +5,19 @@ import {
   waitForSnackBar,
 } from '../../utils';
 import { SideMenu } from '../models/sideMenu';
-import { DEFAULT_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
+import {
+  DEFAULT_TIMEOUT_IN_MS,
+  DASHBOARD_TIMEOUT_IN_MS,
+  FREIGHT_BI_BASE_URL,
+} from '../../constants';
 import { DashboardBuilder } from '../models/dashboardBuilder';
 import { UserManagement } from '../models/userManagement';
 import { getFormattedDateTime } from '../../utils';
+
+test.describe.configure({
+  mode: 'parallel',
+  timeout: DASHBOARD_TIMEOUT_IN_MS,
+});
 
 let dashboardTitle;
 let dateNow;

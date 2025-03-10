@@ -2,6 +2,7 @@ import { Locator, Page } from '@playwright/test';
 import { waitforTablePageLoad } from '../../utils';
 import { GlobalNativeTable } from './globalNativeTable';
 import {
+  DASHBOARD_TIMEOUT_IN_MS,
   DEFAULT_TIMEOUT_IN_MS,
   FREIGHT_BI_BASE_URL,
   __saveFilePath,
@@ -33,7 +34,10 @@ export class ExploreReceivableInvoices {
   }
 
   async waitForReferenceComponent() {
-    await this.referenceComponent.waitFor({ state: 'visible' });
+    await this.referenceComponent.waitFor({
+      state: 'visible',
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
   }
 
   async clickExportToExcel() {

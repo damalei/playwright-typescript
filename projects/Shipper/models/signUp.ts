@@ -110,13 +110,28 @@ export class SignUpPage {
     });
   }
 
-  async requestShipperVizAccount() {
+  async requestShipperVizAccount(email: string) {
+    await this.requestAccountBtn.click();
+    await expect(this.requestAccountForm).toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    await this.requestAccountEmail.fill(email);
+    await this.requestAccountOrganization.fill(
+      `${process.env.SHIPPER_VIZ_USER_REQUEST_ORG}`
+    );
+    await this.requestAccountFullName.fill(
+      `${process.env.SHIPPER_VIZ_USER_REQUEST_USER}`
+    );
+    await this.submitRequestBtn.click();
+  }
+
+  async requestShipperVizAccountAccountControl() {
     await this.requestAccountBtn.click();
     await expect(this.requestAccountForm).toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
     await this.requestAccountEmail.fill(
-      `${process.env.SHIPPER_VIZ_USER_REQUEST_EMAIL}`
+      `${process.env.SHIPPER_VIZ_USER2_REQUEST_EMAIL}`
     );
     await this.requestAccountOrganization.fill(
       `${process.env.SHIPPER_VIZ_USER_REQUEST_ORG}`
@@ -164,18 +179,33 @@ export class SignUpPage {
     });
   }
 
-  async checkShipperVizRequestedAccount() {
+  async checkShipperVizRequestedAccount(email: string) {
+    await this.shipperUserSearchBar.fill(email);
+    await this.page.waitForSelector(`text=${email}`);
+    const shipperUserSearchResults = await this.page
+      .locator(`text=${email}`)
+      .textContent();
+    expect(shipperUserSearchResults).toContain(email);
+    const shipperUserSearchResultsPaywallFeature = await this.page
+      .locator('text=PaywallFeature.LANDING_PAGE')
+      .textContent();
+    expect(shipperUserSearchResultsPaywallFeature).toContain(
+      'PaywallFeature.LANDING_PAGE'
+    );
+  }
+
+  async checkShipperVizRequestedAccountControl() {
     await this.shipperUserSearchBar.fill(
-      `${process.env.SHIPPER_VIZ_USER_REQUEST_EMAIL}`
+      `${process.env.SHIPPER_VIZ_USER2_REQUEST_EMAIL}`
     );
     await this.page.waitForSelector(
-      `text=${process.env.SHIPPER_VIZ_USER_REQUEST_EMAIL}`
+      `text=${process.env.SHIPPER_VIZ_USER2_REQUEST_EMAIL}`
     );
     const shipperUserSearchResults = await this.page
-      .locator(`text=${process.env.SHIPPER_VIZ_USER_REQUEST_EMAIL}`)
+      .locator(`text=${process.env.SHIPPER_VIZ_USER2_REQUEST_EMAIL}`)
       .textContent();
     expect(shipperUserSearchResults).toContain(
-      process.env.SHIPPER_VIZ_USER_REQUEST_EMAIL
+      process.env.SHIPPER_VIZ_USER2_REQUEST_EMAIL
     );
     const shipperUserSearchResultsPaywallFeature = await this.page
       .locator('text=PaywallFeature.LANDING_PAGE')
@@ -205,10 +235,8 @@ export class SignUpPage {
     });
   }
 
-  async fillRequestAccountFormOnPaywalls() {
-    await this.requestAccountEmail.fill(
-      `${process.env.SHIPPER_VIZ_USER_PAYWALL_REQUEST_EMAIL}`
-    );
+  async fillRequestAccountFormOnPaywalls(email: string) {
+    await this.requestAccountEmail.fill(email);
     await this.requestAccountOrganization.fill(
       `${process.env.SHIPPER_VIZ_USER_REQUEST_ORG}`
     );
@@ -218,13 +246,13 @@ export class SignUpPage {
     await this.submitRequestBtn.click();
   }
 
-  async requestPaywallAccess(tab) {
+  async requestPaywallAccess(tab, email: string) {
     await tab.click();
     await expect(this.premiumFeatureNote).toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
     await this.requestPaywallAccessBtn.click();
-    await this.fillRequestAccountFormOnPaywalls();
+    await this.fillRequestAccountFormOnPaywalls(email);
   }
 
   async requestPaywallAccessWithApprovedEmail(tab) {
@@ -262,29 +290,23 @@ export class SignUpPage {
     });
   }
 
-  async signUpOnShipperVizPaywalls() {
+  async signUpOnShipperVizPaywalls(email: string) {
     await this.seeContainerDetails.click();
-    await this.fillRequestAccountFormOnPaywalls();
-    await this.requestPaywallAccess(this.documentsPaywall);
-    await this.requestPaywallAccess(this.costPerSKUPaywall);
-    await this.requestPaywallAccess(this.invoicesToPayPaywall);
-    await this.requestPaywallAccess(this.containerUtilizationPaywall);
-    await this.requestPaywallAccess(this.exceptionManagementsPaywall);
+    await this.fillRequestAccountFormOnPaywalls(email);
+    await this.requestPaywallAccess(this.documentsPaywall, email);
+    await this.requestPaywallAccess(this.costPerSKUPaywall, email);
+    await this.requestPaywallAccess(this.invoicesToPayPaywall, email);
+    await this.requestPaywallAccess(this.containerUtilizationPaywall, email);
+    await this.requestPaywallAccess(this.exceptionManagementsPaywall, email);
   }
 
-  async checkShipperVizSignUpPaywallAccess() {
-    await this.shipperUserSearchBar.fill(
-      `${process.env.SHIPPER_VIZ_USER_PAYWALL_REQUEST_EMAIL}`
-    );
-    await this.page.waitForSelector(
-      `text=${process.env.SHIPPER_VIZ_USER_PAYWALL_REQUEST_EMAIL}`
-    );
+  async checkShipperVizSignUpPaywallAccess(email: string) {
+    await this.shipperUserSearchBar.fill(email);
+    await this.page.waitForSelector(`text=${email}`);
     const shipperUserSearchResults = await this.page
-      .locator(`text=${process.env.SHIPPER_VIZ_USER_PAYWALL_REQUEST_EMAIL}`)
+      .locator(`text=${email}`)
       .textContent();
-    expect(shipperUserSearchResults).toContain(
-      process.env.SHIPPER_VIZ_USER_PAYWALL_REQUEST_EMAIL
-    );
+    expect(shipperUserSearchResults).toContain(email);
 
     const signUpFormCellCSSLocator = await this.page.locator(
       'p.MuiTypography-root.MuiTypography-body1.css-uv7mby'
@@ -313,5 +335,13 @@ export class SignUpPage {
     await this.requestPaywallAccessWithApprovedEmail(
       this.exceptionManagementsPaywall
     );
+  }
+
+  async setGlobalShipperEmail(email: string) {
+    global.SHIPPER_VIZ_USER_REQUEST_EMAIL = email;
+  }
+
+  async setGlobalShipperMultPayEmail(email: string) {
+    global.SHIPPER_VIZ_USER_PAYWALL_REQUEST_EMAIL = email;
   }
 }
