@@ -114,3 +114,30 @@ export function removeTextBetweenPatterns(
 export function removeSpacesAndColons(text: string): string {
   return text.replace(/[\s:]/g, '');
 }
+
+export const waitDashboardLoad = async (page: Page) => {
+  console.log('Waiting for dashboard to load');
+  await page.waitForTimeout(30000);
+
+  let isEqual = false;
+  let expandCount = 1;
+  let downloadCount;
+  const timeout = 60000; // Polling timeout
+  const pollingInterval = 500; // Polling every 500ms
+  const startTime = Date.now();
+
+  while (!isEqual && Date.now() - startTime < timeout) {
+    console.log('Polling for dashboard to load');
+    expandCount = await page
+      .getByTestId('data-component-expand-button')
+      .count();
+    downloadCount = await page.getByTestId('download-btn').count();
+    console.log(`${expandCount} : ${downloadCount}`);
+
+    isEqual = expandCount == downloadCount;
+
+    if (!isEqual) {
+      await page.waitForTimeout(pollingInterval);
+    }
+  }
+};
