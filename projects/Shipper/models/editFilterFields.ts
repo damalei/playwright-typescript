@@ -1,5 +1,6 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { DASHBOARD_TIMEOUT_IN_MS } from '../../constants';
+import { waitforTablePageLoad, waitForFilterSectionToLoad } from '../../utils';
 import exp from 'constants';
 
 let dischargePortKey;
@@ -57,6 +58,9 @@ export class EditFilterFields {
   readonly lastLegArrivalStatusFilterLocator: Locator;
   readonly dischargePortFilterValueChip: (key: string) => Locator;
   readonly dischargeFilterValueLocator: (key: string) => Locator;
+  readonly editFiltersDiv: Locator;
+  readonly shipmentsForwarderReferenceSort: Locator;
+  readonly editColumnButton: Locator;
   readonly: (key: string) => Locator;
   readonly consigneeNameFilterLocator: Locator;
   readonly originPortFilterLocator: Locator;
@@ -77,6 +81,7 @@ export class EditFilterFields {
     this.searchFilter = page.getByPlaceholder('Search Filter');
     this.updateFilterFieldsBtn = page.getByTestId('save-filters-button');
     this.shipmentWeightFilterChip = page.getByText('Shipment Weight- KG');
+    this.editColumnButton = page.getByRole('button', { name: 'Edit Columns' });
     this.containerNumbers = page.getByTestId(
       'table-body-0-container_container_number_display'
     );
@@ -167,6 +172,11 @@ export class EditFilterFields {
       name: 'Delayed',
     });
     this.hasExceptionsValueChip = page.getByRole('button', { name: 'True' });
+    this.editFiltersDiv = page.getByText('BasicAdvancedReset');
+    this.shipmentsForwarderReferenceSort = page.getByTestId(
+      'table-header-forwarder_reference'
+    );
+
     this.originPortFilterField = page
       .locator('label')
       .filter({ hasText: 'Origin Port' });
@@ -176,7 +186,6 @@ export class EditFilterFields {
       .filter({ hasText: /^Failed to depart \(Past 3 months\)View shipments$/ })
       .getByRole('button');
   }
-
   async waitForExceptionManagement() {
     await this.page.waitForLoadState('load');
     await this.drilldownTableShipmentsArriving.waitFor({ state: 'visible' });
@@ -396,6 +405,7 @@ export class EditFilterFields {
       'Discharge Port-custom-multiple-text-field',
       0
     );
+    await this.editFiltersDiv.click();
     await this.lastLegArrivalStatusFilterChip.click();
     await this.lastLegArrivalStatusValue.click();
     await this.hasExceptionsChip.click();
@@ -459,6 +469,9 @@ export class EditFilterFields {
   ): Promise<Record<string, string>> {
     const field = this.page.getByTestId(fieldTestId);
     const dropdownRows = this.page.locator('[class*="a1-dropdownRow"]');
+    await dropdownRows
+      .first()
+      .waitFor({ state: 'visible', timeout: DASHBOARD_TIMEOUT_IN_MS });
     const count = await dropdownRows.count();
     const dict: Record<string, string> = {};
 
@@ -473,29 +486,39 @@ export class EditFilterFields {
       }
     }
 
+    if (Object.keys(dict).length === 0) {
+      throw new Error('No dropdown values found in rows');
+    }
+
     return dict;
   }
 
   async getDropdownKeyValue(
     fieldTestId: string,
     optionNumber: number
-  ): Promise<{ key: string; value: string } | null> {
+  ): Promise<{ key: string; value: string }> {
     const dict = await this.getDropdownRowsAsDict(fieldTestId);
     const keys = Object.keys(dict);
 
-    if (keys.length > 0) {
-      const nKey = keys[optionNumber];
-      return {
-        key: nKey,
-        value: dict[nKey],
-      };
+    if (optionNumber >= keys.length) {
+      throw new Error(
+        `Option number ${optionNumber} is out of bounds. Only ${keys.length} options available.`
+      );
     }
 
-    return null;
+    const nKey = keys[optionNumber];
+    return {
+      key: nKey,
+      value: dict[nKey],
+    };
   }
 
   async clickDropdownValue(fieldTestId: string, optionNumber: number) {
     await this.page.getByTestId(fieldTestId).click();
+    const dropdownRows = this.page.locator('[class*="a1-dropdownRow"]');
+    await dropdownRows
+      .first()
+      .waitFor({ state: 'visible', timeout: DASHBOARD_TIMEOUT_IN_MS });
     const result = await this.getDropdownKeyValue(fieldTestId, optionNumber);
     if (!result) throw new Error('No dropdown value found');
     dischargePortKey = result.key.trim();
@@ -508,6 +531,67 @@ export class EditFilterFields {
     return { key: dischargePortKey, value: dischargePortValue };
   }
 
+  async dragSourceToTargetColumn(
+    page: Page,
+    sourceIndex: number,
+    targetIndex: number
+  ) {
+    await waitForFilterSectionToLoad(page, DASHBOARD_TIMEOUT_IN_MS);
+    await waitforTablePageLoad(page, DASHBOARD_TIMEOUT_IN_MS);
+    const tableHeaderList = await this.page
+      .getByTestId('table-header')
+      .locator('th')
+      .allTextContents();
+    const sourceName = tableHeaderList[sourceIndex]
+      .replace(/\(.*?\)/g, '')
+      .trim();
+    const targetName = tableHeaderList[targetIndex]
+      .replace(/\(.*?\)/g, '')
+      .trim();
+    await this.editColumnButton.click();
+    await page.waitForTimeout(2000);
+    const columnPopper = this.page.getByTestId('edit-columns-popper');
+    const source = columnPopper
+      .locator(`//span[text()='${sourceName}']`)
+      .locator('..')
+      .locator('..')
+      .locator('..');
+    const target = columnPopper
+      .locator(`//span[text()='${targetName}']`)
+      .locator('..')
+      .locator('..')
+      .locator('..');
+    await source.focus();
+    await target.focus();
+    await source.dragTo(target);
+    await source.hover();
+    await page.waitForTimeout(2000);
+    await this.page.mouse.down();
+    const box = (await target.boundingBox())!;
+    await this.page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await target.hover();
+    await this.page.mouse.up();
+    await this.editColumnButton.click();
+    const newTableHeaderList = await this.getHeaderList(page);
+    return newTableHeaderList;
+  }
+
+  async swapColumns(page: Page, sourceIndex: number, targetIndex: number) {
+    await waitForFilterSectionToLoad(page, DASHBOARD_TIMEOUT_IN_MS);
+    await waitforTablePageLoad(page, DASHBOARD_TIMEOUT_IN_MS);
+    const tableHeaderList = await this.getHeaderList(page);
+    const temp = tableHeaderList[sourceIndex];
+    tableHeaderList[sourceIndex] = tableHeaderList[targetIndex];
+    tableHeaderList[targetIndex] = temp;
+    return tableHeaderList;
+  }
+
+  async getHeaderList(page: Page) {
+    return await page
+      .getByTestId('table-header')
+      .locator('th')
+      .allTextContents();
+  }
   async loginToShipperDrilldown() {
     await this.loginEmail.fill(`${process.env.SHIPPER_VIZ_CLIENT2_USER}`);
     await this.loginPass.fill(`${process.env.SHIPPER_VIZ_CLIENT2_PASS}`);

@@ -114,4 +114,3 @@ export function removeTextBetweenPatterns(
 export function removeSpacesAndColons(text: string): string {
   return text.replace(/[\s:]/g, '');
 }
-

@@ -249,4 +249,13 @@ export class AccountControl {
   async revertToDefaultOrg(email: string) {
     await this.shipperUserSearchBar.fill(email);
   }
+
+  async loginToShipperNewUser() {
+    await this.loginEmail.fill(`${process.env.SHIPPER_VIZ_NEW_USER}`);
+    await this.loginPass.fill(`${process.env.SHIPPER_VIZ_NEW_PASS}`);
+    await this.loginBtn.click();
+    await expect(this.exceptionManagementHeader).toBeVisible({
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
+  }
 }
