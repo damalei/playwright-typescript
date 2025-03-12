@@ -114,7 +114,6 @@ export function removeTextBetweenPatterns(
 export function removeSpacesAndColons(text: string): string {
   return text.replace(/[\s:]/g, '');
 }
-
 export const waitDashboardLoad = async (page: Page) => {
   console.log('Waiting for dashboard to load');
   await page.waitForTimeout(30000);
