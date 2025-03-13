@@ -4,7 +4,7 @@ import { DEFAULT_TIMEOUT_IN_MS } from '../../constants';
 import { logInAuth } from '../../utils';
 
 test.describe.configure({
-  mode: 'parallel',
+  mode: 'serial',
   timeout: DEFAULT_TIMEOUT_IN_MS,
 });
 
