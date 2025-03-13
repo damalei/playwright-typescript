@@ -3,6 +3,7 @@ import { FREIGHT_BI_BASE_URL } from '../../constants';
 import { ExploreOrganizations } from '../models/exploreOrganizations';
 import { AdvancedFilterView } from '../models/advancedFilters';
 import { EditTableColumns } from '../models/explorePageEditColumn';
+import { logInAuth } from '../../utils';
 
 let exploreOrganizations;
 let viewFilterSection;
@@ -12,18 +13,23 @@ test.describe('Edit Columns on Explore Organizations', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
-    await page.goto(FREIGHT_BI_BASE_URL);
+    const context = await browser.newContext({ storageState: undefined });
+    page = await context.newPage();
+    await logInAuth(
+      page,
+      `${process.env.FREIGHT_BI_CLIENT4_USER}`,
+      `${process.env.FREIGHT_BI_CLIENT4_PASS}`
+    );
     exploreOrganizations = new ExploreOrganizations(page);
     viewFilterSection = new AdvancedFilterView(page);
     editTableColumnsExploreOrganizations = new EditTableColumns(page);
+    await exploreOrganizations.goto();
+    await exploreOrganizations.waitForReferenceComponent();
   });
 
   test.describe('Add Table Columns', () => {
     test('[53.2] User adds Posted Profit excl. Tax table column on the Explore Organizations Page', async () => {
       const columnName = 'Posted Profit % excl. Tax';
-      await exploreOrganizations.goto();
-      await exploreOrganizations.waitForReferenceComponent();
       await viewFilterSection.waitForFilterFields();
       await editTableColumnsExploreOrganizations.openEditColumns();
       await editTableColumnsExploreOrganizations.toggleTableColumnVisibilityEyeIcon(

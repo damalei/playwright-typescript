@@ -3,6 +3,7 @@ import { FREIGHT_BI_BASE_URL } from '../../constants';
 import { ExploreContainers } from '../models/exploreContainers';
 import { AdvancedFilterView } from '../models/advancedFilters';
 import { EditTableColumns } from '../models/explorePageEditColumn';
+import { logInAuth } from '../../utils';
 
 let exploreContainers;
 let viewFilterSection;
@@ -12,18 +13,23 @@ test.describe('Edit Columns on Explore Containers', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
-    await page.goto(FREIGHT_BI_BASE_URL);
+    const context = await browser.newContext({ storageState: undefined });
+    page = await context.newPage();
+    await logInAuth(
+      page,
+      `${process.env.FREIGHT_BI_CLIENT4_USER}`,
+      `${process.env.FREIGHT_BI_CLIENT4_PASS}`
+    );
     exploreContainers = new ExploreContainers(page);
     viewFilterSection = new AdvancedFilterView(page);
     editTableColumnsExploreContainers = new EditTableColumns(page);
+    await exploreContainers.goto();
+    await exploreContainers.waitForReferenceComponent();
   });
 
   test.describe('Add Table Columns', () => {
     test('[57.2] User adds Shipment Transport Mode table column on the Explore Organizations Page', async () => {
       const columnName = 'Shipment Transport Mode';
-      await exploreContainers.goto();
-      await exploreContainers.waitForReferenceComponent();
       await viewFilterSection.waitForFilterFields();
       await editTableColumnsExploreContainers.openEditColumns();
       await editTableColumnsExploreContainers.toggleTableColumnVisibilityEyeIcon(

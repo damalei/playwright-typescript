@@ -3,8 +3,9 @@ import { FREIGHT_BI_BASE_URL } from '../../constants';
 import { ExploreShipments } from '../models/exploreShipments';
 import { AdvancedFilterView } from '../models/advancedFilters';
 import { EditTableColumns } from '../models/explorePageEditColumn';
+import { logInAuth } from '../../utils';
 
-let exploreShipments;
+export let exploreShipments;
 let viewFilterSections;
 let editTableColumnsExploreShipments;
 
@@ -12,18 +13,23 @@ test.describe('Edit columns on Explore Shipments Page', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
-    await page.goto(FREIGHT_BI_BASE_URL);
+    const context = await browser.newContext({ storageState: undefined });
+    page = await context.newPage();
+    await logInAuth(
+      page,
+      `${process.env.FREIGHT_BI_CLIENT4_USER}`,
+      `${process.env.FREIGHT_BI_CLIENT4_PASS}`
+    );
     exploreShipments = new ExploreShipments(page);
     viewFilterSections = new AdvancedFilterView(page);
     editTableColumnsExploreShipments = new EditTableColumns(page);
+    await exploreShipments.goto();
+    await exploreShipments.waitForReferenceComponent();
   });
 
   test.describe('Add table columns', () => {
     test('[47.2] User adds [date] Date Shipment Closed table column on the Shipments Page', async () => {
       const columnName = 'Date Shipment Closed';
-      await exploreShipments.goto();
-      await exploreShipments.waitForReferenceComponent();
       await viewFilterSections.waitForFilterFields();
       await editTableColumnsExploreShipments.openEditColumns();
       await editTableColumnsExploreShipments.toggleTableColumnVisibilityEyeIcon(

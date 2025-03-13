@@ -3,6 +3,7 @@ import { FREIGHT_BI_BASE_URL } from '../../constants';
 import { ExplorePayableInvoices } from '../models/explorePayableInvoices';
 import { AdvancedFilterView } from '../models/advancedFilters';
 import { EditTableColumns } from '../models/explorePageEditColumn';
+import { logInAuth } from '../../utils';
 
 let explorePayableInvoices;
 let viewFilterSection;
@@ -12,18 +13,23 @@ test.describe('Edit Columns on Explore Payable Invoices', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
-    await page.goto(FREIGHT_BI_BASE_URL);
+    const context = await browser.newContext({ storageState: undefined });
+    page = await context.newPage();
+    await logInAuth(
+      page,
+      `${process.env.FREIGHT_BI_CLIENT4_USER}`,
+      `${process.env.FREIGHT_BI_CLIENT4_PASS}`
+    );
     explorePayableInvoices = new ExplorePayableInvoices(page);
     viewFilterSection = new AdvancedFilterView(page);
     editTableColumnsExplorePayableInvoices = new EditTableColumns(page);
+    await explorePayableInvoices.goto();
+    await explorePayableInvoices.waitForReferenceComponent();
   });
 
   test.describe('Add Table Columns', () => {
     test('[49.2] User adds Recognition Type table column on the Explore Payable Invoices Page', async () => {
       const columnName = 'Recognition Type';
-      await explorePayableInvoices.goto();
-      await explorePayableInvoices.waitForReferenceComponent();
       await viewFilterSection.waitForFilterFields();
       await editTableColumnsExplorePayableInvoices.openEditColumns();
       await editTableColumnsExplorePayableInvoices.toggleTableColumnVisibilityEyeIcon(

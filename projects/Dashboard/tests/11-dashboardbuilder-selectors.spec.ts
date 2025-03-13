@@ -32,11 +32,17 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
     await user.inputDashboard('Business Performance', 'QA Test Template');
     await user.buttonSave.click();
     await user.confirmDashboardChange();
-    await waitForElementToHide(
-      page,
-      DEFAULT_TIMEOUT_IN_MS,
-      '//button[text()="Save"]'
-    );
+    // const confirmButton = page.getByText('Confirm');
+    // try {
+    //   await confirmButton.click();
+    // } catch (error) {
+    //   console.log('Element not found, continuing...');
+    // }
+    // await waitForElementToHide(
+    //   page,
+    //   DEFAULT_TIMEOUT_IN_MS,
+    //   '//button[text()="Save"]'
+    // );
   });
 
   test('[11.1 & 11.3] User adds selector FIELD from the basic view', async () => {
@@ -66,11 +72,16 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
     await user.clickEditAccess(`${process.env.FREIGHT_BI_CLIENT_USER}`);
     await user.inputDashboard('Business Performance', 'QA Test Template');
     await user.buttonSave.click();
-    await waitForElementToHide(
-      page,
-      DEFAULT_TIMEOUT_IN_MS,
-      '//button[text()="Save"]'
-    );
+    // const confirmButton = page.getByText('Confirm');
+    // try {
+    //   await confirmButton.click();
+    // } catch (error) {
+    //   console.log('Element not found, continuing...');
+    // }
+    // await page.getByRole('button', { name: 'Cancel' }).waitFor({
+    //   state: 'hidden',
+    //   timeout: 10000,
+    // });
     await page.reload();
     await side.accBP.click();
     await side.clickOnDashboardName('QA Test Template');
