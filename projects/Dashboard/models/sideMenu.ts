@@ -9,11 +9,10 @@ export class SideMenu {
   readonly userManagement: Locator;
   readonly listUserManagement: Locator;
   readonly accBP: Locator;
-  readonly accOperations: Locator
+  readonly accOperations: Locator;
   readonly accAccounting: Locator;
   readonly listWrapperBusiness: Locator;
   readonly apiSummary: Locator;
-
 
   constructor(page: Page) {
     this.page = page;
