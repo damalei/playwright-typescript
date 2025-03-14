@@ -84,7 +84,10 @@ export class UserManagement {
   async checkSandboxChips(label: string, chip: string) {
     const chipLabel = this.page.getByLabel(label, { exact: true });
     await chipLabel.waitFor({ state: 'visible' });
-    const isChipVisible = await chipLabel.locator('..').getByText(chip, { exact: true }).isVisible();
+    const isChipVisible = await chipLabel
+      .locator('..')
+      .getByText(chip, { exact: true })
+      .isVisible();
     return isChipVisible;
   }
 }

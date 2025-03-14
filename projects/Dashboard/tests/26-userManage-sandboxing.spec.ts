@@ -147,7 +147,6 @@ test.describe.serial('[26] User sets-up sandboxing', () => {
 
 test.describe
   .serial('[26.5] User confirms no changes to an inactive sandboxing configuration (disabled)', () => {
-
   test.beforeAll(async ({ browser }) => {
     const context = await browser.newContext({ storageState: undefined });
     page = await context.newPage();
@@ -176,14 +175,35 @@ test.describe
       await user.clickEditAccess(`${process.env.FREIGHT_BI_ADMIN2_USER}`);
     });
     await test.step('Verify sandboxing values are displayed', async () => {
-      const isSalesRepChipVisible = await user.checkSandboxChips('Sales Rep', 'Rui Aguiar (RA)');
-      const isSalesRepChipVisible2 = await user.checkSandboxChips('Sales Rep', 'Jig Young (JY)');
-      const isOperatorChipVisible2 = await user.checkSandboxChips('Operator', 'Jefferson Tan (JT)');
-      const isOperatorChipVisible3 = await user.checkSandboxChips('Operator', 'Casper Chan (CC)');
+      const isSalesRepChipVisible = await user.checkSandboxChips(
+        'Sales Rep',
+        'Rui Aguiar (RA)'
+      );
+      const isSalesRepChipVisible2 = await user.checkSandboxChips(
+        'Sales Rep',
+        'Jig Young (JY)'
+      );
+      const isOperatorChipVisible2 = await user.checkSandboxChips(
+        'Operator',
+        'Jefferson Tan (JT)'
+      );
+      const isOperatorChipVisible3 = await user.checkSandboxChips(
+        'Operator',
+        'Casper Chan (CC)'
+      );
       const isBranchChipVisible = await user.checkSandboxChips('Branch', 'MNL');
-      const isBranchChipVisible2 = await user.checkSandboxChips('Branch', 'NYC');
-      const isDepartmentChipVisible = await user.checkSandboxChips('Department', 'FIA');
-      const isDepartmentChipVisible2 = await user.checkSandboxChips('Department', 'FES');
+      const isBranchChipVisible2 = await user.checkSandboxChips(
+        'Branch',
+        'NYC'
+      );
+      const isDepartmentChipVisible = await user.checkSandboxChips(
+        'Department',
+        'FIA'
+      );
+      const isDepartmentChipVisible2 = await user.checkSandboxChips(
+        'Department',
+        'FES'
+      );
       await expect.soft(isSalesRepChipVisible).toBe(true);
       await expect.soft(isSalesRepChipVisible2).toBe(true);
       await expect.soft(isOperatorChipVisible2).toBe(true);
@@ -206,7 +226,9 @@ test.describe
       await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
     });
     await test.step('Verify sandboxing values are not displayed', async () => {
-      await expect.soft(globalFilterSection.accSandboxingFilters).not.toBeVisible();
+      await expect
+        .soft(globalFilterSection.accSandboxingFilters)
+        .not.toBeVisible();
     });
   });
 
@@ -216,14 +238,15 @@ test.describe
       await side.clickOnDashboardName('Payables Overview');
     });
     await test.step('Verify sandboxing values are displayed on the dashboard', async () => {
-      await expect.soft(globalFilterSection.accSandboxingFilters).not.toBeVisible();
+      await expect
+        .soft(globalFilterSection.accSandboxingFilters)
+        .not.toBeVisible();
     });
-  }); 
+  });
 });
 
 test.describe
   .serial('[26.4] User confirms no changes to an active sandboxing configuration (enabled)', () => {
-
   test.beforeAll(async ({ browser }) => {
     const context = await browser.newContext({ storageState: undefined });
     page = await context.newPage();
@@ -252,14 +275,35 @@ test.describe
       await user.clickEditAccess(`${process.env.FREIGHT_BI_ADMIN3_USER}`);
     });
     await test.step('Verify sandboxing values are displayed', async () => {
-      const isSalesRepChipVisible = await user.checkSandboxChips('Sales Rep', 'Rui Aguiar (RA)');
-      const isSalesRepChipVisible2 = await user.checkSandboxChips('Sales Rep', 'Jig Young (JY)');
-      const isOperatorChipVisible2 = await user.checkSandboxChips('Operator', 'Jefferson Tan (JT)');
-      const isOperatorChipVisible3 = await user.checkSandboxChips('Operator', 'Casper Chan (CC)');
+      const isSalesRepChipVisible = await user.checkSandboxChips(
+        'Sales Rep',
+        'Rui Aguiar (RA)'
+      );
+      const isSalesRepChipVisible2 = await user.checkSandboxChips(
+        'Sales Rep',
+        'Jig Young (JY)'
+      );
+      const isOperatorChipVisible2 = await user.checkSandboxChips(
+        'Operator',
+        'Jefferson Tan (JT)'
+      );
+      const isOperatorChipVisible3 = await user.checkSandboxChips(
+        'Operator',
+        'Casper Chan (CC)'
+      );
       const isBranchChipVisible = await user.checkSandboxChips('Branch', 'MNL');
-      const isBranchChipVisible2 = await user.checkSandboxChips('Branch', 'NYC');
-      const isDepartmentChipVisible = await user.checkSandboxChips('Department', 'FIA');
-      const isDepartmentChipVisible2 = await user.checkSandboxChips('Department', 'FES');
+      const isBranchChipVisible2 = await user.checkSandboxChips(
+        'Branch',
+        'NYC'
+      );
+      const isDepartmentChipVisible = await user.checkSandboxChips(
+        'Department',
+        'FIA'
+      );
+      const isDepartmentChipVisible2 = await user.checkSandboxChips(
+        'Department',
+        'FES'
+      );
       await expect.soft(isSalesRepChipVisible).toBe(true);
       await expect.soft(isSalesRepChipVisible2).toBe(true);
       await expect.soft(isOperatorChipVisible2).toBe(true);
@@ -284,64 +328,120 @@ test.describe
     await test.step('Verify sandboxing values are displayed', async () => {
       await globalFilterSection.accSandboxingFilters.click();
       await expect
-        .soft(page.getByTestId('sandboxing-filterchip').getByText('Sales Rep is Rui Aguiar (RA)'))
+        .soft(
+          page
+            .getByTestId('sandboxing-filterchip')
+            .getByText('Sales Rep is Rui Aguiar (RA)')
+        )
         .toBeVisible();
       await expect
-        .soft(page.getByTestId('sandboxing-filterchip').getByText('Sales Rep is Jig Young (JY)'))
+        .soft(
+          page
+            .getByTestId('sandboxing-filterchip')
+            .getByText('Sales Rep is Jig Young (JY)')
+        )
         .toBeVisible();
       await expect
-        .soft(page.getByTestId('sandboxing-filterchip').getByText('Operator is Jefferson Tan (JT)'))
+        .soft(
+          page
+            .getByTestId('sandboxing-filterchip')
+            .getByText('Operator is Jefferson Tan (JT)')
+        )
         .toBeVisible();
       await expect
-        .soft(page.getByTestId('sandboxing-filterchip').getByText('Operator is Casper Chan (CC)'))
+        .soft(
+          page
+            .getByTestId('sandboxing-filterchip')
+            .getByText('Operator is Casper Chan (CC)')
+        )
         .toBeVisible();
       await expect
-        .soft(page.getByTestId('sandboxing-filterchip').getByText('Branch is MNL'))
+        .soft(
+          page.getByTestId('sandboxing-filterchip').getByText('Branch is MNL')
+        )
         .toBeVisible();
       await expect
-        .soft(page.getByTestId('sandboxing-filterchip').getByText('Branch is NYC'))
+        .soft(
+          page.getByTestId('sandboxing-filterchip').getByText('Branch is NYC')
+        )
         .toBeVisible();
       await expect
-        .soft(page.getByTestId('sandboxing-filterchip').getByText('Department is FIA'))
+        .soft(
+          page
+            .getByTestId('sandboxing-filterchip')
+            .getByText('Department is FIA')
+        )
         .toBeVisible();
       await expect
-        .soft(page.getByTestId('sandboxing-filterchip').getByText('Department is FES'))
+        .soft(
+          page
+            .getByTestId('sandboxing-filterchip')
+            .getByText('Department is FES')
+        )
         .toBeVisible();
     });
   });
 
   test('User confirms sandboxing values are displayed on the dashboard - custom', async () => {
-      await test.step('User goes a custom dashboard', async () => {
-        await side.accAccounting.click();
-        await side.clickOnDashboardName('Payables Overview');
-        await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
-      });
-      await test.step('Verify sandboxing values are displayed on the dashboard', async () => {
-        await globalFilterSection.accSandboxingFilters.click();
-        await expect
-          .soft(page.getByTestId('sandboxing-filterchip').getByText('Sales Rep is Rui Aguiar (RA)'))
-          .toBeVisible();
-        await expect
-          .soft(page.getByTestId('sandboxing-filterchip').getByText('Sales Rep is Jig Young (JY)'))
-          .toBeVisible();
-        await expect
-          .soft(page.getByTestId('sandboxing-filterchip').getByText('Operator is Jefferson Tan (JT)'))
-          .toBeVisible();
-        await expect
-          .soft(page.getByTestId('sandboxing-filterchip').getByText('Operator is Casper Chan (CC)'))
-          .toBeVisible();
-        await expect
-          .soft(page.getByTestId('sandboxing-filterchip').getByText('Branch is MNL'))
-          .toBeVisible();
-        await expect
-          .soft(page.getByTestId('sandboxing-filterchip').getByText('Branch is NYC'))
-          .toBeVisible();
-        await expect
-          .soft(page.getByTestId('sandboxing-filterchip').getByText('Department is FIA'))
-          .toBeVisible();
-        await expect
-          .soft(page.getByTestId('sandboxing-filterchip').getByText('Department is FES'))
-          .toBeVisible();
-      });
-    }); 
+    await test.step('User goes a custom dashboard', async () => {
+      await side.accAccounting.click();
+      await side.clickOnDashboardName('Payables Overview');
+      await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    });
+    await test.step('Verify sandboxing values are displayed on the dashboard', async () => {
+      await globalFilterSection.accSandboxingFilters.click();
+      await expect
+        .soft(
+          page
+            .getByTestId('sandboxing-filterchip')
+            .getByText('Sales Rep is Rui Aguiar (RA)')
+        )
+        .toBeVisible();
+      await expect
+        .soft(
+          page
+            .getByTestId('sandboxing-filterchip')
+            .getByText('Sales Rep is Jig Young (JY)')
+        )
+        .toBeVisible();
+      await expect
+        .soft(
+          page
+            .getByTestId('sandboxing-filterchip')
+            .getByText('Operator is Jefferson Tan (JT)')
+        )
+        .toBeVisible();
+      await expect
+        .soft(
+          page
+            .getByTestId('sandboxing-filterchip')
+            .getByText('Operator is Casper Chan (CC)')
+        )
+        .toBeVisible();
+      await expect
+        .soft(
+          page.getByTestId('sandboxing-filterchip').getByText('Branch is MNL')
+        )
+        .toBeVisible();
+      await expect
+        .soft(
+          page.getByTestId('sandboxing-filterchip').getByText('Branch is NYC')
+        )
+        .toBeVisible();
+      await expect
+        .soft(
+          page
+            .getByTestId('sandboxing-filterchip')
+            .getByText('Department is FIA')
+        )
+        .toBeVisible();
+      await expect
+        .soft(
+          page
+            .getByTestId('sandboxing-filterchip')
+            .getByText('Department is FES')
+        )
+        .toBeVisible();
+    });
+  });
 });
