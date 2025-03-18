@@ -12,4 +12,6 @@ node_modules/
 /projects/credentials.ts
 /env/.env.passive
 /env/.env.staging
-/playwright-report_*
+/playwright-report
+/playwright-report*
+
