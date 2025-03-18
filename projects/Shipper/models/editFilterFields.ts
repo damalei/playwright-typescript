@@ -326,6 +326,9 @@ export class EditFilterFields {
       });
     }
   }
+  async waitForContainerNumberReference() {
+    await this.containerNumbers.waitFor({ state: 'visible' });
+  }
 
   async deleteFilterValuesExceptionManagement() {
     await this.transportModeFilterLocator.click();
