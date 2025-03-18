@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page, expect } from '@playwright/test';
 import { FREIGHT_BI_BASE_URL, DEFAULT_TIMEOUT_IN_MS } from '../../constants';
 import {
   waitDashboardLoad,
@@ -7,6 +7,7 @@ import {
 } from '../../utils';
 import * as path from 'path';
 import * as os from 'os';
+import * as fs from 'fs';
 
 const __saveFilePath = path.join(os.homedir(), 'Downloads', path.sep);
 
@@ -62,9 +63,9 @@ export class Dashboards {
     await this.page.waitForTimeout(60000);
   }
 
-  async getDashboards(page: Page) {
+  async getDashboards(page: Page, section: string) {
     const dashboardList = await page
-      .getByTestId('sidebar-tab-wrapper-BUSINESS_PERFORMANCE')
+      .getByTestId(`sidebar-tab-wrapper-${section}`)
       .locator('li > a > span')
       .allTextContents();
     console.log(dashboardList);
@@ -79,7 +80,7 @@ export class Dashboards {
         .click();
       await waitDashboardLoad(this.page);
       const count = await this.page.getByTestId('download-btn').count();
-      console.log(`DL BUTTON COUNT ${count}`);
+      console.log(`Download button count: ${count} on ${dashboard}`);
       await this.downloadCharts(section, dashboard, count);
     }
   }
@@ -87,17 +88,32 @@ export class Dashboards {
   async downloadCharts(section: string, dashboard: string, count: number) {
     console.log('Starting download');
     for (let i = 0; i < count; i += 1) {
-      const downloadPromise = this.page.waitForEvent('download');
-      await this.page.getByTestId('download-btn').nth(i).click();
-      const download = await downloadPromise;
-      const modDashboard = dashboard.replace('*', 'ast');
-      await download.saveAs(
-        __saveFilePath +
+      try {
+        const downloadPromise = this.page.waitForEvent('download');
+        await this.page.getByTestId('download-btn').nth(i).click();
+        const download = await downloadPromise;
+        const modDashboard = dashboard.replace('*', 'ast');
+        const downloadPath =
+          __saveFilePath +
           section +
           modDashboard +
           '__' +
-          download.suggestedFilename()
-      );
+          download.suggestedFilename();
+        await download.saveAs(downloadPath);
+
+        // Add soft expectation to check if file exists
+        await expect
+          .soft(
+            fs.existsSync(downloadPath),
+            `Chart ${i + 1} download failed - File not found at ${downloadPath}`
+          )
+          .toBeTruthy();
+
+        console.log(`Successfully downloaded chart ${i + 1} of ${count}`);
+      } catch (error) {
+        console.error(`Failed to download chart ${i + 1}: ${error.message}`);
+        continue; // Continue with next download even if current one fails
+      }
     }
   }
 }

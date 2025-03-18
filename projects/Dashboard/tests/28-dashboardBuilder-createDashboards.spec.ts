@@ -278,11 +278,15 @@ test.describe.serial('[28] Dashboard Builder: Create/Edit Dashboards', () => {
     } catch (error) {
       console.log('Element not found, continuing...');
     }
-    await waitForElementToHide(
-      page,
-      DEFAULT_TIMEOUT_IN_MS,
-      `${xpathUserManagementButton}`
-    );
+    // await waitForElementToHide(
+    //   page,
+    //   DEFAULT_TIMEOUT_IN_MS,
+    //   xpathUserManagementButton
+    // );
+    await page.getByRole('button', { name: 'Save' }).waitFor({
+      state: 'hidden',
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
     await page.reload();
     await side.accBP.click();
     await side.clickOnDashboardName(`${dashboardTitle} copy edited`);

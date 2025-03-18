@@ -3,6 +3,7 @@ import { FREIGHT_BI_BASE_URL } from '../../constants';
 import { ExploreReceivableInvoices } from '../models/exploreReceivableInvoices';
 import { AdvancedFilterView } from '../models/advancedFilters';
 import { EditTableColumns } from '../models/explorePageEditColumn';
+import { logInAuth } from '../../utils';
 
 let exploreReceivableInvoices;
 let viewFilterSection;
@@ -12,18 +13,23 @@ test.describe('Edit Columns on Explore Receivable Invoices', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
-    await page.goto(FREIGHT_BI_BASE_URL);
+    const context = await browser.newContext({ storageState: undefined });
+    page = await context.newPage();
+    await logInAuth(
+      page,
+      `${process.env.FREIGHT_BI_CLIENT4_USER}`,
+      `${process.env.FREIGHT_BI_CLIENT4_PASS}`
+    );
     exploreReceivableInvoices = new ExploreReceivableInvoices(page);
     viewFilterSection = new AdvancedFilterView(page);
     editTableColumnsExploreReceivableInvoices = new EditTableColumns(page);
+    await exploreReceivableInvoices.goto();
+    await exploreReceivableInvoices.waitForReferenceComponent();
   });
 
   test.describe('Add Table Columns', () => {
     test('[51.2] User adds Recognition Type table column on the Explore Receivable Invoices Page', async () => {
       const columnName = 'Recognition Type';
-      await exploreReceivableInvoices.goto();
-      await exploreReceivableInvoices.waitForReferenceComponent();
       await viewFilterSection.waitForFilterFields();
       await editTableColumnsExploreReceivableInvoices.openEditColumns();
       await editTableColumnsExploreReceivableInvoices.toggleTableColumnVisibilityEyeIcon(
