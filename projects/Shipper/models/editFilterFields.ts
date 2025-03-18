@@ -1,5 +1,8 @@
 import { Locator, Page, expect } from '@playwright/test';
-import { DASHBOARD_TIMEOUT_IN_MS } from '../../constants';
+import {
+  DASHBOARD_TIMEOUT_IN_MS,
+  DEFAULT_TIMEOUT_IN_MS,
+} from '../../constants';
 import { waitforTablePageLoad, waitForFilterSectionToLoad } from '../../utils';
 import exp from 'constants';
 
@@ -140,7 +143,9 @@ export class EditFilterFields {
       .getByTestId('ExpandMoreIcon');
     this.transportModeSea = page.getByText('SEASea Freight');
     this.shipmentWeightValue = page.getByLabel('value');
-    this.transportModeFilterLocator = page.locator('span:has-text("Sea") + *');
+    this.transportModeFilterLocator = page
+      .locator('[data-testid="Transport Mode-custom-multiple-text-field"]')
+      .locator('span:has-text("Sea") + *');
     this.hasTrueValueLocator = page.locator('span:has-text("True") + *');
     this.lastLegArrivalStatusFilterValueLocator = page.locator(
       'span:has-text("Delayed") + *'
@@ -156,9 +161,11 @@ export class EditFilterFields {
     this.deleteFilterValueBtn = page.getByText('Delete');
     this.dischargePortFilterValueChip = (key: string) =>
       page.getByRole('button', { name: key });
-    this.transportModeFilterValueChip = page.getByRole('button', {
-      name: 'SEA',
-    });
+    this.transportModeFilterValueChip = page
+      .getByRole('button', {
+        name: 'SEA',
+      })
+      .first();
     this.shipmentWeightFilterValueChip = page.getByText('Shipment Weight1 KG');
     this.failedToDepartDrilldown = page.getByText('Failed to depart (Past 3');
     this.failedToArriveDrilldown = page.getByText('Failed to arrive (Past 3');
@@ -315,7 +322,7 @@ export class EditFilterFields {
     ];
     for (const addedFilterValueChip of filterValueChips) {
       await expect(addedFilterValueChip).toBeVisible({
-        timeout: DASHBOARD_TIMEOUT_IN_MS,
+        timeout: DEFAULT_TIMEOUT_IN_MS,
       });
     }
   }
