@@ -114,6 +114,7 @@ export function removeTextBetweenPatterns(
 export function removeSpacesAndColons(text: string): string {
   return text.replace(/[\s:]/g, '');
 }
+
 export const waitDashboardLoad = async (page: Page) => {
   console.log('Waiting for dashboard to load');
   await page.waitForTimeout(30000);
@@ -139,4 +140,10 @@ export const waitDashboardLoad = async (page: Page) => {
       await page.waitForTimeout(pollingInterval);
     }
   }
+};
+
+export const waitForTaskCardToLoad = async (page: Page) => {
+  await expect(page.locator('[data-testid^="task-card-"]').nth(0)).toBeVisible({
+    timeout: DEFAULT_TIMEOUT_IN_MS,
+  });
 };
