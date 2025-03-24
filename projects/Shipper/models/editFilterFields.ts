@@ -4,7 +4,6 @@ import {
   DEFAULT_TIMEOUT_IN_MS,
 } from '../../constants';
 import { waitforTablePageLoad, waitForFilterSectionToLoad } from '../../utils';
-import exp from 'constants';
 
 let dischargePortKey;
 let dischargePortValue;
@@ -69,7 +68,9 @@ export class EditFilterFields {
   readonly originPortFilterLocator: Locator;
   readonly originPortFilterField: Locator;
   readonly consigneeNameFilterField: Locator;
-  readonly failedToDepartDepartDrilldown: Locator;
+  readonly failedToDepartDrilldownViewShipments: Locator;
+  readonly failedToArriveDrilldownViewShipments: Locator;
+  readonly exceptionManagementBreadcrumb: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -188,13 +189,21 @@ export class EditFilterFields {
       .locator('label')
       .filter({ hasText: 'Origin Port' });
     this.consigneeNameFilterField = page.getByText('Consignee Name');
-    this.failedToDepartDepartDrilldown = page
+    this.failedToDepartDrilldownViewShipments = page
       .locator('div')
       .filter({ hasText: /^Failed to depart \(Past 3 months\)View shipments$/ })
       .getByRole('button');
+    this.failedToArriveDrilldownViewShipments = page
+      .locator('div')
+      .filter({ hasText: /^Failed to arrive \(Past 3 months\)View shipments$/ })
+      .getByRole('button');
+    this.exceptionManagementBreadcrumb = page.getByRole('link', {
+      name: 'Exceptions Management',
+    });
   }
   async waitForExceptionManagement() {
     await this.page.waitForLoadState('load');
+    await this.page.waitForLoadState('domcontentloaded');
     await this.drilldownTableShipmentsArriving.waitFor({ state: 'visible' });
     await this.filterFields.waitFor({ state: 'visible' });
     await this.failedToDepartDrilldown.waitFor({ state: 'visible' });
@@ -628,17 +637,21 @@ export class EditFilterFields {
     });
   }
 
-  async drilldownFailedToDepart() {
-    await this.failedToDepartDepartDrilldown.click();
+  async drilldownFailedToDepartOrArrive() {
+    if (await this.failedToDepartDrilldownViewShipments.isVisible()) {
+      await this.failedToDepartDrilldownViewShipments.click();
+    } else {
+      await this.failedToArriveDrilldownViewShipments.click();
+    }
     await expect(this.page.getByText('Filters applied from')).toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
     await expect(
       this.page.getByTestId('table-body-0-forwarder_reference')
     ).toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
-    await expect(
-      this.page.getByRole('link', { name: 'Exceptions Management' })
-    ).toBeVisible({ timeout: DASHBOARD_TIMEOUT_IN_MS });
+    await expect(this.exceptionManagementBreadcrumb).toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
   }
 
   async addFilterValueDrilldown() {
@@ -657,5 +670,24 @@ export class EditFilterFields {
       .filter({ hasText: selectedText });
     await expect(chip).toBeVisible();
     await expect(this.page.getByRole('button', { name: 'True' })).toBeVisible();
+  }
+
+  async selectFirstOption(filterField: Locator) {
+    await filterField.waitFor({
+      state: 'visible',
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    await filterField.click();
+
+    const dropdownOption = this.page
+      .locator('.MuiGrid-container.css-1sznya1-dropdownRow')
+      .first();
+    await dropdownOption.waitFor({
+      state: 'visible',
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    const selectedText = await dropdownOption.innerText();
+    await dropdownOption.click();
+    return selectedText.split('\n')[0].trim();
   }
 }

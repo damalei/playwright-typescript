@@ -25,7 +25,7 @@ test.describe('TS 34 - User edits filter fields on Drilldown Page', () => {
   ];
   test('[34.1] User adds Filter Fields', async () => {
     await editFilterFields.waitForExceptionManagement();
-    await editFilterFields.drilldownFailedToDepart();
+    await editFilterFields.drilldownFailedToDepartOrArrive();
 
     for (const filterFields of filterFieldstoAdd) {
       if (filterFields === 'Page Last Updated On') {
@@ -48,7 +48,7 @@ test.describe('TS 34 - User edits filter fields on Drilldown Page', () => {
 
   test('[34.3] User removes Filter Fields', async () => {
     await editFilterFields.navigateDashboardBackToExceptionManagement();
-    await editFilterFields.drilldownFailedToDepart();
+    await editFilterFields.drilldownFailedToDepartOrArrive();
     await editFilterFields.editFilterFields();
     await editFilterFields.removeFilterFieldsDrilldown();
     await editFilterFields.updateFiltersFields();
@@ -59,13 +59,13 @@ test.describe('TS 34 - User edits filter fields on Drilldown Page', () => {
 
   test('[34.4] User add  Filter values', async () => {
     await editFilterFields.navigateDashboardBackToExceptionManagement();
-    await editFilterFields.drilldownFailedToDepart();
+    await editFilterFields.drilldownFailedToDepartOrArrive();
     await editFilterFields.addFilterValueDrilldown();
   });
 
   test('[34.5] User remove  Filter values', async () => {
     await editFilterFields.navigateDashboardBackToExceptionManagement();
-    await editFilterFields.drilldownFailedToDepart();
+    await editFilterFields.drilldownFailedToDepartOrArrive();
     await editFilterFields.hasTrueValueLocator.click();
     await editFilterFields.saveViewDashboard();
     await editFilterFields.navigateDashboardBackToExploreShipments();
