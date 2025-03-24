@@ -6,7 +6,7 @@ import { ExploreReceivableInvoices } from '../models/exploreReceivableInvoices';
 import { ExploreContainers } from '../models/exploreContainers';
 import { GlobalNativeTable } from '../models/globalNativeTable';
 import { GlobalFilterSection } from '../models/globalFilterSection';
-import { DASHBOARD_TIMEOUT_IN_MS } from '../../constants';
+import { DASHBOARD_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
 import { logInAuth } from '../../utils';
 
 test.describe.configure({
@@ -24,7 +24,7 @@ test.describe('User clicks edits column > save columns', () => {
       `${process.env.FREIGHT_BI_CLIENT2_USER}`,
       `${process.env.FREIGHT_BI_CLIENT2_PASS}`
     );
-    await page.goto('https://passive-dashboard.expedock.com/');
+    await page.goto(FREIGHT_BI_BASE_URL);
   });
 
   test.afterEach(async ({}) => {

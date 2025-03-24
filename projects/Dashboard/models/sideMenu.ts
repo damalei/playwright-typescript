@@ -13,6 +13,7 @@ export class SideMenu {
   readonly accAccounting: Locator;
   readonly listWrapperBusiness: Locator;
   readonly apiSummary: Locator;
+  readonly optionOrganizationManagement: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -31,6 +32,9 @@ export class SideMenu {
       'sidebar-tab-wrapper-BUSINESS_PERFORMANCE'
     );
     this.apiSummary = page.getByTestId('account-user-api-partner-list');
+    this.optionOrganizationManagement = page.locator(
+      '//span[text()="Organization Management"]'
+    );
   }
 
   async clickOnDashboardName(dashboardName: string) {
