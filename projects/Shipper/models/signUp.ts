@@ -282,7 +282,7 @@ export class SignUpPage {
   }
 
   async searchShipmentonShipperViz() {
-    await this.signUpSearchShipment.fill('S00016721');
+    await this.signUpSearchShipment.fill('S00724521');
     await this.trackShipmentBtn.click();
     await this.shipmentCardResult.click();
     await expect(this.shipmentRoute).toBeVisible({

@@ -1,8 +1,7 @@
 import { test, Page } from '@playwright/test';
 import { ExploreContainers } from '../models/shipperExploreContainers';
 import { LoginPage } from '../models/login.ts';
-import { EditTableColumns } from '../models/shipperEditColumn';
-
+import { EditColumns } from '../models/editColumns';
 let exploreContainers;
 let editTableColumnsShipperContainers;
 let loginPage;
@@ -14,7 +13,7 @@ test.describe('Edit Columns on Shipper Explore Containers', () => {
     page = await browser.newPage();
     loginPage = new LoginPage(page);
     exploreContainers = new ExploreContainers(page);
-    editTableColumnsShipperContainers = new EditTableColumns(page);
+    editTableColumnsShipperContainers = new EditColumns(page);
     await loginPage.goto();
     await loginPage.loginToShipper();
     await exploreContainers.gotoExploreContainers();

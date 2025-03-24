@@ -555,8 +555,12 @@ export class EditFilterFields {
     sourceIndex: number,
     targetIndex: number
   ) {
+    console.log(
+      `Starting dragSourceToTargetColumn from ${sourceIndex} to ${targetIndex}`
+    );
     await waitForFilterSectionToLoad(page, DASHBOARD_TIMEOUT_IN_MS);
     await waitforTablePageLoad(page, DASHBOARD_TIMEOUT_IN_MS);
+
     const tableHeaderList = await this.page
       .getByTestId('table-header')
       .locator('th')
@@ -570,6 +574,10 @@ export class EditFilterFields {
     await this.editColumnButton.click();
     await page.waitForTimeout(2000);
     const columnPopper = this.page.getByTestId('edit-columns-popper');
+    await columnPopper.waitFor({
+      state: 'visible',
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
     const source = columnPopper
       .locator(`//span[text()='${sourceName}']`)
       .locator('..')
@@ -580,17 +588,29 @@ export class EditFilterFields {
       .locator('..')
       .locator('..')
       .locator('..');
-    await source.focus();
-    await target.focus();
-    await source.dragTo(target);
+
+    await source.waitFor({
+      state: 'visible',
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    await target.waitFor({
+      state: 'visible',
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
     await source.hover();
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(1000);
+    await source.dragTo(target);
+    await page.waitForTimeout(1000);
+    await source.hover();
+    await page.waitForTimeout(1000);
     await this.page.mouse.down();
     const box = (await target.boundingBox())!;
     await this.page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
     await target.hover();
+    await page.waitForTimeout(1000);
     await this.page.mouse.up();
     await this.editColumnButton.click();
+    await page.waitForTimeout(2000);
     const newTableHeaderList = await this.getHeaderList(page);
     return newTableHeaderList;
   }
