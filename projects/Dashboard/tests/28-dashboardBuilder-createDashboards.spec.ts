@@ -1,9 +1,5 @@
 import { test, Page, expect } from '@playwright/test';
-import {
-  waitForElementToHide,
-  waitForFilterSectionToLoad,
-  waitForSnackBar,
-} from '../../utils';
+import { waitForFilterSectionToLoad, waitForSnackBar } from '../../utils';
 import { SideMenu } from '../models/sideMenu';
 import {
   DEFAULT_TIMEOUT_IN_MS,
@@ -33,7 +29,6 @@ order by period`;
 const chartName1 = 'Line Chart no card filter';
 const chartName2 = 'Line Chart with AIR filter';
 const chartName3 = 'Line Chart with SEA filter';
-const xpathUserManagementButton = '//button[text()="Save"]';
 
 test.describe.serial('[28] Dashboard Builder: Create/Edit Dashboards', () => {
   let page: Page;
@@ -271,22 +266,7 @@ test.describe.serial('[28] Dashboard Builder: Create/Edit Dashboards', () => {
       'Business Performance',
       `${dashboardTitle} copy edited`
     );
-    await user.buttonSave.click();
-    const confirmButton = page.getByText('Confirm');
-    try {
-      await confirmButton.click();
-    } catch (error) {
-      console.log('Element not found, continuing...');
-    }
-    // await waitForElementToHide(
-    //   page,
-    //   DEFAULT_TIMEOUT_IN_MS,
-    //   xpathUserManagementButton
-    // );
-    await page.getByRole('button', { name: 'Save' }).waitFor({
-      state: 'hidden',
-      timeout: DEFAULT_TIMEOUT_IN_MS,
-    });
+    await user.saveUserSettings();
     await page.reload();
     await side.accBP.click();
     await side.clickOnDashboardName(`${dashboardTitle} copy edited`);

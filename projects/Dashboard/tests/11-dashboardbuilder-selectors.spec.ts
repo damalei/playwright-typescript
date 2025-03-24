@@ -1,19 +1,29 @@
 import { test, Page, expect } from '@playwright/test';
-import {
-  waitForElementToHide,
-  waitForFilterSectionToLoad,
-  waitForSnackBar,
-} from '../../utils';
+import { waitForFilterSectionToLoad } from '../../utils';
 import { SideMenu } from '../models/sideMenu';
-import { DEFAULT_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
+import {
+  DEFAULT_TIMEOUT_IN_MS,
+  DASHBOARD_TIMEOUT_IN_MS,
+  FREIGHT_BI_BASE_URL,
+} from '../../constants';
 import { DashboardBuilder } from '../models/dashboardBuilder';
 import { UserManagement } from '../models/userManagement';
 
+/**
+ * Developer's Note:
+ * When re-running the test make sure to do the following:
+ * 1. Dashboard Builder > QA Test Template 2> Disable the Org Type selector
+ * 2. User Management > Business Performance > Remove QA Test Templa
+ */
+
 const dashboard2 =
   FREIGHT_BI_BASE_URL +
-  '/dashboard-builder/c3f63950-8ce7-4529-b29d-31a92c6f7941'; //QA TEST Template (AP DASH DEMO)
+  //'/dashboard-builder/c3f63950-8ce7-4529-b29d-31a92c6f7941'; //QA TEST Template (AP DASH DEMO)
+  '/dashboard-builder/d787c999-4e98-4dcf-ab5c-cb9f4bbb9ee8'; //QA TEST Template 2 (AP DASH DEMO)
 
-test.describe('Edit and save filters fields on Dashboard Builder', () => {
+test.describe
+  .serial('Edit and save filters fields on Dashboard Builder', () => {
+  test.setTimeout(DASHBOARD_TIMEOUT_IN_MS);
   let page: Page;
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
@@ -29,26 +39,12 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
     await page.keyboard.press('Escape');
     await user.searchEmail(`${process.env.FREIGHT_BI_CLIENT_USER}`);
     await user.clickEditAccess(`${process.env.FREIGHT_BI_CLIENT_USER}`);
-    await user.inputDashboard('Business Performance', 'QA Test Template');
-    await user.buttonSave.click();
-    await user.confirmDashboardChange();
-    // const confirmButton = page.getByText('Confirm');
-    // try {
-    //   await confirmButton.click();
-    // } catch (error) {
-    //   console.log('Element not found, continuing...');
-    // }
-    // await waitForElementToHide(
-    //   page,
-    //   DEFAULT_TIMEOUT_IN_MS,
-    //   '//button[text()="Save"]'
-    // );
+    await user.inputDashboard('Business Performance', 'QA Test Template 2');
+    await user.saveUserSettings();
   });
 
   test('[11.1 & 11.3] User adds selector FIELD from the basic view', async () => {
     const dashbuild = new DashboardBuilder(page);
-    const user = new UserManagement(page);
-    const side = new SideMenu(page);
     await page.goto(dashboard2);
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
     await dashbuild.buttonEditDashboard.click();
@@ -61,7 +57,6 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
   });
 
   test('[11.2] User saves a selector FIELD from the basic view', async () => {
-    const dashbuild = new DashboardBuilder(page);
     const user = new UserManagement(page);
     const side = new SideMenu(page);
     await page.goto(FREIGHT_BI_BASE_URL);
@@ -70,21 +65,12 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
     await page.keyboard.press('Escape');
     await user.searchEmail(`${process.env.FREIGHT_BI_CLIENT_USER}`);
     await user.clickEditAccess(`${process.env.FREIGHT_BI_CLIENT_USER}`);
-    await user.inputDashboard('Business Performance', 'QA Test Template');
-    await user.buttonSave.click();
-    // const confirmButton = page.getByText('Confirm');
-    // try {
-    //   await confirmButton.click();
-    // } catch (error) {
-    //   console.log('Element not found, continuing...');
-    // }
-    // await page.getByRole('button', { name: 'Cancel' }).waitFor({
-    //   state: 'hidden',
-    //   timeout: 10000,
-    // });
+    await user.inputDashboard('Business Performance', 'QA Test Template 2');
+    await user.isDashboardOnField('Business Performance', 'QA Test Template 2');
+    await user.saveUserSettings();
     await page.reload();
     await side.accBP.click();
-    await side.clickOnDashboardName('QA Test Template');
+    await side.clickOnDashboardName('QA Test Template 2');
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
     await expect.soft(page.locator('//h6[text()="ORG TYPE"]')).toBeVisible();
     await expect.soft(page.locator('//input[@value="Shipper"]')).toBeVisible();
@@ -92,7 +78,6 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
 
   test('[11.5] User changes a value on the selector field', async () => {
     const dashbuild = new DashboardBuilder(page);
-    const user = new UserManagement(page);
     const side = new SideMenu(page);
     await page.goto(dashboard2);
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
@@ -102,7 +87,7 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
     await dashbuild.buttonSave.click();
     await page.goto(FREIGHT_BI_BASE_URL);
     await side.accBP.click();
-    await side.clickOnDashboardName('QA Test Template');
+    await side.clickOnDashboardName('QA Test Template 2');
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
     await expect.soft(page.locator('//h6[text()="ORG TYPE"]')).toBeVisible();
     await expect.soft(page.locator('//input[@value="Creditor"]')).toBeVisible();
@@ -110,7 +95,6 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
 
   test('[11.4] User removes a selector field', async () => {
     const dashbuild = new DashboardBuilder(page);
-    const user = new UserManagement(page);
     const side = new SideMenu(page);
     await page.goto(dashboard2);
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
@@ -120,7 +104,7 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
     await dashbuild.buttonSave.click();
     await page.goto(FREIGHT_BI_BASE_URL);
     await side.accBP.click();
-    await side.clickOnDashboardName('QA Test Template');
+    await side.clickOnDashboardName('QA Test Template 2');
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
     await expect
       .soft(page.locator('//h6[text()="ORG TYPE"]'))
@@ -137,7 +121,6 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
     },
     async () => {
       const dashbuild = new DashboardBuilder(page);
-      const user = new UserManagement(page);
       const side = new SideMenu(page);
       await page.goto(dashboard2);
       await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
@@ -153,7 +136,7 @@ test.describe('Edit and save filters fields on Dashboard Builder', () => {
       await dashbuild.buttonSave.click();
       await page.goto(FREIGHT_BI_BASE_URL);
       await side.accBP.click();
-      await side.clickOnDashboardName('QA Test Template');
+      await side.clickOnDashboardName('QA Test Template 2');
       await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
       await expect
         .soft(page.locator('//h6[text()="ORG TYPE"]'))

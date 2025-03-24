@@ -1,5 +1,4 @@
 import { test, Page } from '@playwright/test';
-import { FREIGHT_BI_BASE_URL } from '../../constants';
 import { ExploreContainers } from '../models/exploreContainers';
 import { AdvancedFilterView } from '../models/advancedFilters';
 import { EditTableColumns } from '../models/explorePageEditColumn';
@@ -9,7 +8,7 @@ let exploreContainers;
 let viewFilterSection;
 let editTableColumnsExploreContainers;
 
-test.describe('Edit Columns on Explore Containers', () => {
+test.describe.serial('Edit Columns on Explore Containers', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {

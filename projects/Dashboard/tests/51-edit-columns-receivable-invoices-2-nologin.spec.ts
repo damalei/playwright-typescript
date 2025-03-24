@@ -9,7 +9,7 @@ let exploreReceivableInvoices;
 let viewFilterSection;
 let editTableColumnsExploreReceivableInvoices;
 
-test.describe('Edit Columns on Explore Receivable Invoices', () => {
+test.describe.serial('Edit Columns on Explore Receivable Invoices', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
