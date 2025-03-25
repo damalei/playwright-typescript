@@ -2,16 +2,19 @@ import { test, Page, expect } from '@playwright/test';
 import {
   logInAuth,
   waitForAdvanceSnackBar,
-  waitForElementToHide,
   waitForFilterSectionToLoad,
 } from '../../utils';
-import { DEFAULT_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
+import {
+  DEFAULT_TIMEOUT_IN_MS,
+  DASHBOARD_TIMEOUT_IN_MS,
+  FREIGHT_BI_BASE_URL,
+} from '../../constants';
 import { UserManagement } from '../models/userManagement';
 import { ExplorePayableInvoices } from '../models/explorePayableInvoices';
 import { GlobalFilterSection } from '../models/globalFilterSection';
 import { ExploreShipments } from '../models/exploreShipments';
 import { SideMenu } from '../models/sideMenu';
-import { after } from 'node:test';
+
 let page: Page;
 let user: UserManagement;
 let pay: ExplorePayableInvoices;
@@ -20,6 +23,7 @@ let side: SideMenu;
 let globalFilterSection: GlobalFilterSection;
 
 test.describe.serial('[26] User sets-up sandboxing', () => {
+  test.setTimeout(DASHBOARD_TIMEOUT_IN_MS);
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     await page.goto(FREIGHT_BI_BASE_URL);
@@ -41,16 +45,12 @@ test.describe.serial('[26] User sets-up sandboxing', () => {
     await user.searchEmail(`${process.env.FREIGHT_BI_CLIENT_USER}`);
     await user.clickEditAccess(`${process.env.FREIGHT_BI_CLIENT_USER}`);
     await user.inputDashboard('Sales Rep', 'Rui Aguiar (RA)');
+    await user.isDashboardOnField('Sales Rep', 'Rui Aguiar (RA)');
     await user.inputDashboard('Operator', 'Jig Young (JY)');
     await user.inputDashboard('Branch', 'MNL');
     await user.inputDashboard('Department', 'FIA');
     await user.toggleSandbox.click();
-    await user.buttonSave.click();
-    await waitForElementToHide(
-      page,
-      DEFAULT_TIMEOUT_IN_MS,
-      '//button[text()="Save"]'
-    );
+    await user.saveUserSettings();
     await pay.goto();
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
     await expect.soft(pay.globalFilterSection.infoIcon).toBeVisible();
@@ -111,7 +111,6 @@ test.describe.serial('[26] User sets-up sandboxing', () => {
   test('[26.2] Admin User disables sandboxing', async () => {
     const user = new UserManagement(page);
     const pay = new ExplorePayableInvoices(page);
-    const globalFilterSection = new GlobalFilterSection(page);
     await user.goto();
     await user.waitForReferenceComponent();
     await user.searchEmail(`${process.env.FREIGHT_BI_CLIENT_USER}`);
@@ -121,12 +120,7 @@ test.describe.serial('[26] User sets-up sandboxing', () => {
     await user.inputDashboard('Branch', 'MNL');
     await user.inputDashboard('Department', 'FIA');
     await user.toggleSandbox.click();
-    await user.buttonSave.click();
-    await waitForElementToHide(
-      page,
-      DEFAULT_TIMEOUT_IN_MS,
-      '//button[text()="Save"]'
-    );
+    await user.saveUserSettings();
     await page.reload();
     await user.waitForReferenceComponent();
     await pay.goto();

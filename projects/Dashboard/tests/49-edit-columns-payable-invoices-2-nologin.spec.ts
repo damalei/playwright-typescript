@@ -9,7 +9,7 @@ let explorePayableInvoices;
 let viewFilterSection;
 let editTableColumnsExplorePayableInvoices;
 
-test.describe('Edit Columns on Explore Payable Invoices', () => {
+test.describe.serial('Edit Columns on Explore Payable Invoices', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {

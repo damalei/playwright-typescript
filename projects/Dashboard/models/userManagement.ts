@@ -1,6 +1,7 @@
 import { expect, Locator, Page } from '@playwright/test';
 import { DEFAULT_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
-
+import { waitForElementToHide } from '../../utils';
+import { time } from 'console';
 export class UserManagement {
   readonly page: Page;
   readonly emailSearchField: Locator;
@@ -14,6 +15,7 @@ export class UserManagement {
   readonly inputDepartment: Locator;
   readonly toggleSandbox: Locator;
   readonly confirmBtn: Locator;
+  readonly saveButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -34,6 +36,7 @@ export class UserManagement {
       .getByText('Can only access shipments they are assigned to')
       .locator('..')
       .locator('//input[@type="checkbox"]');
+    this.saveButton = page.getByRole('button', { name: 'Save' });
   }
 
   async searchEmail(email: string) {
@@ -54,7 +57,7 @@ export class UserManagement {
     await this.referenceComponent.waitFor({ state: 'visible' });
   }
 
-  async inputDashboard(section: string, dashboard) {
+  async inputDashboard(section: string, dashboard: string) {
     await this.page.getByLabel(section, { exact: true }).click();
     const field = this.page
       .getByLabel(section, { exact: true })
@@ -65,6 +68,18 @@ export class UserManagement {
     await this.page.keyboard.press('Backspace');
     await this.page.keyboard.press('ArrowDown');
     await this.page.keyboard.press('Enter');
+  }
+
+  async isDashboardOnField(section: string, dashboard: string) {
+    const field = this.page.getByLabel(section, { exact: true }).locator('..');
+    const isDashboardChipVisible = await field
+      .getByText(dashboard, { exact: true })
+      .isVisible();
+    if (isDashboardChipVisible) {
+      console.log('Dashboard added to field...');
+    } else {
+      await this.inputDashboard(section, dashboard);
+    }
   }
 
   async goto() {
@@ -89,5 +104,16 @@ export class UserManagement {
       .getByText(chip, { exact: true })
       .isVisible();
     return isChipVisible;
+  }
+
+  async saveUserSettings() {
+    await this.buttonSave.click();
+    try {
+      const confirmButton = this.page.getByText('Confirm');
+      await confirmButton.click({ timeout: 20000 });
+    } catch (error) {
+      console.log('Confirm button not found, continuing...');
+    }
+    await waitForElementToHide(this.page, 20000, this.saveButton);
   }
 }

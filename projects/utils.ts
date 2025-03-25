@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page, expect, Locator } from '@playwright/test';
 import { DEFAULT_TIMEOUT_IN_MS } from './constants.ts';
 
 export function setGlobalData(url: string) {
@@ -58,9 +58,9 @@ export const waitForAdvanceSnackBar = async (
 export const waitForElementToHide = async (
   page: Page,
   loadTimeoutMs: number,
-  locator: string
+  locator: Locator
 ) => {
-  await expect(page.locator(locator)).toBeHidden({
+  await expect(locator).toBeHidden({
     timeout: loadTimeoutMs,
   });
 };

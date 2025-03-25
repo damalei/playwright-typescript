@@ -1,5 +1,4 @@
 import { test, Page } from '@playwright/test';
-import { FREIGHT_BI_BASE_URL } from '../../constants';
 import { ExploreOrganizations } from '../models/exploreOrganizations';
 import { AdvancedFilterView } from '../models/advancedFilters';
 import { EditTableColumns } from '../models/explorePageEditColumn';
@@ -9,7 +8,7 @@ let exploreOrganizations;
 let viewFilterSection;
 let editTableColumnsExploreOrganizations;
 
-test.describe('Edit Columns on Explore Organizations', () => {
+test.describe.serial('Edit Columns on Explore Organizations', () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {

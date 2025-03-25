@@ -1,15 +1,14 @@
 import { Page, test, expect } from '@playwright/test';
-import { waitForElementToHide } from '../../utils';
-import { DEFAULT_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
+import { FREIGHT_BI_BASE_URL, DASHBOARD_TIMEOUT_IN_MS } from '../../constants';
 import { SideMenu } from '../models/sideMenu';
 import { UserManagement } from '../models/userManagement';
 
-const xpathUserManagementButton = '//button[text()="Save"]';
 const dash1 = 'QA Chart Collection';
-const dash2 = 'QA Test Template';
+const dash2 = 'QA Test Template 3';
 
-test.describe('[33]User Edit dashboard list on side menu ', () => {
+test.describe.serial('[33]User Edit dashboard list on side menu ', () => {
   let page: Page;
+  test.setTimeout(DASHBOARD_TIMEOUT_IN_MS);
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     await page.goto('https://passive-dashboard.expedock.com/');
@@ -26,12 +25,9 @@ test.describe('[33]User Edit dashboard list on side menu ', () => {
     await user.clickEditAccess(`${process.env.FREIGHT_BI_CLIENT_USER}`);
     await user.inputDashboard('Business Performance', `${dash1}`);
     await user.inputDashboard('Business Performance', `${dash2}`);
-    await user.buttonSave.click();
-    await waitForElementToHide(
-      page,
-      DEFAULT_TIMEOUT_IN_MS,
-      `${xpathUserManagementButton}`
-    );
+    await user.isDashboardOnField('Business Performance', `${dash1}`);
+    await user.isDashboardOnField('Business Performance', `${dash2}`);
+    await user.saveUserSettings();
     await page.reload();
     await side.accBP.click();
     await expect.soft(page.locator(`//span[text()='${dash1}']`)).toBeVisible();
@@ -56,13 +52,7 @@ test.describe('[33]User Edit dashboard list on side menu ', () => {
     await user.clickEditAccess(`${process.env.FREIGHT_BI_CLIENT_USER}`);
     await user.inputDashboard('Business Performance', `${dash1}`);
     await user.inputDashboard('Business Performance', `${dash2}`);
-    await user.buttonSave.click();
-    await user.confirmDashboardChange();
-    await waitForElementToHide(
-      page,
-      DEFAULT_TIMEOUT_IN_MS,
-      `${xpathUserManagementButton}`
-    );
+    await user.saveUserSettings();
     await page.reload();
     await side.accBP.click();
     await expect.soft(page.locator(`//span[text()='${dash1}']`)).toBeHidden();
