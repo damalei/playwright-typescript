@@ -654,44 +654,4 @@ export class EditFilterFields {
     await expect(chip).toBeVisible();
     await expect(this.page.getByRole('button', { name: 'True' })).toBeVisible();
   }
-
-  async addRandomFilterValueChip(fieldName: string) {
-    try {
-      await this.page
-        .getByTestId(`${fieldName}-custom-multiple-text-field`)
-        .click();
-
-      const dropdownRows = this.page.locator('[class*="a1-dropdownRow"]');
-      await dropdownRows
-        .first()
-        .waitFor({ state: 'visible', timeout: DASHBOARD_TIMEOUT_IN_MS });
-
-      // Get count of dropdown rows
-      const count = await dropdownRows.count();
-      if (count === 0) {
-        console.log(`No dropdown values found for ${fieldName}`);
-        return null;
-      }
-
-      // Select random index between 0 and count-1
-      const randomIndex = Math.floor(Math.random() * count);
-      const result = await this.getDropdownKeyValue(fieldName, randomIndex);
-
-      if (!result) {
-        console.log(`No value found at index ${randomIndex} for ${fieldName}`);
-        return null;
-      }
-
-      // Click the selected value
-      await this.page
-        .getByTestId(fieldName)
-        .getByText(`${result.key}${result.value}`)
-        .click();
-
-      return result;
-    } catch (error) {
-      console.log(`Error selecting random value for ${fieldName}:`, error);
-      return null;
-    }
-  }
 }
