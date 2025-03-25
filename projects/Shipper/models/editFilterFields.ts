@@ -298,7 +298,7 @@ export class EditFilterFields {
     await this.transportModeSea.click();
     await this.shipmentWeightFilterChip.click();
     await this.shipmentWeightValue.fill('1');
-    await this.clickDropdownValue(
+    await this.clickDropdownValuePort(
       'Discharge Port-custom-multiple-text-field',
       0
     );
@@ -411,7 +411,7 @@ export class EditFilterFields {
   }
 
   async addFilterValuesExplorePages() {
-    await this.clickDropdownValue(
+    await this.clickDropdownValuePort(
       'Discharge Port-custom-multiple-text-field',
       0
     );
@@ -479,13 +479,11 @@ export class EditFilterFields {
   ): Promise<Record<string, string>> {
     const field = this.page.getByTestId(fieldTestId);
     const dropdownRows = this.page.locator('[class*="a1-dropdownRow"]');
-    await dropdownRows
-      .first()
-      .waitFor({ state: 'visible', timeout: DASHBOARD_TIMEOUT_IN_MS });
+    await dropdownRows.first().waitFor({ state: 'visible', timeout: 5000 });
     const count = await dropdownRows.count();
     const dict: Record<string, string> = {};
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < count - 1; i++) {
       const row = dropdownRows.nth(i);
       const divs = row.locator('div');
       const key = await divs.nth(0).textContent();
@@ -523,12 +521,10 @@ export class EditFilterFields {
     };
   }
 
-  async clickDropdownValue(fieldTestId: string, optionNumber: number) {
+  async clickDropdownValuePort(fieldTestId: string, optionNumber: number) {
     await this.page.getByTestId(fieldTestId).click();
     const dropdownRows = this.page.locator('[class*="a1-dropdownRow"]');
-    await dropdownRows
-      .first()
-      .waitFor({ state: 'visible', timeout: DASHBOARD_TIMEOUT_IN_MS });
+    await dropdownRows.first().waitFor({ state: 'visible', timeout: 5000 });
     const result = await this.getDropdownKeyValue(fieldTestId, optionNumber);
     if (!result) throw new Error('No dropdown value found');
     dischargePortKey = result.key.trim();
@@ -657,5 +653,45 @@ export class EditFilterFields {
       .filter({ hasText: selectedText });
     await expect(chip).toBeVisible();
     await expect(this.page.getByRole('button', { name: 'True' })).toBeVisible();
+  }
+
+  async addRandomFilterValueChip(fieldName: string) {
+    try {
+      await this.page
+        .getByTestId(`${fieldName}-custom-multiple-text-field`)
+        .click();
+
+      const dropdownRows = this.page.locator('[class*="a1-dropdownRow"]');
+      await dropdownRows
+        .first()
+        .waitFor({ state: 'visible', timeout: DASHBOARD_TIMEOUT_IN_MS });
+
+      // Get count of dropdown rows
+      const count = await dropdownRows.count();
+      if (count === 0) {
+        console.log(`No dropdown values found for ${fieldName}`);
+        return null;
+      }
+
+      // Select random index between 0 and count-1
+      const randomIndex = Math.floor(Math.random() * count);
+      const result = await this.getDropdownKeyValue(fieldName, randomIndex);
+
+      if (!result) {
+        console.log(`No value found at index ${randomIndex} for ${fieldName}`);
+        return null;
+      }
+
+      // Click the selected value
+      await this.page
+        .getByTestId(fieldName)
+        .getByText(`${result.key}${result.value}`)
+        .click();
+
+      return result;
+    } catch (error) {
+      console.log(`Error selecting random value for ${fieldName}:`, error);
+      return null;
+    }
   }
 }

@@ -2,20 +2,29 @@ import { test, expect, Page } from '@playwright/test';
 import { LoginPage } from '../models/login';
 import { EditFilterFields } from '../models/editFilterFields';
 import { AccountControl } from '../models/accountControl';
-import { areListsEqual } from '../../utils';
+import { areListsEqual, waitForFilterSectionToLoad } from '../../utils';
+import { SHIPPER_VIZ_BASE_URL, DEFAULT_TIMEOUT_IN_MS } from '../../constants';
+import { GlobalFilterSection } from '../../Dashboard/models/globalFilterSection';
 
 let loginPage: LoginPage;
 let newHeaderList: string[];
 let page: Page;
 let editFilterFields;
 let accountControl;
+let originPort1: { key: string; value: string };
+let originPort2: { key: string; value: string };
+let dischargePort1: { key: string; value: string };
+let dischargePort2: { key: string; value: string };
+let dischargeEta;
+let globalFilterSection: GlobalFilterSection;
 
-test.describe('Load Dashboard Filter Settings', () => {
+test.describe.serial('Load Dashboard Filter Settings', () => {
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     loginPage = new LoginPage(page);
     editFilterFields = new EditFilterFields(page);
     accountControl = new AccountControl(page);
+    globalFilterSection = new GlobalFilterSection(page);
     await loginPage.goto();
     await accountControl.accountControlLoginToShipper();
     await editFilterFields.waitForExceptionManagement();
@@ -29,6 +38,7 @@ test.describe('Load Dashboard Filter Settings', () => {
     'Chargeable weight',
     'Shipper Name',
   ];
+
   test('22.3 - User edits dashboard and refreshes the page', async () => {
     for (const filterFields of filterFieldstoAdd) {
       if (filterFields === 'Page Last Updated On') {
@@ -119,6 +129,171 @@ test.describe('Load Dashboard Filter Settings', () => {
     await editFilterFields.saveViewDashboard();
     await editFilterFields.navigateDashboardBackToExceptionManagement();
     await editFilterFields.checkDeletedFilterValuesExceptionManagement();
+  });
+
+  test('[22.2] Exceptions Management - User clicks the browser back button until the first edit is shown', async () => {
+    await page.goto(SHIPPER_VIZ_BASE_URL + '/exceptions-management');
+    await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    originPort1 = await editFilterFields.clickDropdownValuePort(
+      'Origin Port-custom-multiple-text-field',
+      '0'
+    );
+    originPort2 = await editFilterFields.clickDropdownValuePort(
+      'Origin Port-custom-multiple-text-field',
+      '0'
+    );
+    dischargePort1 = await editFilterFields.clickDropdownValuePort(
+      'Discharge Port-custom-multiple-text-field',
+      '1'
+    );
+
+    await page.goBack();
+    await page.getByTestId('Discharge Port-custom-multiple-text-field').click();
+    await expect
+      .soft(page.locator(`//span[text()='${dischargePort1.key}']`))
+      .toBeHidden();
+    await page.getByTestId('Origin Port-custom-multiple-text-field').click();
+    await expect
+      .soft(page.locator(`//span[text()='${originPort2.key}']`))
+      .toBeVisible();
+    await expect
+      .soft(page.locator(`//span[text()='${originPort1.key}']`))
+      .toBeVisible();
+
+    await page.goBack();
+    await page.getByTestId('Origin Port-custom-multiple-text-field').click();
+    await expect
+      .soft(page.locator(`//span[text()='${dischargePort1.key}']`))
+      .toBeHidden();
+    await page.getByTestId('Origin Port-custom-multiple-text-field').click();
+    await expect
+      .soft(page.locator(`//span[text()='${originPort2.key}']`))
+      .toBeHidden();
+    await expect
+      .soft(page.locator(`//span[text()='${originPort1.key}']`))
+      .toBeVisible();
+
+    await page.goBack();
+    await page.getByTestId('Origin Port-custom-multiple-text-field').click();
+    await expect
+      .soft(page.locator(`//span[text()='${dischargePort1.key}']`))
+      .toBeHidden();
+    await page.getByTestId('Origin Port-custom-multiple-text-field').click();
+    await expect
+      .soft(page.locator(`//span[text()='${originPort2.key}']`))
+      .toBeHidden();
+    await expect
+      .soft(page.locator(`//span[text()='${originPort1.key}']`))
+      .toBeHidden();
+  });
+
+  test('[22.2] Explore Shipment - User clicks the browser back button until the first edit is shown', async () => {
+    await page.goto(SHIPPER_VIZ_BASE_URL + '/explore-shipments');
+    await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    originPort1 = await editFilterFields.clickDropdownValuePort(
+      'Origin Port-custom-multiple-text-field',
+      '0'
+    );
+    originPort2 = await editFilterFields.clickDropdownValuePort(
+      'Origin Port-custom-multiple-text-field',
+      '0'
+    );
+    dischargePort1 = await editFilterFields.clickDropdownValuePort(
+      'Discharge Port-custom-multiple-text-field',
+      '1'
+    );
+
+    await page.goBack();
+    await page.getByTestId('Discharge Port-custom-multiple-text-field').click();
+    await expect
+      .soft(page.locator(`//span[text()='${dischargePort1.key}']`))
+      .toBeHidden();
+    await page.getByTestId('Origin Port-custom-multiple-text-field').click();
+    await expect
+      .soft(page.locator(`//span[text()='${originPort2.key}']`))
+      .toBeVisible();
+    await expect
+      .soft(page.locator(`//span[text()='${originPort1.key}']`))
+      .toBeVisible();
+
+    await page.goBack();
+    await page.getByTestId('Origin Port-custom-multiple-text-field').click();
+    await expect
+      .soft(page.locator(`//span[text()='${dischargePort1.key}']`))
+      .toBeHidden();
+    await page.getByTestId('Origin Port-custom-multiple-text-field').click();
+    await expect
+      .soft(page.locator(`//span[text()='${originPort2.key}']`))
+      .toBeHidden();
+    await expect
+      .soft(page.locator(`//span[text()='${originPort1.key}']`))
+      .toBeVisible();
+
+    await page.goBack();
+    await page.getByTestId('Origin Port-custom-multiple-text-field').click();
+    await expect
+      .soft(page.locator(`//span[text()='${dischargePort1.key}']`))
+      .toBeHidden();
+    await page.getByTestId('Origin Port-custom-multiple-text-field').click();
+    await expect
+      .soft(page.locator(`//span[text()='${originPort2.key}']`))
+      .toBeHidden();
+    await expect
+      .soft(page.locator(`//span[text()='${originPort1.key}']`))
+      .toBeHidden();
+  });
+
+  test('[22.2] Explore Container - User clicks the browser back button until the first edit is shown', async () => {
+    await page.goto(SHIPPER_VIZ_BASE_URL + '/explore-containers');
+    await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);
+    dischargePort1 = await editFilterFields.clickDropdownValuePort(
+      'Discharge Port-custom-multiple-text-field',
+      '1'
+    );
+    dischargePort2 = await editFilterFields.clickDropdownValuePort(
+      'Discharge Port-custom-multiple-text-field',
+      '1'
+    );
+    dischargeEta = await globalFilterSection.setBasicDateFilter(
+      'Discharge Port ETA',
+      'Today'
+    );
+
+    await page.goBack();
+    await expect
+      .soft(page.locator('//p[contains(text(), "Today")]'))
+      .toBeHidden();
+    await page.getByTestId('Discharge Port-custom-multiple-text-field').click();
+    await expect
+      .soft(page.locator(`//span[text()='${dischargePort2.key}']`))
+      .toBeVisible();
+    await expect
+      .soft(page.locator(`//span[text()='${dischargePort1.key}']`))
+      .toBeVisible();
+
+    await page.goBack();
+    await page.getByTestId('Discharge Port-custom-multiple-text-field').click();
+    await expect
+      .soft(page.locator('//p[contains(text(), "Today")]'))
+      .toBeHidden();
+    await expect
+      .soft(page.locator(`//span[text()='${dischargePort2.key}']`))
+      .toBeHidden();
+    await expect
+      .soft(page.locator(`//span[text()='${dischargePort1.key}']`))
+      .toBeVisible();
+
+    await page.goBack();
+    await page.getByTestId('Discharge Port-custom-multiple-text-field').click();
+    await expect
+      .soft(page.locator('//p[contains(text(), "Today")]'))
+      .toBeHidden();
+    await expect
+      .soft(page.locator(`//span[text()='${dischargePort2.key}']`))
+      .toBeHidden();
+    await expect
+      .soft(page.locator(`//span[text()='${dischargePort1.key}']`))
+      .toBeHidden();
   });
 
   test.afterAll(
