@@ -123,6 +123,27 @@ export default defineConfig({
       dependencies: ['shipper-setup'],
     },
 
+    {
+      name: 'recon-setup',
+      testDir: './projects/Recon/tests',
+      testMatch: /Recon\/tests\/auth[.]setup[.]ts/,
+    },
+
+    {
+      name: 'recon-main-tests',
+      testDir: './projects/Recon/tests',
+      testMatch: /.*.spec.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/recon-client.json',
+        viewport: {
+          width: 1440,
+          height: 900,
+        },
+      },
+      dependencies: ['recon-setup'],
+    },
+
     // {
     //   name: 'chromium',
     //   use: { ...devices['Desktop Chrome'] },
