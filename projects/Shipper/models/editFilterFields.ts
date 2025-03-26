@@ -307,7 +307,7 @@ export class EditFilterFields {
     await this.transportModeSea.click();
     await this.shipmentWeightFilterChip.click();
     await this.shipmentWeightValue.fill('1');
-    await this.clickDropdownValue(
+    await this.clickDropdownValuePort(
       'Discharge Port-custom-multiple-text-field',
       0
     );
@@ -420,7 +420,7 @@ export class EditFilterFields {
   }
 
   async addFilterValuesExplorePages() {
-    await this.clickDropdownValue(
+    await this.clickDropdownValuePort(
       'Discharge Port-custom-multiple-text-field',
       0
     );
@@ -488,13 +488,11 @@ export class EditFilterFields {
   ): Promise<Record<string, string>> {
     const field = this.page.getByTestId(fieldTestId);
     const dropdownRows = this.page.locator('[class*="a1-dropdownRow"]');
-    await dropdownRows
-      .first()
-      .waitFor({ state: 'visible', timeout: DASHBOARD_TIMEOUT_IN_MS });
+    await dropdownRows.first().waitFor({ state: 'visible', timeout: 5000 });
     const count = await dropdownRows.count();
     const dict: Record<string, string> = {};
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < count - 1; i++) {
       const row = dropdownRows.nth(i);
       const divs = row.locator('div');
       const key = await divs.nth(0).textContent();
@@ -532,12 +530,10 @@ export class EditFilterFields {
     };
   }
 
-  async clickDropdownValue(fieldTestId: string, optionNumber: number) {
+  async clickDropdownValuePort(fieldTestId: string, optionNumber: number) {
     await this.page.getByTestId(fieldTestId).click();
     const dropdownRows = this.page.locator('[class*="a1-dropdownRow"]');
-    await dropdownRows
-      .first()
-      .waitFor({ state: 'visible', timeout: DASHBOARD_TIMEOUT_IN_MS });
+    await dropdownRows.first().waitFor({ state: 'visible', timeout: 5000 });
     const result = await this.getDropdownKeyValue(fieldTestId, optionNumber);
     if (!result) throw new Error('No dropdown value found');
     dischargePortKey = result.key.trim();
