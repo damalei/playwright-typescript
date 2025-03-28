@@ -7,14 +7,14 @@ let signUpPage;
 let page: Page;
 let recon;
 
-test.describe('[2] ShipperViz Account Control', () => {
+test.describe('[80] Recon Dashboard User Access', () => {
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     signUpPage = new SignUpPage(page);
     recon = new reconDashboard(page);
   });
 
-  test('[36.2] Client clicks on the "Reconciliation Results" link from the breadcrumbs', async () => {
+  test('[80.1] Client clicks on "To-Do Dashboard" link from the side menu', async () => {
     await signUpPage.gotoDashboard();
     await recon.gotoReconDashboard();
     await expect(

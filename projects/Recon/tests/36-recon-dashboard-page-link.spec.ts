@@ -7,7 +7,7 @@ let signUpPage;
 let page: Page;
 let recon;
 
-test.describe('[2] ShipperViz Account Control', () => {
+test.describe('[80] Recon Dashboard User Access', () => {
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     signUpPage = new SignUpPage(page);

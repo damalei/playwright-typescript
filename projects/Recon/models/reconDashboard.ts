@@ -10,6 +10,7 @@ export class reconDashboard {
   readonly reconBreadcrumb: Locator;
   readonly sortTabByAssignedTo: Locator;
   readonly sortTabByVendor: Locator;
+  readonly reconAppJobLink: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -23,6 +24,9 @@ export class reconDashboard {
       name: 'Assigned to',
     });
     this.sortTabByVendor = page.getByRole('button', { name: 'Vendor' });
+    this.reconAppJobLink = page.getByRole('link', {
+      name: 'https://app.expedock.com/',
+    });
   }
 
   async gotoReconDashboard() {
@@ -121,5 +125,17 @@ export class reconDashboard {
     await expect(
       page.getByRole('button', { name: exportButtonName })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
+  }
+  async loginToReconDashboard(username: string, password: string) {
+    await this.page.goto(`https://${process.env.ENV}-dashboard.expedock.com`);
+    await this.page.locator('#username').fill(username);
+    await this.page.locator('#password').fill(password);
+    await this.page
+      .getByRole('button', { name: 'Continue', exact: true })
+      .click();
+    await this.page.waitForURL('https://passive-dashboard.expedock.com/**/');
+    await expect(this.page.getByTestId('account-user-name')).toBeVisible({
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
   }
 }
