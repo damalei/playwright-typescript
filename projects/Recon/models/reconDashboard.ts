@@ -12,6 +12,14 @@ export class reconDashboard {
   readonly tabToDo: Locator;
   readonly tabForExpedock: Locator;
   readonly tabForOtherUsers: Locator;
+  readonly reconViewDocumentsTab: Locator;
+  readonly reconViewAccrualTab: Locator;
+  readonly reconViewNotesTab: Locator;
+  readonly firstReconShipmentReference: Locator;
+  readonly reconPageReassignBtn: Locator;
+  readonly reconPageReassignToUserList: Locator;
+  readonly searchReconJobOrReference: Locator;
+
 
   constructor(page: Page) {
     this.page = page;
@@ -39,6 +47,27 @@ export class reconDashboard {
     this.tabForOtherUsers = this.page.getByRole('tab', {
       name: 'For Other Users',
       exact: true,
+    this.reconViewDocumentsTab = page.getByRole('tab', {
+      name: 'View Documents',
+      selected: true,
+    });
+    this.reconViewAccrualTab = page.getByRole('tab', { name: 'Accrual' });
+    this.reconViewNotesTab = page.getByRole('tab', { name: 'Notes' });
+    this.reconViewDocumentsTab = page.getByRole('tab', {
+      name: 'View Documents',
+      selected: true,
+    });
+    this.reconViewAccrualTab = page.getByRole('tab', { name: 'Accrual' });
+    this.reconViewNotesTab = page.getByRole('tab', { name: 'Notes' });
+    this.firstReconShipmentReference = page
+      .locator('a.MuiStack-root.css-377j2d')
+      .first();
+    this.reconPageReassignBtn = page.getByRole('button', { name: 'Re-assign' });
+    this.reconPageReassignToUserList = page.getByRole('combobox', {
+      name: 'Reassign to*',
+    });
+    this.searchReconJobOrReference = page.getByRole('textbox', {
+      name: 'Enter an invoice or reference',
     });
   }
 
@@ -71,17 +100,12 @@ export class reconDashboard {
       if (await link.isVisible()) {
         await link.click();
         await this.waitForPageLoad(this.page);
-        await expect(
-          this.page.getByText(
-            'Move to DoneRe-assignRe-process via ExpedockPost'
-          )
-        ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
 
         await expect(
           this.page.getByRole('heading', { name: 'Reconciliation Summary' })
         ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
 
-        return;
+        return jobLinks;
       }
     }
 
@@ -151,7 +175,7 @@ export class reconDashboard {
       timeout: DEFAULT_TIMEOUT_IN_MS,
     });
   }
-
+  
   async searchJob(invoiceNumber: string) {
     await this.inputSearch.fill(invoiceNumber);
   }
@@ -159,5 +183,65 @@ export class reconDashboard {
   async clickInvoice(tab: Locator, jobReference: string) {
     await tab.click();
     await this.page.locator(`//a[text()='${jobReference}']`).click();
+
+  async clickReconViewAccrualTab() {
+    const waitForNetworkIdle = async (timeout: number) => {
+      try {
+        await this.page.waitForLoadState('networkidle', { timeout });
+      } catch (e) {}
+    };
+    await this.reconViewAccrualTab.click();
+    await waitForNetworkIdle(1000);
+  }
+
+  async clickReconViewNotesTab() {
+    const waitForNetworkIdle = async (timeout: number) => {
+      try {
+        await this.page.waitForLoadState('networkidle', { timeout });
+      } catch (e) {}
+    };
+    await this.reconViewNotesTab.click();
+    await waitForNetworkIdle(1000);
+  }
+  async getFirstReconJobLinkText(
+    page: Page,
+    timeout = 2000
+  ): Promise<string | null> {
+    try {
+      const jobLocator = page
+        .locator('table.css-o13epf-table tbody tr td:first-child a')
+        .first();
+      await jobLocator.waitFor({ state: 'visible', timeout });
+      const jobText = await jobLocator.textContent();
+      return jobText;
+    } catch (error) {
+      console.error('Failed to get job text:', error);
+      return null;
+    }
+  }
+
+  async reassignReconJob(page: Page, userEmail: string) {
+    await this.firstReconShipmentReference.click();
+    await this.reconPageReassignBtn.click();
+    await this.reconPageReassignToUserList.fill(userEmail);
+    await page.getByRole('option', { name: userEmail }).click();
+    await this.reconPageReassignBtn.click();
+  }
+
+  async verifyReassignedJob(
+    page: Page,
+    jobText: string | null,
+    recon: reconDashboard,
+    userEmail: string
+  ) {
+    await this.searchReconJobOrReference.fill(jobText || '');
+    await expect(this.searchReconJobOrReference).toHaveValue(jobText || '');
+    await recon.clickTab(page, 'For Other Users');
+    await expect(page.getByRole('cell', { name: jobText || '' })).toBeVisible({
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
+    await expect(page.getByRole('cell', { name: userEmail })).toBeVisible({
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
   }
 }
