@@ -8,3 +8,6 @@ export const FREIGHT_BI_BASE_URL = `https://${process.env.ENV}-dashboard.expedoc
 export const SHIPPER_VIZ_BASE_URL = `https://dashdemo.${process.env.ENV}-portal.expedock.com`;
 
 export const PROD_FREIGHT_BI_BASE_URL = `https://dashboard.expedock.com`;
+
+export const APP_TASK_COLLECTION_URL = `https://${process.env.ENV}-app.expedock.com/tasks/69a64db6-71b1-4f59-adbf-04407cc8a0bc`;
+export const __apFilePath = '../qa-automation/projects/App/fixtures/';

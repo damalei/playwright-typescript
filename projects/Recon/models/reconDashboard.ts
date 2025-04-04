@@ -1,8 +1,5 @@
 import { Locator, expect, Page } from '@playwright/test';
-import {
-  DEFAULT_TIMEOUT_IN_MS,
-  DASHBOARD_TIMEOUT_IN_MS,
-} from '../../constants';
+import { DEFAULT_TIMEOUT_IN_MS } from '../../constants';
 
 export class reconDashboard {
   readonly page: Page;
@@ -11,21 +8,37 @@ export class reconDashboard {
   readonly sortTabByAssignedTo: Locator;
   readonly sortTabByVendor: Locator;
   readonly reconAppJobLink: Locator;
+  readonly inputSearch: Locator;
+  readonly tabToDo: Locator;
+  readonly tabForExpedock: Locator;
+  readonly tabForOtherUsers: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.reconDashboardLink = page.getByRole('link', {
+    this.reconDashboardLink = this.page.getByRole('link', {
       name: 'To-Do Dashboard',
     });
-    this.reconBreadcrumb = page.getByRole('link', {
+    this.reconBreadcrumb = this.page.getByRole('link', {
       name: 'Reconciliation Results',
     });
-    this.sortTabByAssignedTo = page.getByRole('button', {
+    this.sortTabByAssignedTo = this.page.getByRole('button', {
       name: 'Assigned to',
     });
-    this.sortTabByVendor = page.getByRole('button', { name: 'Vendor' });
-    this.reconAppJobLink = page.getByRole('link', {
+    this.sortTabByVendor = this.page.getByRole('button', { name: 'Vendor' });
+    this.reconAppJobLink = this.page.getByRole('link', {
       name: 'https://app.expedock.com/',
+    });
+    this.inputSearch = this.page.getByPlaceholder(
+      'Enter an invoice or reference number'
+    );
+    this.tabToDo = this.page.getByRole('tab', { name: 'To Do', exact: true });
+    this.tabForExpedock = this.page.getByRole('tab', {
+      name: 'For Expedock',
+      exact: true,
+    });
+    this.tabForOtherUsers = this.page.getByRole('tab', {
+      name: 'For Other Users',
+      exact: true,
     });
   }
 
@@ -137,5 +150,14 @@ export class reconDashboard {
     await expect(this.page.getByTestId('account-user-name')).toBeVisible({
       timeout: DEFAULT_TIMEOUT_IN_MS,
     });
+  }
+
+  async searchJob(invoiceNumber: string) {
+    await this.inputSearch.fill(invoiceNumber);
+  }
+
+  async clickInvoice(tab: Locator, jobReference: string) {
+    await tab.click();
+    await this.page.locator(`//a[text()='${jobReference}']`).click();
   }
 }

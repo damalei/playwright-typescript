@@ -2,32 +2,47 @@ import { Locator, Page } from '@playwright/test';
 
 export class TaskPage {
   readonly page: Page;
-  readonly inputSearchField: Locator;
-  readonly columnTodo: Locator;
-  readonly columninProgress: Locator;
-  readonly columnQA: Locator;
-  readonly columnConfirmation: Locator;
-  readonly columnDone: Locator;
-  readonly buttonOpenJob: Locator;
+  readonly tableJobs: Locator;
+  readonly tableJobInputRow: Locator;
+  readonly inputJobName: Locator;
+  readonly inputJobType: Locator;
+  readonly inputOwner: Locator;
+  readonly inputQa: Locator;
+  readonly buttonCreate: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.inputSearchField = page
-      .getByTestId('task-search-bar')
+    this.tableJobs = page.locator('table').nth(1);
+    this.tableJobInputRow = this.tableJobs.locator('tr').nth(-1);
+    this.inputJobName = this.tableJobInputRow
+      .locator('td')
+      .nth(2)
       .locator('input');
-    this.columnTodo = page.locator('//*[@data-rfd-droppable-id="TODO"]');
-    this.columninProgress = page.locator(
-      '//*[@data-rfd-droppable-id="IN_PROGRESS"]'
-    );
-    this.columnQA = page.locator('//*[@data-rfd-droppable-id="QA"]');
-    this.columnConfirmation = page.locator(
-      '//*[@data-rfd-droppable-id="CONFIRMATION"]'
-    );
-    this.columnDone = page.locator('//*[@data-rfd-droppable-id="DONE"]');
-    this.buttonOpenJob = page.getByTestId('open-job-button');
+    this.inputJobType = this.tableJobInputRow
+      .getByPlaceholder('Job Type')
+      .locator('..')
+      .locator('svg');
+    this.inputOwner = this.tableJobInputRow
+      .locator('td')
+      .nth(4)
+      .locator('input');
+    this.inputQa = this.tableJobInputRow.locator('td').nth(5).locator('input');
+    this.buttonCreate = this.tableJobInputRow.getByRole('button', {
+      name: 'Create',
+    });
   }
 
-  async clickOnColumnCard(column: Locator, index: number) {
-    await column.locator('> *').nth(index).click();
+  async openNewJob(jobName: string) {
+    const rowNewJob = await this.page.getByTestId(`job-row-${jobName}`);
+    const buttonOpenNewJob = await rowNewJob.getByTestId('open-job-button');
+    await buttonOpenNewJob.click();
+  }
+
+  async clickJobType(jobName: string) {
+    await this.page
+      .getByRole('row', { name: `${jobName}     Open` })
+      .getByRole('combobox')
+      .first()
+      .click();
   }
 }
