@@ -125,14 +125,12 @@ export class SignUpPage {
     await this.submitRequestBtn.click();
   }
 
-  async requestShipperVizAccountAccountControl() {
+  async requestShipperVizAccountAccountControl(email: string) {
     await this.requestAccountBtn.click();
     await expect(this.requestAccountForm).toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
-    await this.requestAccountEmail.fill(
-      `${process.env.SHIPPER_VIZ_USER2_REQUEST_EMAIL}`
-    );
+    await this.requestAccountEmail.fill(email);
     await this.requestAccountOrganization.fill(
       `${process.env.SHIPPER_VIZ_USER_REQUEST_ORG}`
     );

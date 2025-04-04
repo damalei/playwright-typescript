@@ -139,8 +139,8 @@ export class AccountControl {
     });
   }
 
-  async checkRejectedUser() {
-    await this.shipperUserSearchBar.fill(global.SHIPPER_VIZ_USER_REQUEST_EMAIL);
+  async checkRejectedUser(email: string) {
+    await this.shipperUserSearchBar.fill(email);
     await expect(this.searchResultsRejectedUser).toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
