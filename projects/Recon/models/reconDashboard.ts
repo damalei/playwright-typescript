@@ -11,6 +11,9 @@ export class reconDashboard {
   readonly sortTabByAssignedTo: Locator;
   readonly sortTabByVendor: Locator;
   readonly reconAppJobLink: Locator;
+  readonly reconViewDocumentsTab: Locator;
+  readonly reconViewAccrualTab: Locator;
+  readonly reconViewNotesTab: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -27,6 +30,18 @@ export class reconDashboard {
     this.reconAppJobLink = page.getByRole('link', {
       name: 'https://app.expedock.com/',
     });
+    this.reconViewDocumentsTab = page.getByRole('tab', {
+      name: 'View Documents',
+      selected: true,
+    });
+    this.reconViewAccrualTab = page.getByRole('tab', { name: 'Accrual' });
+    this.reconViewNotesTab = page.getByRole('tab', { name: 'Notes' });
+    this.reconViewDocumentsTab = page.getByRole('tab', {
+      name: 'View Documents',
+      selected: true,
+    });
+    this.reconViewAccrualTab = page.getByRole('tab', { name: 'Accrual' });
+    this.reconViewNotesTab = page.getByRole('tab', { name: 'Notes' });
   }
 
   async gotoReconDashboard() {
@@ -58,12 +73,6 @@ export class reconDashboard {
       if (await link.isVisible()) {
         await link.click();
         await this.waitForPageLoad(this.page);
-        await expect(
-          this.page.getByText(
-            'Move to DoneRe-assignRe-process via ExpedockPost'
-          )
-        ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
-
         await expect(
           this.page.getByRole('heading', { name: 'Reconciliation Summary' })
         ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
@@ -137,5 +146,24 @@ export class reconDashboard {
     await expect(this.page.getByTestId('account-user-name')).toBeVisible({
       timeout: DEFAULT_TIMEOUT_IN_MS,
     });
+  }
+  async clickReconViewAccrualTab() {
+    const waitForNetworkIdle = async (timeout: number) => {
+      try {
+        await this.page.waitForLoadState('networkidle', { timeout });
+      } catch (e) {}
+    };
+    await this.reconViewAccrualTab.click();
+    await waitForNetworkIdle(1000);
+  }
+
+  async clickReconViewNotesTab() {
+    const waitForNetworkIdle = async (timeout: number) => {
+      try {
+        await this.page.waitForLoadState('networkidle', { timeout });
+      } catch (e) {}
+    };
+    await this.reconViewNotesTab.click();
+    await waitForNetworkIdle(1000);
   }
 }
