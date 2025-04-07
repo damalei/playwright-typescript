@@ -47,6 +47,7 @@ export class reconDashboard {
     this.tabForOtherUsers = this.page.getByRole('tab', {
       name: 'For Other Users',
       exact: true,
+    });
     this.reconViewDocumentsTab = page.getByRole('tab', {
       name: 'View Documents',
       selected: true,
