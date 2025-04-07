@@ -20,7 +20,6 @@ export class reconDashboard {
   readonly reconPageReassignToUserList: Locator;
   readonly searchReconJobOrReference: Locator;
 
-
   constructor(page: Page) {
     this.page = page;
     this.reconDashboardLink = this.page.getByRole('link', {
@@ -176,7 +175,7 @@ export class reconDashboard {
       timeout: DEFAULT_TIMEOUT_IN_MS,
     });
   }
-  
+
   async searchJob(invoiceNumber: string) {
     await this.inputSearch.fill(invoiceNumber);
   }
@@ -185,7 +184,7 @@ export class reconDashboard {
     await tab.click();
     await this.page.locator(`//a[text()='${jobReference}']`).click();
   }
-  
+
   async clickReconViewAccrualTab() {
     const waitForNetworkIdle = async (timeout: number) => {
       try {
