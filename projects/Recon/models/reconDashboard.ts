@@ -184,7 +184,8 @@ export class reconDashboard {
   async clickInvoice(tab: Locator, jobReference: string) {
     await tab.click();
     await this.page.locator(`//a[text()='${jobReference}']`).click();
-
+  }
+  
   async clickReconViewAccrualTab() {
     const waitForNetworkIdle = async (timeout: number) => {
       try {
