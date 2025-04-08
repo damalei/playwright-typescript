@@ -1,5 +1,5 @@
 import { test, Page } from '@playwright/test';
-import { ExploreContainers } from '../models/shipperExploreContainers';
+import { ExploreContainers } from '../models/exploreContainers';
 import { LoginPage } from '../models/login.ts';
 import { EditColumns } from '../models/editColumns';
 let exploreContainers;

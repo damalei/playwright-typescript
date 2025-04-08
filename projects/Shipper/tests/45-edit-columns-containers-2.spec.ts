@@ -134,7 +134,8 @@ test.describe('Edit Dashboard Column Settings', () => {
       await newPage.goto(
         `https://dashdemo.${process.env.ENV}-portal.expedock.com/login`
       );
-      await accountControl.loginToShipperNewUser(newPage);
+      const newAccountControl = new AccountControl(newPage);
+      await newAccountControl.loginToShipperNewUser();
       await newPage.waitForURL(
         `https://dashdemo.${process.env.ENV}-portal.expedock.com/**/`
       );

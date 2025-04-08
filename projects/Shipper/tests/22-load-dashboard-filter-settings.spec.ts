@@ -129,6 +129,11 @@ test.describe.serial('Load Dashboard Filter Settings', () => {
     await editFilterFields.saveViewDashboard();
     await editFilterFields.navigateDashboardBackToExceptionManagement();
     await editFilterFields.checkDeletedFilterValuesExceptionManagement();
+    await editFilterFields.editFilterFields();
+    await editFilterFields.deleteRemainingFilterChipExceptionManagement();
+    await editFilterFields.updateFiltersFields();
+    await editFilterFields.saveViewDashboard();
+    await editFilterFields.checkDeleteRemainingFilterChipExceptionManagement();
   });
 
   test('[22.2] Exceptions Management - User clicks the browser back button until the first edit is shown', async () => {
@@ -295,15 +300,4 @@ test.describe.serial('Load Dashboard Filter Settings', () => {
       .soft(page.locator(`//span[text()='${dischargePort1.key}']`))
       .toBeHidden();
   });
-
-  test.afterAll(
-    'Exception Management-Reverting dashboard to original state',
-    async () => {
-      await editFilterFields.editFilterFields();
-      await editFilterFields.deleteRemainingFilterChipExceptionManagement();
-      await editFilterFields.updateFiltersFields();
-      await editFilterFields.saveViewDashboard();
-      await editFilterFields.checkDeleteRemainingFilterChipExceptionManagement();
-    }
-  );
 });
