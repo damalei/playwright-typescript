@@ -10,16 +10,12 @@ import { JobPage } from '../../App/models/jobPage.ts';
 const __apFileName = 'Case_3_V3.pdf';
 
 let signUpPage;
-// let page: Page;
 let newTab: Page;
-// let recon;
 let taskPage: TaskPage;
-// let invoicePage: InvoicePage;
-// let reprocessModal: ReprocessModal;
 let page1: Page;
 let jobPage: JobPage;
 
-test.describe('[37] User process a reconciliation', () => {
+test.describe.serial('[37] User process a reconciliation', () => {
   test.beforeAll(async ({ browser }) => {
     const context: BrowserContext = await browser.newContext();
     page1 = await context.newPage();
@@ -38,6 +34,7 @@ test.describe('[37] User process a reconciliation', () => {
     const invoiceNumber = await reconcileAPInvoice(page1, jobName);
 
     // Open a new tab
+
     newTab = await page1.context().newPage();
     const newTabRecon = new reconDashboard(newTab);
     const newTabInvoicePage = new InvoicePage(newTab);
@@ -78,5 +75,12 @@ test.describe('[37] User process a reconciliation', () => {
     await expect(jobPage.divJobNotes).toContainText(
       `${invoiceNumber} and its associated shipments are currently being processed by Expedock.`
     );
+  });
+
+  test('37.5 Operator moves a reprocessed reconsiliation back to To Do', async () => {
+    jobPage = new JobPage(page1);
+    await jobPage.buttonSaveAndExport.click();
+    await jobPage.optionReconcile.click();
+    await modal;
   });
 });
