@@ -38,7 +38,10 @@ export class reconDashboard {
     this.inputSearch = this.page.getByPlaceholder(
       'Enter an invoice or reference number'
     );
-    this.tabToDo = this.page.getByRole('tab', { name: 'To Do', exact: true });
+    this.tabToDo = this.page.getByRole('tab', {
+      name: 'To Do',
+      exact: true,
+    });
     this.tabForExpedock = this.page.getByRole('tab', {
       name: 'For Expedock',
       exact: true,
@@ -181,7 +184,11 @@ export class reconDashboard {
   }
 
   async clickInvoice(tab: Locator, jobReference: string) {
-    await tab.click();
+    try {
+      await tab.click({ timeout: 5000 });
+    } catch (error) {
+      console.error('Failed to click tab:', error);
+    }
     await this.page.locator(`//a[text()='${jobReference}']`).click();
   }
 

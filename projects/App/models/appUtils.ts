@@ -3,8 +3,6 @@ import { APP_TASK_COLLECTION_URL, __apFilePath } from '../../constants.ts';
 import { TaskPage } from './taskPage.ts';
 import { JobPage, ReconcileModal } from './jobPage.ts';
 
-// const __apFilePath = '../qa-automation/projects/App/fixtures/';
-
 export const createJob = async (
   page: Page,
   jobType: string,
@@ -33,7 +31,12 @@ export const createEpochName = () => {
   return `AP-${Math.floor(Date.now() / 1000)}`;
 };
 
-export const reconcileAPInvoice = async (page: Page, jobName: string) => {
+export const reconcileAPInvoice = async (
+  page: Page,
+  jobName: string,
+  externalStatus: string = 'To Do',
+  externalAssignee: string = 'qa-passive-2@expedock.com'
+) => {
   const jobPage = new JobPage(page);
   const reconcileModal = new ReconcileModal(page);
   const invoiceNumber = `INV-${jobName}`;
@@ -45,6 +48,8 @@ export const reconcileAPInvoice = async (page: Page, jobName: string) => {
   await jobPage.buttonSaveAndExport.click();
   await jobPage.optionReconcile.click();
   await reconcileModal.buttonReconcile.click();
+  await reconcileModal.selectAssignee(externalAssignee);
+  await reconcileModal.selectExternalStatus(externalStatus);
   await reconcileModal.buttonShowCustomerAP.click();
   return invoiceNumber;
 };

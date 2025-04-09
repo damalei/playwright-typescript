@@ -91,17 +91,24 @@ export class ReconcileModal {
     this.buttonShowCustomerAP = page.getByTestId('show-customer-aprecon');
   }
 
-  async selectAssignee(assignee: 'qa-passive-2@expedock.com') {
-    await this.page.getByTestId('assignee-select').click();
-    await this.page.getByText(assignee).click();
+  async selectAssignee(assignee: string) {
     const fieldAssignee = this.page.getByLabel('Assignee').locator('..');
     const input = fieldAssignee.locator('input');
     const closeIcon = fieldAssignee.getByTestId('CloseIcon');
+    await input.scrollIntoViewIfNeeded();
     await input.hover();
     await closeIcon.click();
     await this.page.getByRole('option', { name: `${assignee}` }).click();
+  }
+
+  async selectExternalStatus(status: string) {
     const fieldExternalStatus = this.page
       .getByLabel('External Status')
       .locator('..');
+    const input = fieldExternalStatus.locator('input');
+    const closeIcon = fieldExternalStatus.getByTestId('CloseIcon');
+    await input.hover();
+    await closeIcon.click();
+    await this.page.getByRole('option', { name: `${status}` }).click();
   }
 }
