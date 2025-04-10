@@ -142,8 +142,10 @@ export const waitDashboardLoad = async (page: Page) => {
   }
 };
 
-export const waitForTaskCardToLoad = async (page: Page) => {
-  await expect(page.locator('[data-testid^="task-card-"]').nth(0)).toBeVisible({
+export const waitForTaskCardToLoad = async (page: Page, column: Locator) => {
+  await expect(
+    column.locator('[data-testid^="task-card-"]').nth(0)
+  ).toBeVisible({
     timeout: DEFAULT_TIMEOUT_IN_MS,
   });
 };

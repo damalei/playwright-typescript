@@ -1,5 +1,5 @@
 import { Page, test, expect } from '@playwright/test';
-import { DEFAULT_TIMEOUT_IN_MS, APP_BASE_URL } from '../../constants';
+import { APP_BASE_URL } from '../../constants';
 import { TaskPage } from '../models/taskPage';
 import { JobPage } from '../models/jobPage';
 import { waitForTaskCardToLoad } from '../../utils';
@@ -15,7 +15,7 @@ test.describe.parallel('[80] Tasks page tab checking', () => {
     await taskPage.inputSearchField.click();
     await taskPage.inputSearchField.fill('');
     await taskPage.inputSearchField.press('Enter');
-    await waitForTaskCardToLoad(page);
+    // await waitForTaskCardToLoad(page);
   });
 
   test('[80.1] User should be able to access the jobs under Done column', async () => {
