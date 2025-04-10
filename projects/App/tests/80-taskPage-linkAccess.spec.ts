@@ -15,7 +15,6 @@ test.describe.parallel('[80] Tasks page tab checking', () => {
     await taskPage.inputSearchField.click();
     await taskPage.inputSearchField.fill('');
     await taskPage.inputSearchField.press('Enter');
-    // await waitForTaskCardToLoad(page);
   });
 
   test('[80.1] User should be able to access the jobs under Done column', async () => {
