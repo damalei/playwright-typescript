@@ -5,21 +5,18 @@ import { reconDashboard } from '../models/reconDashboard.ts';
 import { createJob, reconcileAPInvoice } from '../../App/models/appUtils.ts';
 import { TaskPage } from '../../App/models/taskPage.ts';
 import { InvoicePage, ReprocessModal } from '../models/invoicePage.ts';
-import { JobPage } from '../../App/models/jobPage.ts';
+import { JobPage, ReconcileModal } from '../../App/models/jobPage.ts';
 
 const __apFileName = 'Case_3_V3.pdf';
 
 let signUpPage;
-// let page: Page;
 let newTab: Page;
-// let recon;
 let taskPage: TaskPage;
-// let invoicePage: InvoicePage;
-// let reprocessModal: ReprocessModal;
 let page1: Page;
 let jobPage: JobPage;
+let invoiceNumber: string;
 
-test.describe('[37] User process a reconciliation', () => {
+test.describe.serial('[37] User process a reconciliation', () => {
   test.beforeAll(async ({ browser }) => {
     const context: BrowserContext = await browser.newContext();
     page1 = await context.newPage();
@@ -35,7 +32,7 @@ test.describe('[37] User process a reconciliation', () => {
       `${process.env.APP_CLIENT_USER}`,
       __apFileName
     );
-    const invoiceNumber = await reconcileAPInvoice(page1, jobName);
+    invoiceNumber = await reconcileAPInvoice(page1, jobName);
 
     // Open a new tab
     newTab = await page1.context().newPage();
@@ -70,7 +67,6 @@ test.describe('[37] User process a reconciliation', () => {
     // Check JMS side Job Notes is updated
     jobPage = new JobPage(page1);
     await page1.reload();
-    // await page1.pause()
     await jobPage.tabJobInfo.click();
     await expect(jobPage.divJobNotes).toContainText(
       'Request for Expedock to reprocess by Expedock'
@@ -78,5 +74,29 @@ test.describe('[37] User process a reconciliation', () => {
     await expect(jobPage.divJobNotes).toContainText(
       `${invoiceNumber} and its associated shipments are currently being processed by Expedock.`
     );
+  });
+
+  test('37.5 Operator moves a reprocessed reconsiliation back to To Do', async () => {
+    // Reconcile the reprocessed AP job
+    jobPage = new JobPage(page1);
+    const modal = new ReconcileModal(page1);
+    await jobPage.buttonSaveAndExport.click();
+    await jobPage.optionReconcile.click();
+    await modal.buttonReconcile.click();
+    await modal.selectAssignee('qa-passive-2@expedock.com');
+    await modal.selectExternalStatus('To Do');
+    await modal.buttonShowCustomerAP.click();
+
+    // Open a new tab
+    newTab = await page1.context().newPage();
+    const newTabRecon = new reconDashboard(newTab);
+    const newTabInvoicePage = new InvoicePage(newTab);
+    await newTab.goto(FREIGHT_BI_BASE_URL + '/dashboard/recon-job-list');
+    await newTabRecon.waitForTableToLoad(newTab);
+    await newTabRecon.searchJob(invoiceNumber);
+
+    // Check Invoice page Reprocess Button is enabled
+    await newTabRecon.clickInvoice(newTabRecon.tabToDo, invoiceNumber);
+    await expect(newTabInvoicePage.buttonReprocess).toBeEnabled();
   });
 });
