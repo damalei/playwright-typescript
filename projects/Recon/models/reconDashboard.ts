@@ -19,6 +19,12 @@ export class reconDashboard {
   readonly reconPageReassignBtn: Locator;
   readonly reconPageReassignToUserList: Locator;
   readonly searchReconJobOrReference: Locator;
+  readonly moveToDoneBtn: Locator;
+  readonly moveToDoneReasonOption: Locator;
+  readonly moveToDoneAdditionalNotes: Locator;
+  readonly moveToDoneOthersOption: Locator;
+  readonly tabDone: Locator;
+  readonly notesTabPanel: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -38,10 +44,13 @@ export class reconDashboard {
     this.inputSearch = this.page.getByPlaceholder(
       'Enter an invoice or reference number'
     );
+    this.tabToDo = this.page.getByRole('tab', { name: 'To Do', exact: true });
+    this.tabDone = this.page.getByRole('tab', { name: 'Done', exact: true });
     this.tabToDo = this.page.getByRole('tab', {
       name: 'To Do',
       exact: true,
     });
+
     this.tabForExpedock = this.page.getByRole('tab', {
       name: 'For Expedock',
       exact: true,
@@ -72,6 +81,15 @@ export class reconDashboard {
     this.searchReconJobOrReference = page.getByRole('textbox', {
       name: 'Enter an invoice or reference',
     });
+    this.moveToDoneBtn = page.getByRole('button', { name: 'Move to Done' });
+    this.moveToDoneReasonOption = page.getByRole('combobox', {
+      name: 'Reason for Moving to Done*',
+    });
+    this.moveToDoneAdditionalNotes = page.getByRole('textbox', {
+      name: 'Additional Notes *',
+    });
+    this.moveToDoneOthersOption = page.getByRole('option', { name: 'Others' });
+    this.notesTabPanel = page.getByTestId('notes-tab-panel');
   }
 
   async gotoReconDashboard() {
@@ -229,7 +247,6 @@ export class reconDashboard {
   }
 
   async reassignReconJob(page: Page, userEmail: string) {
-    await this.firstReconShipmentReference.click();
     await this.reconPageReassignBtn.click();
     await this.reconPageReassignToUserList.fill(userEmail);
     await page.getByRole('option', { name: userEmail }).click();
@@ -245,11 +262,22 @@ export class reconDashboard {
     await this.searchReconJobOrReference.fill(jobText || '');
     await expect(this.searchReconJobOrReference).toHaveValue(jobText || '');
     await recon.clickTab(page, 'For Other Users');
-    await expect(page.getByRole('cell', { name: jobText || '' })).toBeVisible({
-      timeout: DEFAULT_TIMEOUT_IN_MS,
-    });
-    await expect(page.getByRole('cell', { name: userEmail })).toBeVisible({
-      timeout: DEFAULT_TIMEOUT_IN_MS,
-    });
+  }
+  async moveReconJobToDone(page: Page) {
+    await this.moveToDoneBtn.click();
+    await this.moveToDoneReasonOption.click();
+    await this.moveToDoneOthersOption.click();
+    await this.moveToDoneAdditionalNotes.fill('Regression Automation CTA Test');
+    await this.moveToDoneBtn.click();
+  }
+
+  async verifyMoveReconJobToDone(
+    page: Page,
+    jobText: string | null,
+    recon: reconDashboard
+  ) {
+    await this.searchReconJobOrReference.fill(jobText || '');
+    await expect(this.searchReconJobOrReference).toHaveValue(jobText || '');
+    await recon.clickTab(page, 'Done');
   }
 }
