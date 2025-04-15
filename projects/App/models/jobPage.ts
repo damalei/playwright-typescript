@@ -18,6 +18,17 @@ export class JobPage {
   readonly optionReconcile: Locator;
   readonly tabJobInfo: Locator;
   readonly divJobNotes: Locator;
+  readonly jobsMainPage: Locator;
+  readonly documentTabPanel: Locator;
+  readonly tabInstructions: Locator;
+  readonly tabDocument: Locator;
+  readonly tabJobInformation: Locator;
+  readonly tabEDocs: Locator;
+  readonly tabTaskInfo: Locator;
+  readonly tabEmail: Locator;
+  readonly firstTableRow: Locator;
+  readonly firstJobRow: Locator;
+  readonly iconOpenJob: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -47,6 +58,19 @@ export class JobPage {
     this.divJobNotes = this.page
       .locator('//h3[text()="Job Notes"]')
       .locator('..');
+    this.jobsMainPage = this.page.getByRole('link', { name: 'Jobs' });
+    this.documentTabPanel = this.page.getByRole('tabpanel', {
+      name: 'Document',
+    });
+    this.tabInstructions = this.page.getByRole('tab', { name: 'Instructions' });
+    this.tabDocument = this.page.getByRole('tab', { name: 'Document' });
+    this.tabJobInformation = this.page.getByTestId('job-info-tab');
+    this.tabEDocs = this.page.getByTestId('edocs-tab');
+    this.tabTaskInfo = this.page.getByTestId('task-info-tab');
+    this.tabEmail = this.page.getByTestId('email-tab');
+    this.firstTableRow = this.page.getByRole('row').first();
+    this.firstJobRow = this.page.getByRole('row').nth(1);
+    this.iconOpenJob = this.firstJobRow.getByTestId('DescriptionIcon').first();
   }
 
   async fillAndEnter(locator: Locator, text: string) {
@@ -76,6 +100,10 @@ export class JobPage {
   async deleteTextAreaValue(locator: Locator) {
     await locator.hover();
     await locator.getByTestId('CloseIcon').click();
+  }
+
+  async getJobTab(tabName: string) {
+    return this.page.getByRole('link', { name: new RegExp(`^${tabName}`) });
   }
 }
 
