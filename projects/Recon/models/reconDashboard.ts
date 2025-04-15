@@ -25,6 +25,7 @@ export class reconDashboard {
   readonly moveToDoneOthersOption: Locator;
   readonly tabDone: Locator;
   readonly notesTabPanel: Locator;
+  readonly buttonAddFilters: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -90,6 +91,7 @@ export class reconDashboard {
     });
     this.moveToDoneOthersOption = page.getByRole('option', { name: 'Others' });
     this.notesTabPanel = page.getByTestId('notes-tab-panel');
+    this.buttonAddFilters = page.getByRole('button', { name: 'Add a Filter' });
   }
 
   async gotoReconDashboard() {
@@ -99,7 +101,7 @@ export class reconDashboard {
       this.page.locator('div').filter({ hasText: /^Reconciliation Results$/ })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect(
-      this.page.getByRole('button', { name: 'Export “To Do” tab' })
+      this.page.getByRole('button', { name: 'Export "To Do" tab' })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   }
 
@@ -142,13 +144,22 @@ export class reconDashboard {
   }
 
   async waitForPageLoad(page: Page) {
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForSelector('body', { state: 'visible' });
     try {
-      await page.waitForLoadState('networkidle', { timeout: 3000 });
-    } catch (e) {}
-    await page.waitForSelector('body', { state: 'visible' });
-    await page.waitForSelector('img', { state: 'attached' }).catch(() => {});
+      await page.waitForLoadState('domcontentloaded');
+      await page.waitForSelector('body', { state: 'visible' });
+      try {
+        await page.waitForLoadState('networkidle', { timeout: 3000 });
+      } catch (e) {
+        // Ignore networkidle timeout as it's not critical
+      }
+      await page.waitForSelector('body', { state: 'visible' });
+      await page.waitForSelector('img', { state: 'attached' }).catch(() => {
+        // Ignore image loading errors as they're not critical
+      });
+    } catch (error) {
+      console.error('Error during page load:', error);
+      throw error;
+    }
   }
 
   async clickReconBreadcrumb() {
@@ -162,7 +173,7 @@ export class reconDashboard {
       this.page.locator('div').filter({ hasText: /^Reconciliation Results$/ })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect(
-      this.page.getByRole('button', { name: 'Export “To Do” tab' })
+      this.page.getByRole('button', { name: 'Export "To Do" tab' })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   }
 
@@ -179,7 +190,7 @@ export class reconDashboard {
   }
 
   async expectExportButtonVisible(page: Page, tabName: string) {
-    const exportButtonName = `Export “${tabName}” tab`;
+    const exportButtonName = `Export "${tabName}" tab`;
     await expect(
       page.getByRole('button', { name: exportButtonName })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
@@ -279,5 +290,34 @@ export class reconDashboard {
     await this.searchReconJobOrReference.fill(jobText || '');
     await expect(this.searchReconJobOrReference).toHaveValue(jobText || '');
     await recon.clickTab(page, 'Done');
+  }
+
+  async selectDropdownOption(option: string) {
+    await this.page.getByRole('tooltip').getByText(option).click();
+  }
+
+  async isMultiSelectFieldAvailable(field: string) {
+    const fieldLocator = await this.page
+      .getByLabel(field)
+      .locator('..')
+      .locator('input');
+    const count = await fieldLocator.count();
+    if (count > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async isCalendarSelectFieldAvailable(field: string) {
+    const fieldLocator = await this.page.locator(
+      `//div[@aria-labelledby="${field}"]`
+    );
+    const count = await fieldLocator.count();
+    if (count > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
