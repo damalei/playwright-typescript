@@ -101,7 +101,7 @@ export class reconDashboard {
       this.page.locator('div').filter({ hasText: /^Reconciliation Results$/ })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect(
-      this.page.getByRole('button', { name: 'Export "To Do" tab' })
+      this.page.getByRole('button', { name: 'Export “To Do” tab' })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   }
 
@@ -173,7 +173,7 @@ export class reconDashboard {
       this.page.locator('div').filter({ hasText: /^Reconciliation Results$/ })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect(
-      this.page.getByRole('button', { name: 'Export "To Do" tab' })
+      this.page.getByRole('button', { name: 'Export “To Do” tab' })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   }
 
@@ -190,7 +190,7 @@ export class reconDashboard {
   }
 
   async expectExportButtonVisible(page: Page, tabName: string) {
-    const exportButtonName = `Export "${tabName}" tab`;
+    const exportButtonName = `Export “${tabName}” tab`;
     await expect(
       page.getByRole('button', { name: exportButtonName })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
