@@ -1,6 +1,5 @@
 import { test, expect, Page } from '@playwright/test';
 import { reconDashboard } from '../models/reconDashboard.ts';
-import { FREIGHT_BI_BASE_URL } from '../../constants.ts';
 
 let page: Page;
 let recon;
