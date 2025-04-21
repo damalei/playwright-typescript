@@ -360,7 +360,7 @@ export class reconDashboard {
   }
 
   async isFilterChipVisible(chipText: string) {
-    const chip = await this.page.locator(`//span[text()="${chipText}X"]`);
+    const chip = await this.page.getByText(`${chipText}X`);
     const count = await chip.count();
     if (count > 0) {
       return true;
