@@ -1,5 +1,10 @@
 import { Locator, expect, Page } from '@playwright/test';
-import { DEFAULT_TIMEOUT_IN_MS } from '../../constants';
+import { DEFAULT_TIMEOUT_IN_MS, FREIGHT_BI_BASE_URL } from '../../constants';
+import * as path from 'path';
+import * as os from 'os';
+import * as fs from 'fs';
+
+const __saveFilePath = path.join(os.homedir(), 'Downloads', path.sep);
 
 export class reconDashboard {
   readonly page: Page;
@@ -103,6 +108,10 @@ export class reconDashboard {
     await expect(
       this.page.getByRole('button', { name: 'Export "To Do" tab' })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
+  }
+
+  async gotoReconUrl() {
+    await this.page.goto(FREIGHT_BI_BASE_URL + '/dashboard/recon-job-list');
   }
 
   async clickJobLink() {
@@ -318,6 +327,25 @@ export class reconDashboard {
       return true;
     } else {
       return false;
+    }
+  }
+
+  async exportTab(tabName: string): Promise<boolean> {
+    // await this.page.pause();
+    await this.page.getByRole('tab', { name: tabName }).click();
+    try {
+      const downloadPromise = this.page.waitForEvent('download');
+      await this.page
+        .getByRole('button', { name: `Export “${tabName}” tab` })
+        .click();
+      const download = await downloadPromise;
+      const downloadPath = __saveFilePath + '___recon___';
+      download.suggestedFilename();
+      await download.saveAs(downloadPath);
+      return true; // Download completed successfully
+    } catch (error) {
+      console.error(`Failed to download ${tabName} tab`);
+      return false; // Download failed
     }
   }
 }
