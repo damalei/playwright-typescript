@@ -75,5 +75,7 @@ test.describe('TS 12 - User edits filter fields on Exceptions Management', () =>
     await editFilterFields.updateFiltersFields();
     await editFilterFields.saveViewDashboard();
     await editFilterFields.checkDeleteRemainingFilterChipExceptionManagement();
+
+    await page.close();
   });
 });

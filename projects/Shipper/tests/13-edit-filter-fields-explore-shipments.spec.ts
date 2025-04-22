@@ -78,5 +78,7 @@ test.describe('TS 13 - User edits filter fields on Explore Shipments', () => {
     await editFilterFields.updateFiltersFields();
     await editFilterFields.saveViewDashboard();
     await editFilterFields.checkDeleteRemainingFilterChipExplorePages();
+
+    await page.close();
   });
 });

@@ -185,5 +185,6 @@ test.describe.serial('[29] ShipperViz Account Control', () => {
     await expect(page.getByText('Successfully updated')).toBeVisible({
       timeout: DEFAULT_TIMEOUT_IN_MS,
     });
+    await page.close();
   });
 });

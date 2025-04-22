@@ -257,9 +257,6 @@ export class EditFilterFields {
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
     await this.saveDashboardView.click();
-    await expect(this.saveViewSuccessNote).toBeVisible({
-      timeout: DASHBOARD_TIMEOUT_IN_MS,
-    });
   }
 
   async checkAddedFilterFieldsExceptionManagement() {

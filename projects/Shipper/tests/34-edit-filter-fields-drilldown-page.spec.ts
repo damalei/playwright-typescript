@@ -70,5 +70,7 @@ test.describe('TS 34 - User edits filter fields on Drilldown Page', () => {
     await editFilterFields.saveViewDashboard();
     await editFilterFields.navigateDashboardBackToExploreShipments();
     await expect(page.getByRole('button', { name: 'True' })).not.toBeVisible();
+
+    await page.close();
   });
 });

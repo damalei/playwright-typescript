@@ -103,5 +103,6 @@ test.describe('Default Column check on Shipper', () => {
         .soft(page.getByRole('columnheader', { name: column, exact: true }))
         .toBeVisible();
     }
+    await page.close();
   });
 });

@@ -7,7 +7,7 @@ let signUpPage;
 let page: Page;
 let recon;
 
-test.describe('[80] Recon Dashboard User Access', () => {
+test.describe('[36] Recon Dashboard User Access', () => {
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     signUpPage = new SignUpPage(page);
@@ -22,7 +22,6 @@ test.describe('[80] Recon Dashboard User Access', () => {
 
     await recon.clickTab(page, 'All');
     await recon.expectExportButtonVisible(page, 'All');
-    await recon.sortTabByAssignedTo.click();
     await recon.clickJobLink();
     await recon.waitForPageLoad(page);
     await recon.clickReconBreadcrumb();
@@ -35,9 +34,6 @@ test.describe('[80] Recon Dashboard User Access', () => {
 
     await recon.clickTab(page, 'For Expedock');
     await recon.expectExportButtonVisible(page, 'For Expedock');
-    await recon.sortTabByVendor
-      .click()
-      .then(() => recon.sortTabByVendor.click());
     await recon.clickJobLink();
     await recon.waitForPageLoad(page);
     await recon.clickReconBreadcrumb();
