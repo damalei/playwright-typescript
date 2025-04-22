@@ -26,6 +26,10 @@ export class reconDashboard {
   readonly tabDone: Locator;
   readonly notesTabPanel: Locator;
   readonly buttonAddFilters: Locator;
+  readonly toolTipButtonApplyFilter: Locator;
+  readonly toolTipInputAmountField: Locator;
+  readonly multiSelectFilterDropdown: Locator;
+  readonly calendarFilterDropdown: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -92,6 +96,16 @@ export class reconDashboard {
     this.moveToDoneOthersOption = page.getByRole('option', { name: 'Others' });
     this.notesTabPanel = page.getByTestId('notes-tab-panel');
     this.buttonAddFilters = page.getByRole('button', { name: 'Add a Filter' });
+    this.multiSelectFilterDropdown = page.locator('//*[@role="tooltip"]');
+    this.toolTipButtonApplyFilter = this.multiSelectFilterDropdown.getByRole(
+      'button',
+      { name: 'Apply Filter' }
+    );
+    this.toolTipInputAmountField = this.multiSelectFilterDropdown
+      .getByLabel('Amount')
+      .locator('..')
+      .locator('input');
+    this.calendarFilterDropdown = this.page.locator('.ant-picker-dropdown');
   }
 
   async gotoReconDashboard() {
@@ -314,6 +328,40 @@ export class reconDashboard {
       `//div[@aria-labelledby="${field}"]`
     );
     const count = await fieldLocator.count();
+    if (count > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async selectDropdownMultiSelectFilterByIndex(index: number) {
+    const dropdown = await this.page.locator('//*[@role="tooltip"]');
+    await dropdown.locator('li').nth(index).click();
+  }
+
+  async selectUnitFilter(field: string, amount: string) {
+    await this.page.getByLabel(field).click();
+    await this.toolTipInputAmountField.fill(amount);
+  }
+
+  async selectMultiSelectFilter(field: string) {
+    await this.page.getByLabel(field).click();
+  }
+
+  async selectCalendarFilter(field: string) {
+    await this.page
+      .locator(`//span[text()="${field}"]/ancestor::div[2]`)
+      .click();
+  }
+
+  async selectFromCalendarFilterRelativeDate(relativeDate: string) {
+    await this.calendarFilterDropdown.getByText(relativeDate).click();
+  }
+
+  async isFilterChipVisible(chipText: string) {
+    const chip = await this.page.getByText(`${chipText}X`);
+    const count = await chip.count();
     if (count > 0) {
       return true;
     } else {
