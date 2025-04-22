@@ -1,10 +1,6 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { FREIGHT_BI_BASE_URL, DEFAULT_TIMEOUT_IN_MS } from '../../constants';
-import {
-  waitDashboardLoad,
-  waitForFilterSectionToLoad,
-  waitforTablePageLoad,
-} from '../../utils';
+import { waitDashboardLoad } from '../../utils';
 import * as path from 'path';
 import * as os from 'os';
 import * as fs from 'fs';
