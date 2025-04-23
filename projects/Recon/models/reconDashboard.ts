@@ -35,6 +35,10 @@ export class reconDashboard {
   readonly toolTipInputAmountField: Locator;
   readonly multiSelectFilterDropdown: Locator;
   readonly calendarFilterDropdown: Locator;
+  readonly tableColumnInvoiceNumber: Locator;
+  readonly tableColumns: Locator;
+  readonly tableBody: Locator;
+  readonly tableFirstCell: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -111,6 +115,14 @@ export class reconDashboard {
       .locator('..')
       .locator('input');
     this.calendarFilterDropdown = this.page.locator('.ant-picker-dropdown');
+    this.tableColumnInvoiceNumber = page.getByRole('button', {
+      name: 'Invoice No.',
+    });
+    this.tableColumns = page.locator('table.css-o13epf-table th button');
+    this.tableBody = page.locator('table.css-o13epf-table');
+    this.tableFirstCell = page.locator(
+      'table.css-o13epf-table tbody tr:first-child td:first-child'
+    );
   }
 
   async gotoReconDashboard() {
@@ -120,7 +132,7 @@ export class reconDashboard {
       this.page.locator('div').filter({ hasText: /^Reconciliation Results$/ })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect(
-      this.page.getByRole('button', { name: 'Export "To Do" tab' })
+      this.page.getByRole('button', { name: 'Export “To Do” tab' })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   }
 
@@ -172,13 +184,9 @@ export class reconDashboard {
       await page.waitForSelector('body', { state: 'visible' });
       try {
         await page.waitForLoadState('networkidle', { timeout: 3000 });
-      } catch (e) {
-        // Ignore networkidle timeout as it's not critical
-      }
+      } catch (e) {}
       await page.waitForSelector('body', { state: 'visible' });
-      await page.waitForSelector('img', { state: 'attached' }).catch(() => {
-        // Ignore image loading errors as they're not critical
-      });
+      await page.waitForSelector('img', { state: 'attached' }).catch(() => {});
     } catch (error) {
       console.error('Error during page load:', error);
       throw error;
@@ -196,7 +204,7 @@ export class reconDashboard {
       this.page.locator('div').filter({ hasText: /^Reconciliation Results$/ })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect(
-      this.page.getByRole('button', { name: 'Export "To Do" tab' })
+      this.page.getByRole('button', { name: 'Export “To Do” tab' })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   }
 
@@ -213,7 +221,7 @@ export class reconDashboard {
   }
 
   async expectExportButtonVisible(page: Page, tabName: string) {
-    const exportButtonName = `Export "${tabName}" tab`;
+    const exportButtonName = `Export “${tabName}” tab`;
     await expect(
       page.getByRole('button', { name: exportButtonName })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
@@ -359,7 +367,8 @@ export class reconDashboard {
     } catch (error) {
       console.error(`Failed to download ${tabName} tab`);
       return false; // Download failed
-
+    }
+  }
   async selectDropdownMultiSelectFilterByIndex(index: number) {
     const dropdown = await this.page.locator('//*[@role="tooltip"]');
     await dropdown.locator('li').nth(index).click();

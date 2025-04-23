@@ -125,6 +125,7 @@ export class ReconcileModal {
     const closeIcon = fieldAssignee.getByTestId('CloseIcon');
     await input.scrollIntoViewIfNeeded();
     await input.hover();
+    await closeIcon.waitFor({ state: 'visible', timeout: 5000 });
     await closeIcon.click();
     await this.page.getByRole('option', { name: `${assignee}` }).click();
   }
@@ -136,6 +137,7 @@ export class ReconcileModal {
     const input = fieldExternalStatus.locator('input');
     const closeIcon = fieldExternalStatus.getByTestId('CloseIcon');
     await input.hover();
+    await closeIcon.waitFor({ state: 'visible', timeout: 5000 });
     await closeIcon.click();
     await this.page.getByRole('option', { name: `${status}` }).click();
   }

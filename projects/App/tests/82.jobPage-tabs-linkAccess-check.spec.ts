@@ -34,7 +34,6 @@ test.describe('[82] Jobs page tab checking', () => {
     page = await browser.newPage();
     jobPage = new JobPage(page);
     await page.goto(APP_BASE_URL);
-    await waitForTaskCardToLoad(page);
 
     await jobPage.jobsMainPage.click();
     await expect(page).toHaveURL(/.*\/jobs/);
