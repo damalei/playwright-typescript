@@ -71,6 +71,23 @@ export class EditFilterFields {
   readonly failedToDepartDrilldownViewShipments: Locator;
   readonly failedToArriveDrilldownViewShipments: Locator;
   readonly exceptionManagementBreadcrumb: Locator;
+  readonly filtersSection: Locator;
+  readonly derivedFromExceptions: Locator;
+  readonly fieldShipperName: Locator;
+  readonly fieldHasExceptions: Locator;
+  readonly fieldShipmentWeight: Locator;
+  readonly fieldPageLastUpdated: Locator;
+  readonly inputDateFilter: Locator;
+  readonly dateCreatedPicker: Locator;
+  readonly yearToDateOption: Locator;
+  readonly saveAsNewViewOption: Locator;
+  readonly saveAsNewViewNameInput: Locator;
+  readonly viewSavedViewListDropdown: Locator;
+  readonly derivedFromExploreShipments: Locator;
+  readonly derivedFromExploreContainers: Locator;
+  readonly fieldPacks: Locator;
+  readonly fieldLastLegArrivalStatus: Locator;
+  readonly containerNumberReference: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -200,6 +217,41 @@ export class EditFilterFields {
     this.exceptionManagementBreadcrumb = page.getByRole('link', {
       name: 'Exceptions Management',
     });
+    this.filtersSection = page.getByTestId('filters');
+    this.derivedFromExceptions = page.getByText('Derived from Exceptions');
+    this.fieldShipperName = page.getByTestId('shipment.shipper_name field');
+    this.fieldHasExceptions = page.getByTestId('has_exceptions field');
+    this.fieldShipmentWeight = page.getByTestId('shipment.weight field');
+    this.fieldPageLastUpdated = page.getByTestId(
+      'shipment.snowflake_date_created field'
+    );
+    this.inputDateFilter = page.locator(
+      'input.MuiOutlinedInput-input[type="text"]'
+    );
+    this.dateCreatedPicker = page.getByTestId(
+      'shipment.snowflake_date_created-picker'
+    );
+    this.yearToDateOption = page.getByText('Year to Date');
+    this.saveAsNewViewOption = page.getByRole('radio', {
+      name: 'Save as new view A new',
+    });
+    this.saveAsNewViewNameInput = page.getByRole('textbox', {
+      name: 'Enter a name for this view',
+    });
+    this.viewSavedViewListDropdown = page.getByRole('list').getByRole('img');
+    this.derivedFromExploreShipments = page.getByText(
+      'Derived from Explore Shipments'
+    );
+    this.derivedFromExploreContainers = page.getByText(
+      'Derived from Explore Containers'
+    );
+    this.fieldPacks = page.getByTestId('shipment.packs field');
+    this.fieldLastLegArrivalStatus = page.getByTestId(
+      'shipment.last_leg_arrival_status field'
+    );
+    this.containerNumberReference = page.getByTestId(
+      'table-body-0-container_container_number_display'
+    );
   }
   async waitForExceptionManagement() {
     await this.page.waitForLoadState('load');
@@ -333,7 +385,9 @@ export class EditFilterFields {
     }
   }
   async waitForContainerNumberReference() {
-    await this.containerNumbers.waitFor({ state: 'visible' });
+    await expect(this.containerNumberReference).toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
   }
 
   async deleteFilterValuesExceptionManagement() {
@@ -702,5 +756,12 @@ export class EditFilterFields {
     const selectedText = await dropdownOption.innerText();
     await dropdownOption.click();
     return selectedText.split('\n')[0].trim();
+  }
+
+  async saveNewView(viewName: string) {
+    await this.saveViewBtn.click();
+    await this.saveAsNewViewOption.check();
+    await this.saveAsNewViewNameInput.fill(viewName);
+    await this.saveDashboardView.click();
   }
 }
