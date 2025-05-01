@@ -15,7 +15,8 @@ test.describe.serial('[87] Edit reconciliation filter fields', () => {
     date = getFormattedDateWithHyphens();
   });
 
-  test('[87.1] Client adds filter fields on the reconciliation table', async () => {
+  test('[87.1] Client adds filter fields', async () => {
+    await page.goto(FREIGHT_BI_BASE_URL + '/dashboard/recon-job-list');
     await recon.buttonAddFilters.click();
     await recon.selectDropdownOption('Number of Reconciliation Attempt');
     await recon.buttonAddFilters.click();
