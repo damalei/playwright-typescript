@@ -1,4 +1,4 @@
-import { Page, expect, Locator } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { APP_TASK_COLLECTION_URL, __apFilePath } from '../../constants.ts';
 import { TaskPage } from './taskPage.ts';
 import { JobPage, ReconcileModal } from './jobPage.ts';
@@ -8,11 +8,12 @@ export const createJob = async (
   jobType: string,
   owner: string,
   qa: string,
-  fileName: string
+  fileName: string,
+  task: string = APP_TASK_COLLECTION_URL
 ) => {
   const jobPage = new JobPage(page);
   const taskPage = new TaskPage(page);
-  await page.goto(APP_TASK_COLLECTION_URL);
+  await page.goto(task);
   const jobName = `QATEST${createEpochName()}`;
   await taskPage.inputJobName.fill(jobName);
   await taskPage.clickJobType(jobName);
@@ -38,18 +39,38 @@ export const reconcileAPInvoice = async (
   externalAssignee: string = 'qa-passive-2@expedock.com'
 ) => {
   const jobPage = new JobPage(page);
-  const reconcileModal = new ReconcileModal(page);
   const invoiceNumber = `INV-${jobName}`;
   await jobPage.verifyMetaFields();
   await jobPage.inputInvoiceNumber.fill(invoiceNumber);
   await jobPage.inputInvoiceDate.fill('04-25-2025');
   await jobPage.inputInvoiceDueDate.fill('05-25-2025');
   await jobPage.deleteTextAreaValue(jobPage.fieldErroNotes);
+  await reconcileJob(page, externalStatus, externalAssignee);
+  return invoiceNumber;
+};
+
+export const inputApJobMetaFields = async (page: Page, jobName: string) => {
+  const jobPage = new JobPage(page);
+  const invoiceNumber = `INV-${jobName}`;
+  await jobPage.verifyMetaFields();
+  await jobPage.inputInvoiceNumber.fill(invoiceNumber);
+  await jobPage.inputInvoiceDate.fill('04-25-2025');
+  await jobPage.inputInvoiceDueDate.fill('05-25-2025');
+  await jobPage.deleteTextAreaValue(jobPage.fieldErroNotes);
+  return invoiceNumber;
+};
+
+export const reconcileJob = async (
+  page: Page,
+  externalStatus: string = 'To Do',
+  externalAssignee: string = 'qa-passive-2@expedock.com'
+) => {
+  const jobPage = new JobPage(page);
+  const reconcileModal = new ReconcileModal(page);
   await jobPage.buttonSaveAndExport.click();
   await jobPage.optionReconcile.click();
   await reconcileModal.buttonReconcile.click();
   await reconcileModal.selectAssignee(externalAssignee);
   await reconcileModal.selectExternalStatus(externalStatus);
   await reconcileModal.buttonShowCustomerAP.click();
-  return invoiceNumber;
 };

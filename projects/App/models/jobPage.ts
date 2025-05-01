@@ -29,6 +29,11 @@ export class JobPage {
   readonly firstTableRow: Locator;
   readonly firstJobRow: Locator;
   readonly iconOpenJob: Locator;
+  readonly inputShipment: Locator;
+  readonly inputHbl: Locator;
+  readonly inputMbl: Locator;
+  readonly inputVoyageNumber: Locator;
+  readonly inputContainerNumber: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -71,6 +76,13 @@ export class JobPage {
     this.firstTableRow = this.page.getByRole('row').first();
     this.firstJobRow = this.page.getByRole('row').nth(1);
     this.iconOpenJob = this.firstJobRow.getByTestId('DescriptionIcon').first();
+    this.inputShipment = this.page.locator(
+      '//input[@aria-label="Reference No"]'
+    );
+    this.inputHbl = this.page.getByLabel('HBL No');
+    this.inputMbl = this.page.getByLabel('MBL No');
+    this.inputVoyageNumber = this.page.getByLabel('Voyage No.');
+    this.inputContainerNumber = this.page.getByLabel('Container Number');
   }
 
   async fillAndEnter(locator: Locator, text: string) {
