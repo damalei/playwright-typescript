@@ -1,5 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { waitForTaskCardToLoad } from '../../utils';
+import { createEpochName } from './appUtils';
+import { APP_BASE_URL } from '../../constants';
 
 export class TaskPage {
   readonly page: Page;
@@ -17,6 +19,10 @@ export class TaskPage {
   readonly columnConfirmation: Locator;
   readonly columnDone: Locator;
   readonly buttonOpenJob: Locator;
+  readonly buttonCreateTask: Locator;
+  readonly inputTaskName: Locator;
+  readonly inputReferenceNumber: Locator;
+  readonly dropdownCompany: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -51,6 +57,12 @@ export class TaskPage {
     );
     this.columnDone = page.locator('//*[@data-rfd-droppable-id="DONE"]');
     this.buttonOpenJob = page.getByTestId('open-job-button');
+    this.buttonCreateTask = page.getByRole('button', { name: 'Create Task' });
+    this.inputTaskName = page.getByTestId('task-name-textfield');
+    this.inputReferenceNumber = page.getByTestId('task-reference-textfield');
+    this.dropdownCompany = page.locator(
+      '//div[@aria-labelledby="company-select"]'
+    );
   }
 
   async openNewJob(jobName: string) {
@@ -72,5 +84,26 @@ export class TaskPage {
     await waitForTaskCardToLoad(this.page, column);
     await taskCard.hover();
     await taskCard.click();
+  }
+
+  async goto() {
+    await this.page.goto(APP_BASE_URL);
+  }
+
+  async createTask() {
+    const taskName = `QATEST${createEpochName()}`;
+    await this.buttonCreateTask.click();
+    await this.inputTaskName.fill(taskName);
+    await this.inputReferenceNumber.fill(taskName);
+    await this.selectDropdownOption(this.dropdownCompany, 'AP Invoice (Demo)');
+    await this.buttonCreateTask.click();
+    await this.page.getByText('Task Notes').waitFor({ state: 'visible' });
+    const url = await this.page.url();
+    return url;
+  }
+
+  async selectDropdownOption(field: Locator, option: string) {
+    await field.click();
+    await this.page.getByRole('option', { name: `${option}` }).click();
   }
 }

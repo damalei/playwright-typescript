@@ -369,6 +369,7 @@ export class reconDashboard {
       return false; // Download failed
     }
   }
+
   async selectDropdownMultiSelectFilterByIndex(index: number) {
     const dropdown = await this.page.locator('//*[@role="tooltip"]');
     await dropdown.locator('li').nth(index).click();
