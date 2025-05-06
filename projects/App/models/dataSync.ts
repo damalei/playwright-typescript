@@ -30,6 +30,7 @@ export class DataSync {
     await this.buttonTriggerSync.click();
     const modal = new DataSyncModal(this.page);
     await modal.buttonOk.click();
+    await this.page.waitForTimeout(5000);
   }
 
   extractLastPathSegment(url: string): string {

@@ -34,6 +34,7 @@ export class JobPage {
   readonly inputMbl: Locator;
   readonly inputVoyageNumber: Locator;
   readonly inputContainerNumber: Locator;
+  readonly divLineItem: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -83,6 +84,9 @@ export class JobPage {
     this.inputMbl = this.page.getByLabel('MBL No');
     this.inputVoyageNumber = this.page.getByLabel('Voyage No.');
     this.inputContainerNumber = this.page.getByLabel('Container Number');
+    this.divLineItem = this.page
+      .getByRole('combobox', { name: 'Line Items' })
+      .locator('ancestor::*[4]');
   }
 
   async fillAndEnter(locator: Locator, text: string) {
@@ -116,6 +120,18 @@ export class JobPage {
 
   async getJobTab(tabName: string) {
     return this.page.getByRole('link', { name: new RegExp(`^${tabName}`) });
+  }
+
+  async addMissingAccrualValue() {
+    await this.page
+      .locator('//*[@data-testid="edit-line-item-table"]')
+      .scrollIntoViewIfNeeded();
+    await this.page.getByTestId('edit-line-item-table').click();
+    const inputcell = this.page.getByTestId('charge-cost-cell').nth(0);
+    await inputcell.click();
+    await inputcell.pressSequentially('160000');
+    await this.page.keyboard.press('Enter');
+    await this.page.getByTestId('hide-line-item-table').click();
   }
 }
 
