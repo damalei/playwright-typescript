@@ -25,9 +25,21 @@ export class JobTemplate {
   }
 
   async enableAutoRecon() {
-    await this.page.waitForTimeout(5000);
+    await this.page.waitForTimeout(10000);
     const isEnabled = await this.toggleAutoRecon.isChecked();
     if (!isEnabled) {
+      await this.toggleAutoRecon.click();
+      await this.page.getByRole('button', { name: 'Save' }).click();
+      await this.page
+        .getByText('Saving Successful')
+        .waitFor({ state: 'visible' });
+    }
+  }
+
+  async disableAutoRecon() {
+    await this.page.waitForTimeout(10000);
+    const isEnabled = await this.toggleAutoRecon.isChecked();
+    if (isEnabled) {
       await this.toggleAutoRecon.click();
       await this.page.getByRole('button', { name: 'Save' }).click();
       await this.page
