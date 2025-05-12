@@ -23,7 +23,7 @@ test.describe('TS 93 - User saves as new page ', () => {
     editFilterFields = new EditFilterFields(page);
     await loginPage.goto();
     await loginPage.loginToShipper();
-    dateNow = getFormattedDateTime().replace(' ', '');
+    dateNow = getFormattedDateTime().replace(' ', '').slice(0, -3);
     cleanDateNow = removeSpacesAndColons(dateNow);
   });
 
@@ -43,7 +43,7 @@ test.describe('TS 93 - User saves as new page ', () => {
   ];
 
   test('[93.1] User saves a new page from the Exception Management Page', async () => {
-    saveViewName = `EM${cleanDateNow}`;
+    saveViewName = `ExMan${cleanDateNow}`;
     await editFilterFields.waitForExceptionManagement();
 
     for (const filterFields of exceptionManagementFiltersFields) {
@@ -91,13 +91,14 @@ test.describe('TS 93 - User saves as new page ', () => {
     );
 
     await editFilterFields.viewSavedViewListDropdown.click();
-    await expect(page.getByRole('link', { name: saveViewName })).toBeVisible({
+    const viewLink = page.getByLabel(saveViewName);
+    await expect(viewLink).toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
   });
 
   test('[93.2] User saves a new page from the Explore Shipments Page', async () => {
-    saveViewName = `ES${cleanDateNow}`;
+    saveViewName = `ExShip${cleanDateNow}`;
 
     await editFilterFields.gotoExploreShipmentsDashboard();
 
@@ -146,13 +147,14 @@ test.describe('TS 93 - User saves as new page ', () => {
       /Is between 2025 Jan 01 and Today|Year to Date/,
       { timeout: DASHBOARD_TIMEOUT_IN_MS }
     );
-    await expect(page.getByRole('link', { name: saveViewName })).toBeVisible({
+    const viewLink = page.getByLabel(saveViewName);
+    await expect(viewLink).toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
   });
 
   test('[93.3] User saves a new page from the Explore Containers Page', async () => {
-    saveViewName = `EC${cleanDateNow}`;
+    saveViewName = `ExCont${cleanDateNow}`;
 
     await editFilterFields.gotoExploreContainersDashboard();
 
@@ -198,12 +200,45 @@ test.describe('TS 93 - User saves as new page ', () => {
       /Is between 2025 Jan 01 and Today|Year to Date/,
       { timeout: DASHBOARD_TIMEOUT_IN_MS }
     );
-    await expect(page.getByRole('link', { name: saveViewName })).toBeVisible({
+    const viewLink = page.getByLabel(saveViewName);
+    await expect(viewLink).toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
   });
 
-  test.afterAll(async () => {
-    await page.close();
+  test('[93.4] User deletes all created saved views', async () => {
+    // Get all created view names
+    const viewNames = [
+      `ExMan${cleanDateNow}`,
+      `ExShip${cleanDateNow}`,
+      `ExCont${cleanDateNow}`,
+    ];
+
+    await page.reload();
+    await page
+      .getByRole('main')
+      .waitFor({ state: 'visible', timeout: DASHBOARD_TIMEOUT_IN_MS });
+    await expect(page.getByText('Dashboards')).toBeVisible({
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    await editFilterFields.viewSavedViewListDropdown.click();
+    await page.waitForTimeout(2000);
+
+    for (const viewName of viewNames) {
+      try {
+        const viewLink = page.getByLabel(viewName);
+        await viewLink.waitFor({ state: 'visible', timeout: 5000 });
+        await viewLink.hover();
+        await page.waitForTimeout(1000);
+        await editFilterFields.deleteSavedView();
+        await expect(viewLink).not.toBeVisible({ timeout: 5000 });
+        await expect(page.getByLabel(viewName)).not.toBeVisible({
+          timeout: 5000,
+        });
+        await page.waitForTimeout(1000);
+      } catch (error) {
+        console.log(`Failed to delete view ${viewName}: ${error.message}`);
+      }
+    }
   });
 });

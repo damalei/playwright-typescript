@@ -88,6 +88,9 @@ export class EditFilterFields {
   readonly fieldPacks: Locator;
   readonly fieldLastLegArrivalStatus: Locator;
   readonly containerNumberReference: Locator;
+  readonly moreActionsButton: Locator;
+  readonly deleteSavedViewButton: Locator;
+  readonly deleteViewButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -252,6 +255,11 @@ export class EditFilterFields {
     this.containerNumberReference = page.getByTestId(
       'table-body-0-container_container_number_display'
     );
+    this.moreActionsButton = page.getByRole('button', { name: 'More Actions' });
+    this.deleteSavedViewButton = page.getByRole('button', {
+      name: 'Delete saved view',
+    });
+    this.deleteViewButton = page.getByRole('button', { name: 'Delete View' });
   }
   async waitForExceptionManagement() {
     await this.page.waitForLoadState('load');
@@ -763,5 +771,11 @@ export class EditFilterFields {
     await this.saveAsNewViewOption.check();
     await this.saveAsNewViewNameInput.fill(viewName);
     await this.saveDashboardView.click();
+  }
+
+  async deleteSavedView() {
+    await this.moreActionsButton.click();
+    await this.deleteSavedViewButton.click();
+    await this.deleteViewButton.click();
   }
 }
