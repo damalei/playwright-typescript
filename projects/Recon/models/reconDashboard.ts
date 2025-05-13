@@ -39,6 +39,7 @@ export class reconDashboard {
   readonly tableColumns: Locator;
   readonly tableBody: Locator;
   readonly tableFirstCell: Locator;
+  readonly tableFirstRow: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -123,6 +124,7 @@ export class reconDashboard {
     this.tableFirstCell = page.locator(
       'table.css-o13epf-table tbody tr:first-child td:first-child'
     );
+    this.tableFirstRow = page.locator('table tbody tr:first-child');
   }
 
   async gotoReconDashboard() {

@@ -35,6 +35,7 @@ export class JobPage {
   readonly inputVoyageNumber: Locator;
   readonly inputContainerNumber: Locator;
   readonly divLineItem: Locator;
+  readonly optionBatchReconcile: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -87,6 +88,7 @@ export class JobPage {
     this.divLineItem = this.page
       .getByRole('combobox', { name: 'Line Items' })
       .locator('ancestor::*[4]');
+    this.optionBatchReconcile = this.page.getByText('Batch Reconcile SOA');
   }
 
   async fillAndEnter(locator: Locator, text: string) {
@@ -98,9 +100,12 @@ export class JobPage {
     await column.locator('> *').nth(index).click();
   }
 
-  async uploadJobFile(filePath: string, fileName: string) {
+  async uploadJobFile(filePath: string, fileName: string, jobType: string) {
     await this.buttonUploadDocument.click();
     await this.buttonFileChooser.setInputFiles(path.join(filePath, fileName));
+    if (jobType == 'SOA NYC (Demo)') {
+      await this.page.getByTestId('file-upload-select-all').click();
+    }
     await this.buttonUpload.click();
   }
 
@@ -140,11 +145,13 @@ export class ReconcileModal {
   readonly buttonReconcile: Locator;
   readonly buttonShowCustomerAP: Locator;
   readonly fieldAssignee: Locator;
+  readonly buttonSaveJobDetails: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.buttonReconcile = page.getByTestId('recon-button');
     this.buttonShowCustomerAP = page.getByTestId('show-customer-aprecon');
+    this.buttonSaveJobDetails = page.getByTestId('save-job-details-btn');
   }
 
   async selectAssignee(assignee: string) {

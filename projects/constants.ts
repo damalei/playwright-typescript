@@ -11,3 +11,4 @@ export const PROD_FREIGHT_BI_BASE_URL = `https://dashboard.expedock.com`;
 export const APP_TASK_COLLECTION_URL = `https://${process.env.ENV}-app.expedock.com/tasks/69a64db6-71b1-4f59-adbf-04407cc8a0bc`;
 export const __apFilePath = '../qa-automation/projects/App/fixtures/';
 export const __apFileName = 'Case_3_V3.pdf';
+export const __soaFileName = 'Sample SOA - HerculeanOcean Logistics.pdf';
