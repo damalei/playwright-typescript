@@ -5,6 +5,8 @@ export class JobTemplate {
   readonly page: Page;
   readonly inputShipment: Locator;
   readonly toggleAutoRecon: Locator;
+  readonly divDefaultAssignee: Locator;
+  readonly inputDefaultAssignee: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -15,6 +17,9 @@ export class JobTemplate {
       .getByText('Auto-Recon: Enabled')
       .locator('..')
       .locator('input');
+    this.divDefaultAssignee = this.page.getByTestId(
+      'external-assignee-autocomplete'
+    );
   }
 
   async gotoApJobTemplate() {
@@ -46,5 +51,16 @@ export class JobTemplate {
         .getByText('Saving Successful')
         .waitFor({ state: 'visible' });
     }
+  }
+
+  async setDefaultAssignee(defaultAssignee: string) {
+    await this.page.waitForTimeout(10000);
+    await this.divDefaultAssignee.hover();
+    await this.divDefaultAssignee.getByLabel('Clear').click();
+    await this.page.getByRole('option', { name: defaultAssignee }).click();
+    await this.page.getByRole('button', { name: 'Save' }).click();
+    await this.page
+      .getByText('Saving Successful')
+      .waitFor({ state: 'visible' });
   }
 }
