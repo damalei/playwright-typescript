@@ -79,4 +79,57 @@ test.describe
       `${invoiceNumber} and its associated shipments are currently being processed by Expedock.`
     );
   });
+
+  test('[95.4] Client reprocess a job via invoice <> reference page Okay to post', async () => {
+    const jobName = await createJob(
+      page1,
+      'AP Invoice NYC (Demo)',
+      `${process.env.APP_CLIENT_USER}`,
+      `${process.env.APP_CLIENT_USER}`,
+      __apFileName
+    );
+    invoiceNumber = await reconcileAPInvoice(page1, jobName);
+
+    newTab = await page1.context().newPage();
+    const newTabRecon = new reconDashboard(newTab);
+    const newTabInvoicePage = new InvoicePage(newTab);
+    await newTab.goto(FREIGHT_BI_BASE_URL + '/dashboard/recon-job-list');
+    await newTabRecon.waitForTableToLoad(newTab);
+    await newTabRecon.searchJob(invoiceNumber);
+
+    const newTabReprocessModal = new ReprocessModal(newTab);
+    await newTabRecon.waitForTableToLoad(newTab);
+    await newTabRecon.searchJob(invoiceNumber);
+
+    await newTabRecon.clickInvoice(newTabRecon.tabToDo, invoiceNumber);
+    const firstShipment = await newTabRecon.shipmentNumberHeading.textContent();
+    if (!firstShipment) {
+      throw new Error('Failed to get shipment number');
+    }
+    await newTabRecon.firstReconShipmentReference.click();
+    await newTabRecon.okayToPost('Okay to post test automation');
+    await newTabInvoicePage.linkBreadcrumb.click();
+    await newTab.reload();
+    await newTabRecon.searchJob(invoiceNumber);
+    await newTabRecon.tabForExpedock.click();
+    await expect(
+      newTab.locator(`//a[text()='${invoiceNumber}']`)
+    ).toBeVisible();
+    await newTabRecon.clickJobLink();
+    await newTabRecon.clickReconViewNotesTab();
+    await expect(newTabRecon.notesPanelHeading).toContainText(
+      `${firstShipment} is approved for posting by Expedock.`
+    );
+    await expect(newTabRecon.chipReadyToPost).toBeVisible();
+
+    await newTab.close();
+
+    jobPage = new JobPage(page1);
+    await page1.reload();
+    await jobPage.tabJobInfo.click();
+    await expect(jobPage.divJobNotes).toContainText(
+      `${firstShipment} is approved for posting by Expedock`
+    );
+    await jobPage.divJobNotes.scrollIntoViewIfNeeded();
+  });
 });

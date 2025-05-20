@@ -40,6 +40,12 @@ export class reconDashboard {
   readonly tableBody: Locator;
   readonly tableFirstCell: Locator;
   readonly tableFirstRow: Locator;
+  readonly buttonOkayToPostDashboard: Locator;
+  readonly buttonOkayToPostConfirmationModal: Locator;
+  readonly inputAdditionalNotes: Locator;
+  readonly chipReadyToPost: Locator;
+  readonly shipmentNumberHeading: Locator;
+  readonly notesPanelHeading: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -125,6 +131,24 @@ export class reconDashboard {
       'table.css-o13epf-table tbody tr:first-child td:first-child'
     );
     this.tableFirstRow = page.locator('table tbody tr:first-child');
+    this.buttonOkayToPostDashboard = page.getByRole('button', {
+      name: 'Okay to Post',
+    });
+    this.inputAdditionalNotes = page.getByRole('textbox', {
+      name: 'Additional Notes',
+    });
+    this.buttonOkayToPostConfirmationModal = page.getByRole('button', {
+      name: 'Ok to Post',
+    });
+    this.chipReadyToPost = page
+      .locator('div.MuiChip-root')
+      .filter({ hasText: 'Ready to Post' });
+    this.shipmentNumberHeading = page.locator(
+      'h6.MuiTypography-root.MuiTypography-h6.css-ysfr18'
+    );
+    this.notesPanelHeading = page.locator(
+      'h6.MuiTypography-root.MuiTypography-h6.css-1gd1ckd'
+    );
   }
 
   async gotoReconDashboard() {
@@ -404,5 +428,12 @@ export class reconDashboard {
     } else {
       return false;
     }
+  }
+
+  async okayToPost(notes: string) {
+    await this.buttonOkayToPostDashboard.click();
+    await this.inputAdditionalNotes.click();
+    await this.inputAdditionalNotes.fill(notes);
+    await this.buttonOkayToPostConfirmationModal.click();
   }
 }
