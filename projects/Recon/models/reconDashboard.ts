@@ -46,6 +46,10 @@ export class reconDashboard {
   readonly chipReadyToPost: Locator;
   readonly shipmentNumberHeading: Locator;
   readonly notesPanelHeading: Locator;
+  readonly buttonEditColumnView: Locator;
+  readonly reconciliationResultsHeading: Locator;
+  readonly columnHeader: Locator;
+  readonly columnListItem: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -149,6 +153,14 @@ export class reconDashboard {
     this.notesPanelHeading = page.locator(
       'h6.MuiTypography-root.MuiTypography-h6.css-1gd1ckd'
     );
+    this.buttonEditColumnView = page.getByRole('button', {
+      name: 'Edit Column View',
+    });
+    this.reconciliationResultsHeading = page
+      .locator('div')
+      .filter({ hasText: /^Reconciliation Results$/ });
+    this.columnHeader = page.getByRole('columnheader');
+    this.columnListItem = page.getByRole('listitem');
   }
 
   async gotoReconDashboard() {
@@ -252,6 +264,7 @@ export class reconDashboard {
       page.getByRole('button', { name: exportButtonName })
     ).toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   }
+
   async loginToReconDashboard(username: string, password: string) {
     await this.page.goto(`https://${process.env.ENV}-dashboard.expedock.com`);
     await this.page.locator('#username').fill(username);
@@ -435,5 +448,24 @@ export class reconDashboard {
     await this.inputAdditionalNotes.click();
     await this.inputAdditionalNotes.fill(notes);
     await this.buttonOkayToPostConfirmationModal.click();
+  }
+
+  async toggleColumnVisibility(
+    columnName: string,
+    makeVisible: boolean = true
+  ) {
+    const listItem = this.columnListItem.filter({ hasText: columnName });
+    await listItem.scrollIntoViewIfNeeded();
+    await listItem
+      .getByTestId(makeVisible ? 'VisibilityOffIcon' : 'VisibilityIcon')
+      .click();
+  }
+
+  async getColumnHeader(columnName: string) {
+    return this.columnHeader.filter({ hasText: columnName });
+  }
+
+  async getColumnListItem(columnName: string) {
+    return this.columnListItem.filter({ hasText: columnName });
   }
 }
