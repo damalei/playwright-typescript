@@ -181,7 +181,7 @@ export class EditFilterFields {
       .locator('div');
     this.deleteFilterValueBtn = page.getByText('Delete');
     this.dischargePortFilterValueChip = (key: string) =>
-      page.getByRole('button', { name: key });
+      page.locator('.MuiChip-root').filter({ hasText: key }).first();
     this.transportModeFilterValueChip = page
       .getByRole('button', {
         name: 'SEA',
@@ -364,10 +364,10 @@ export class EditFilterFields {
     await this.transportModeSea.click();
     await this.shipmentWeightFilterChip.click();
     await this.shipmentWeightValue.fill('1');
-    await this.clickDropdownValuePort(
-      'Discharge Port-custom-multiple-text-field',
-      0
+    const selectedDischargePort = await this.selectFirstOption(
+      this.dischargePortFilterFields
     );
+    dischargePortKey = selectedDischargePort.split('\n')[0].trim();
     await this.waitForExceptionManagement();
   }
 
@@ -400,7 +400,14 @@ export class EditFilterFields {
 
   async deleteFilterValuesExceptionManagement() {
     await this.transportModeFilterLocator.click();
-    await this.dischargeFilterValueLocator(dischargePortKey).click();
+    const dischargePortChip =
+      this.dischargePortFilterValueChip(dischargePortKey);
+    await dischargePortChip.waitFor({
+      state: 'visible',
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    await dischargePortChip.click({ force: true });
+    await this.deleteFilterValueBtn.click();
     await this.shipmentWeightFilterValueChip.click();
     await this.deleteFilterValueBtn.click();
     await this.waitForExceptionManagement();
@@ -479,10 +486,10 @@ export class EditFilterFields {
   }
 
   async addFilterValuesExplorePages() {
-    await this.clickDropdownValuePort(
-      'Discharge Port-custom-multiple-text-field',
-      0
+    const selectedDischargePort = await this.selectFirstOption(
+      this.dischargePortFilterFields
     );
+    dischargePortKey = selectedDischargePort.split('\n')[0].trim();
     await this.editFiltersDiv.click();
     await this.lastLegArrivalStatusFilterChip.click();
     await this.lastLegArrivalStatusValue.click();
@@ -507,8 +514,15 @@ export class EditFilterFields {
   }
 
   async deleteFilterValuesExplorePages() {
-    await this.dischargeFilterValueLocator(dischargePortKey).click();
     await this.hasTrueValueLocator.click();
+    const dischargePortChip =
+      this.dischargePortFilterValueChip(dischargePortKey);
+    await dischargePortChip.waitFor({
+      state: 'visible',
+      timeout: DASHBOARD_TIMEOUT_IN_MS,
+    });
+    await dischargePortChip.click({ force: true });
+    await this.deleteFilterValueBtn.click();
     await this.lastLegArrivalStatusFilterValueLocator.click();
   }
 

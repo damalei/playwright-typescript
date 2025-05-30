@@ -6,7 +6,7 @@ import { DASHBOARD_TIMEOUT_IN_MS } from '../../constants.ts';
 let loginPage;
 let editFilterFields;
 
-test.describe('TS 23 - Verify filter retention after drilldown navigation', () => {
+test.describe('TS 23 - Backtracking after drilldown', () => {
   let page: Page;
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
