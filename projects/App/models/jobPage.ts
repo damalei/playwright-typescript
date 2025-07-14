@@ -138,6 +138,12 @@ export class JobPage {
     await this.page.keyboard.press('Enter');
     await this.page.getByTestId('hide-line-item-table').click();
   }
+
+  async reconcileAndCheckReconciliationResults() {
+    await this.buttonSaveAndExport.click();
+    await this.optionReconcile.click();
+    await this.page.getByTestId('recon-button').click();
+  }
 }
 
 export class ReconcileModal {
