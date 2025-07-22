@@ -8,6 +8,14 @@ export class IncomingPage {
   readonly companyOptionIncomingPage: Locator;
   readonly closeButtonTaskCard: Locator;
   readonly emailIngestTab: Locator;
+  readonly expandButtonFirstRow: Locator;
+  readonly closeExpandButtonFirstRow: Locator;
+  readonly firstEmailSubject: Locator;
+  readonly expandedSubjectView: Locator;
+  readonly expandedAttachment: Locator;
+  readonly expandedDate: Locator;
+  readonly expandedIframe: Locator;
+  readonly emailTableRefreshButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -22,6 +30,30 @@ export class IncomingPage {
     });
     this.closeButtonTaskCard = page.getByTestId('close-btn').locator('path');
     this.emailIngestTab = page.getByRole('tab', { name: 'Email Ingest' });
+    this.expandButtonFirstRow = page
+      .locator('[data-testid^="email-row-"]')
+      .getByTestId('KeyboardArrowDownIcon')
+      .first();
+    this.closeExpandButtonFirstRow = page
+      .locator('[data-testid^="email-row-"]')
+      .getByTestId('KeyboardArrowUpIcon')
+      .first();
+    this.firstEmailSubject = page.getByTestId('table-body-0-EMAIL_SUBJECT');
+    this.expandedSubjectView = page
+      .locator('[data-testid^="email-card-details-"]')
+      .getByRole('cell');
+    this.expandedAttachment = page
+      .locator('[data-testid^="email-card-details-"]')
+      .getByRole('cell')
+      .first();
+    this.expandedDate = page
+      .locator('[data-testid^="email-card-details-"]')
+      .getByRole('cell')
+      .nth(1);
+    this.expandedIframe = page.locator('iframe').first();
+    this.emailTableRefreshButton = page.getByTestId(
+      'email-table-refresh-button'
+    );
   }
 
   async selectCompany(companyName: string): Promise<void> {
