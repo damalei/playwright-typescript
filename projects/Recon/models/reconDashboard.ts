@@ -17,6 +17,8 @@ export class reconDashboard {
   readonly tabToDo: Locator;
   readonly tabForExpedock: Locator;
   readonly tabForOtherUsers: Locator;
+  readonly tabDone: Locator;
+  readonly tabPosted: Locator;
   readonly reconViewDocumentsTab: Locator;
   readonly reconViewAccrualTab: Locator;
   readonly reconViewNotesTab: Locator;
@@ -28,7 +30,6 @@ export class reconDashboard {
   readonly moveToDoneReasonOption: Locator;
   readonly moveToDoneAdditionalNotes: Locator;
   readonly moveToDoneOthersOption: Locator;
-  readonly tabDone: Locator;
   readonly notesTabPanel: Locator;
   readonly buttonAddFilters: Locator;
   readonly toolTipButtonApplyFilter: Locator;
@@ -82,6 +83,10 @@ export class reconDashboard {
     });
     this.tabForOtherUsers = this.page.getByRole('tab', {
       name: 'For Other Users',
+      exact: true,
+    });
+    this.tabPosted = this.page.getByRole('tab', {
+      name: 'Posted',
       exact: true,
     });
     this.reconViewDocumentsTab = page.getByRole('tab', {
@@ -272,7 +277,9 @@ export class reconDashboard {
     await this.page
       .getByRole('button', { name: 'Continue', exact: true })
       .click();
-    await this.page.waitForURL('https://passive-dashboard.expedock.com/**/');
+    await this.page.waitForURL(
+      `https://${process.env.ENV}-dashboard.expedock.com/**/`
+    );
     await expect(this.page.getByTestId('account-user-name')).toBeVisible({
       timeout: DEFAULT_TIMEOUT_IN_MS,
     });
