@@ -15,6 +15,7 @@ export class JobPage {
   readonly iconErrorMetaField: Locator;
   readonly fieldErroNotes: Locator;
   readonly buttonSaveAndExport: Locator;
+  readonly buttonSave: Locator;
   readonly optionReconcile: Locator;
   readonly tabJobInfo: Locator;
   readonly divJobNotes: Locator;
@@ -36,6 +37,8 @@ export class JobPage {
   readonly inputContainerNumber: Locator;
   readonly divLineItem: Locator;
   readonly optionBatchReconcile: Locator;
+  readonly optionSendToCw: Locator;
+  readonly toggleAutoReconAutoPostIfMatch: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -60,6 +63,10 @@ export class JobPage {
     this.iconErrorMetaField = this.page.getByTestId('ErrorIcon');
     this.fieldErroNotes = this.page.getByTestId('Error Notes-shipment-field');
     this.buttonSaveAndExport = this.page.getByTestId('save-and-export-button');
+    this.buttonSave = this.page.getByRole('button', {
+      name: 'Save',
+      exact: true,
+    });
     this.optionReconcile = this.page.getByTestId('open-reconcile-ap-btn');
     this.tabJobInfo = this.page.getByTestId('job-info-tab');
     this.divJobNotes = this.page
@@ -78,9 +85,10 @@ export class JobPage {
     this.firstTableRow = this.page.getByRole('row').first();
     this.firstJobRow = this.page.getByRole('row').nth(1);
     this.iconOpenJob = this.firstJobRow.getByTestId('DescriptionIcon').first();
-    this.inputShipment = this.page.locator(
-      '//input[@aria-label="Reference No"]'
-    );
+    // this.inputShipment = this.page.locator(
+    //   '//input[@aria-label="Reference No"]'
+    // );
+    this.inputShipment = this.page.getByLabel('Reference No');
     this.inputHbl = this.page.getByLabel('HBL No');
     this.inputMbl = this.page.getByLabel('MBL No');
     this.inputVoyageNumber = this.page.getByLabel('Voyage No.');
@@ -89,6 +97,10 @@ export class JobPage {
       .getByRole('combobox', { name: 'Line Items' })
       .locator('ancestor::*[4]');
     this.optionBatchReconcile = this.page.getByText('Batch Reconcile SOA');
+    this.optionSendToCw = this.page.getByTestId('open-send-to-cw-btn');
+    this.toggleAutoReconAutoPostIfMatch = this.page.locator(
+      'input[name="autoReconAutoPostIfMatch"]'
+    );
   }
 
   async fillAndEnter(locator: Locator, text: string) {
@@ -144,6 +156,16 @@ export class JobPage {
     await this.optionReconcile.click();
     await this.page.getByTestId('recon-button').click();
   }
+
+  /**
+   * Toggle the auto recon auto post if match checkbox if it's currently off
+   */
+  async enableAutoReconAutoPostIfMatch() {
+    const isEnabled = await this.toggleAutoReconAutoPostIfMatch.isChecked();
+    if (!isEnabled) {
+      await this.toggleAutoReconAutoPostIfMatch.click();
+    }
+  }
 }
 
 export class ReconcileModal {
@@ -181,5 +203,17 @@ export class ReconcileModal {
     await closeIcon.waitFor({ state: 'visible', timeout: 5000 });
     await closeIcon.click();
     await this.page.getByRole('option', { name: `${status}` }).click();
+  }
+}
+
+export class SendToCwModal {
+  readonly page: Page;
+  readonly modal: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.modal = page
+      .locator('div[role="dialog"]')
+      .filter({ hasText: 'Review Data to Send to CW' });
   }
 }
