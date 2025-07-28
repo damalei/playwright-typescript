@@ -15,7 +15,7 @@ let recon;
 let taskPage: TaskPage;
 let jobPage: JobPage;
 
-test.describe('[37] User process a reconciliation', () => {
+test.describe('[37 & 95] User process a reconciliation', () => {
   test.beforeAll(async ({ browser }) => {
     const context: BrowserContext = await browser.newContext();
     page = await context.newPage();
@@ -24,7 +24,7 @@ test.describe('[37] User process a reconciliation', () => {
     taskPage = new TaskPage(page);
   });
 
-  test('[37.1-A] Client clicks on "Move to Done" from the Recon Dashboard Invoice page', async () => {
+  test('[37.1] Client clicks on "Move to Done" / "Mark as Reviewed" from the Recon Dashboard Invoice page', async () => {
     const jobName = await createJob(
       page,
       'AP Invoice NYC (Demo)',
@@ -41,11 +41,11 @@ test.describe('[37] User process a reconciliation', () => {
     await ReconPage.waitForTableToLoad(newReconPage);
     await ReconPage.searchJob(invoiceNumber);
     await ReconPage.clickInvoice(ReconPage.tabToDo, invoiceNumber);
-    await ReconPage.moveReconJobToDone(newReconPage);
-    await expect(ReconPage.moveToDoneBtn).not.toBeVisible();
+    await ReconPage.markReconJobAsReviewed(newReconPage);
+    await expect(ReconPage.markAsReviewedBtn).not.toBeVisible();
     await ReconPage.clickReconBreadcrumb();
     await page.reload();
-    await ReconPage.verifyMoveReconJobToDone(
+    await ReconPage.verifyMarkReconJobAsReviewed(
       newReconPage,
       invoiceNumber,
       ReconPage
@@ -58,7 +58,7 @@ test.describe('[37] User process a reconciliation', () => {
     await ReconPage.clickJobLink();
     await ReconPage.clickReconViewNotesTab();
     await expect(ReconPage.notesTabPanel).toContainText(
-      `${invoiceNumber} is moved to done by Expedock.`
+      `${invoiceNumber} is marked as reviewed by Expedock.`
     );
     await newReconPage.close();
 
@@ -67,12 +67,12 @@ test.describe('[37] User process a reconciliation', () => {
     await jobPage.tabJobInfo.click();
     await jobPage.divJobNotes.scrollIntoViewIfNeeded();
     await expect(jobPage.divJobNotes).toContainText(
-      `${invoiceNumber} is moved to done by Expedock.`
+      `${invoiceNumber} is marked as reviewed by Expedock.`
     );
     await newReconPage.close();
   });
 
-  test('[37.1-B] Client clicks on "Move to Done" from the Recon Dashboard Invoice <> Shipment Reference page', async () => {
+  test('[37.1-B 95.1] Client clicks on "Move to Done" / "Mark as Reviewed" from the Recon Dashboard Invoice <> Shipment Reference page', async () => {
     const jobName = await createJob(
       page,
       'AP Invoice NYC (Demo)',
@@ -90,11 +90,11 @@ test.describe('[37] User process a reconciliation', () => {
     await ReconPage.searchJob(invoiceNumber);
     await ReconPage.clickInvoice(ReconPage.tabToDo, invoiceNumber);
     await ReconPage.firstReconShipmentReference.click();
-    await ReconPage.moveReconJobToDone(newReconPage);
-    await expect(ReconPage.moveToDoneBtn).not.toBeVisible();
+    await ReconPage.markReconJobAsReviewed(newReconPage);
+    await expect(ReconPage.markAsReviewedBtn).not.toBeVisible();
     await ReconPage.clickReconBreadcrumb();
     await page.reload();
-    await ReconPage.verifyMoveReconJobToDone(
+    await ReconPage.verifyMarkReconJobAsReviewed(
       newReconPage,
       invoiceNumber,
       ReconPage
@@ -107,7 +107,7 @@ test.describe('[37] User process a reconciliation', () => {
     await ReconPage.clickJobLink();
     await ReconPage.clickReconViewNotesTab();
     await expect(ReconPage.notesTabPanel).toContainText(
-      `${invoiceNumber} is moved to done by Expedock.`
+      `${invoiceNumber} is marked as reviewed by Expedock.`
     );
     await newReconPage.close();
 
@@ -116,7 +116,7 @@ test.describe('[37] User process a reconciliation', () => {
     await jobPage.tabJobInfo.click();
     await jobPage.divJobNotes.scrollIntoViewIfNeeded();
     await expect(jobPage.divJobNotes).toContainText(
-      `${invoiceNumber} is moved to done by Expedock.`
+      `${invoiceNumber} is marked as reviewed by Expedock.`
     );
     await newReconPage.close();
   });

@@ -2,6 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import { SignUpPage } from '../../Shipper/models/signUp.ts';
 import { DEFAULT_TIMEOUT_IN_MS } from '../../constants.ts';
 import { reconDashboard } from '../models/reconDashboard.ts';
+import { logInAuth } from '../../utils';
 
 let signUpPage;
 let page: Page;
@@ -15,8 +16,19 @@ test.describe('[35] User access the Recon Dashboard page tabs', () => {
     recon = new reconDashboard(page);
   });
 
-  test('[35.1] Client clicks on the Recon Dashboard page tabs', async () => {
-    await signUpPage.gotoDashboard();
+  test('[35.1] Client clicks on the Recon Dashboard page tabs', async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ storageState: undefined });
+    page = await context.newPage();
+    recon = new reconDashboard(page);
+    await recon.loginToReconDashboard(
+      `${process.env.RECON_CLIENT_USER}`,
+      `${process.env.RECON_CLIENT_PASS}`
+    );
+    await expect(page.getByTestId('account-user-name')).toBeVisible({
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
     await recon.gotoReconDashboard();
 
     const tabs = [
@@ -25,8 +37,8 @@ test.describe('[35] User access the Recon Dashboard page tabs', () => {
       'No Shipment Found',
       'For Expedock',
       'For Other Users',
-      'Matched',
-      'Done',
+      'Posted',
+      'Reviewed',
       'Disputes',
     ];
 
@@ -85,8 +97,8 @@ test.describe('[35] User access the Recon Dashboard page tabs', () => {
       'No Shipment Found',
       'For Expedock',
       'For Other Users',
-      'Matched',
-      'Done',
+      'Posted',
+      'Reviewed',
       'Disputes',
     ];
 

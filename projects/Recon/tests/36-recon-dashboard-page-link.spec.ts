@@ -44,14 +44,14 @@ test.describe('[36] Recon Dashboard User Access', () => {
     await recon.waitForPageLoad(page);
     await recon.clickReconBreadcrumb();
 
-    await recon.clickTab(page, 'Matched');
-    await recon.expectExportButtonVisible(page, 'Matched');
+    await recon.clickTab(page, 'Posted');
+    await recon.expectExportButtonVisible(page, 'Posted');
     await recon.clickJobLink();
     await recon.waitForPageLoad(page);
     await recon.clickReconBreadcrumb();
 
-    await recon.clickTab(page, 'Done');
-    await recon.expectExportButtonVisible(page, 'Done');
+    await recon.clickTab(page, 'Reviewed');
+    await recon.expectExportButtonVisible(page, 'Reviewed');
     await recon.clickJobLink();
     await recon.waitForPageLoad(page);
     await recon.clickReconBreadcrumb();
@@ -61,5 +61,6 @@ test.describe('[36] Recon Dashboard User Access', () => {
     await recon.clickJobLink();
     await recon.waitForPageLoad(page);
     await recon.clickReconBreadcrumb();
+    await page.close();
   });
 });

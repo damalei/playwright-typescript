@@ -15,8 +15,8 @@ test.describe('[84] User edits the reconciliation table columns', () => {
     'No Shipment Found',
     'For Expedock',
     'For Other Users',
-    'Matched',
-    'Done',
+    'Posted',
+    'Reviewed',
     'Disputes',
   ];
 

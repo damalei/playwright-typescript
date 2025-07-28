@@ -24,8 +24,8 @@ test.describe('Recon Operator User Access', () => {
       'No Shipment Found',
       'For Expedock',
       'For Other Users',
-      'Matched',
-      'Done',
+      'Posted',
+      'Reviewed',
       'Disputes',
     ];
 

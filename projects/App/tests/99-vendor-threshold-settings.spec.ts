@@ -67,6 +67,7 @@ test.describe
     await jobPage.deleteTextAreaValue(jobPage.fieldErroNotes);
     await jobPage.reconcileAndCheckReconciliationResults();
     await expect(page.getByText('Reconciliation Results')).toBeVisible();
+    await page.waitForTimeout(2000);
 
     const reconciliationResultsTable = page.locator('table').nth(1);
     const totalAmountRow = reconciliationResultsTable

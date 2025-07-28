@@ -26,10 +26,10 @@ export class reconDashboard {
   readonly reconPageReassignBtn: Locator;
   readonly reconPageReassignToUserList: Locator;
   readonly searchReconJobOrReference: Locator;
-  readonly moveToDoneBtn: Locator;
-  readonly moveToDoneReasonOption: Locator;
-  readonly moveToDoneAdditionalNotes: Locator;
-  readonly moveToDoneOthersOption: Locator;
+  readonly markAsReviewedBtn: Locator;
+  readonly markAsReviewedReasonOption: Locator;
+  readonly markAsReviewedAdditionalNotes: Locator;
+  readonly markAsReviewedOthersOption: Locator;
   readonly notesTabPanel: Locator;
   readonly buttonAddFilters: Locator;
   readonly toolTipButtonApplyFilter: Locator;
@@ -111,14 +111,18 @@ export class reconDashboard {
     this.searchReconJobOrReference = page.getByRole('textbox', {
       name: 'Enter an invoice or reference',
     });
-    this.moveToDoneBtn = page.getByRole('button', { name: 'Move to Done' });
-    this.moveToDoneReasonOption = page.getByRole('combobox', {
-      name: 'Reason for Moving to Done*',
+    this.markAsReviewedBtn = page.getByRole('button', {
+      name: 'Mark as Reviewed',
     });
-    this.moveToDoneAdditionalNotes = page.getByRole('textbox', {
+    this.markAsReviewedReasonOption = page.getByRole('combobox', {
+      name: 'Reason for marking as',
+    });
+    this.markAsReviewedAdditionalNotes = page.getByRole('textbox', {
       name: 'Additional Notes *',
     });
-    this.moveToDoneOthersOption = page.getByRole('option', { name: 'Others' });
+    this.markAsReviewedOthersOption = page.getByRole('option', {
+      name: 'Others',
+    });
     this.notesTabPanel = page.getByTestId('notes-tab-panel');
     this.buttonAddFilters = page.getByRole('button', { name: 'Add a Filter' });
     this.multiSelectFilterDropdown = page.locator('//*[@role="tooltip"]');
@@ -351,22 +355,24 @@ export class reconDashboard {
     await expect(this.searchReconJobOrReference).toHaveValue(jobText || '');
     await recon.clickTab(page, 'For Other Users');
   }
-  async moveReconJobToDone(page: Page) {
-    await this.moveToDoneBtn.click();
-    await this.moveToDoneReasonOption.click();
-    await this.moveToDoneOthersOption.click();
-    await this.moveToDoneAdditionalNotes.fill('Regression Automation CTA Test');
-    await this.moveToDoneBtn.click();
+  async markReconJobAsReviewed(page: Page) {
+    await this.markAsReviewedBtn.click();
+    await this.markAsReviewedReasonOption.click();
+    await this.markAsReviewedOthersOption.click();
+    await this.markAsReviewedAdditionalNotes.fill(
+      'Regression Automation CTA Test'
+    );
+    await this.markAsReviewedBtn.click();
   }
 
-  async verifyMoveReconJobToDone(
+  async verifyMarkReconJobAsReviewed(
     page: Page,
     jobText: string | null,
     recon: reconDashboard
   ) {
     await this.searchReconJobOrReference.fill(jobText || '');
     await expect(this.searchReconJobOrReference).toHaveValue(jobText || '');
-    await recon.clickTab(page, 'Done');
+    await recon.clickTab(page, 'Reviewed');
   }
 
   async selectDropdownOption(option: string) {

@@ -101,7 +101,7 @@ export class JobTypeSettings {
 
   async selectVendor(vendorName: string) {
     await this.addVendorThresholdCombobox.click();
-    await this.addVendorThresholdCombobox.fill('dia');
+    await this.addVendorThresholdCombobox.fill(vendorName);
     await this.page.getByRole('option', { name: vendorName }).click();
   }
 

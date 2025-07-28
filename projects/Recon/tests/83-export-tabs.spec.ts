@@ -19,8 +19,8 @@ test.describe('[83] User exports from the reconciliation table', () => {
       'No Shipment Found',
       'For Expedock',
       'For Other Users',
-      'Matched',
-      'Done',
+      'Posted',
+      'Reviewed',
       'Disputes',
     ];
 

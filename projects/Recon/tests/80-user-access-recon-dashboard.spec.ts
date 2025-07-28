@@ -27,8 +27,8 @@ test.describe('[80] Recon Dashboard User Access', () => {
       'No Shipment Found',
       'For Expedock',
       'For Other Users',
-      'Matched',
-      'Done',
+      'Posted',
+      'Reviewed',
       'Disputes',
     ];
     for (const tab of tabs) {

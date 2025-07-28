@@ -27,8 +27,8 @@ test.describe('[88] User clicks/sorts on the reconciliation table columns', () =
       'No Shipment Found',
       'For Expedock',
       'For Other Users',
-      'Matched',
-      'Done',
+      'Posted',
+      'Reviewed',
       'Disputes',
       'All',
     ];
