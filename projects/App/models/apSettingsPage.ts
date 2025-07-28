@@ -25,6 +25,7 @@ export class ApSettingsPage {
     const isEnabled = await locator.isChecked();
     if (!isEnabled) {
       await locator.click();
+      await this.saveSettings();
     }
   }
 
@@ -32,6 +33,7 @@ export class ApSettingsPage {
     const isEnabled = await locator.isChecked();
     if (isEnabled) {
       await locator.click();
+      await this.saveSettings();
     }
   }
 

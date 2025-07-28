@@ -26,7 +26,7 @@ export class ExploreShipments {
   }
 
   async goto() {
-    await this.page.goto(FREIGHT_BI_BASE_URL + '/explore/explore-shipments');
+    await this.page.goto(FREIGHT_BI_BASE_URL + '/explore/shipments');
     await waitforTablePageLoad(this.page, DEFAULT_TIMEOUT_IN_MS);
   }
 
