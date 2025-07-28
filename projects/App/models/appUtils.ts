@@ -77,6 +77,7 @@ export const reconcileJob = async (
     await reconcileModal.buttonShowCustomerAP.click();
     await page
       .getByText('Successfully saved recon details')
+      .nth(0)
       .waitFor({ state: 'visible' });
   } else {
     await page.getByText('Batch Reconcile SOA').click();
@@ -155,7 +156,7 @@ export const inputSoaJobMetaFields = async (page: Page, jobName: string) => {
     .nth(0)
     .fill('Steamship Line');
   await page.getByRole('option', { name: 'Steamship Line' }).click();
-  await jobPage.verifyMetaFields();
+  await jobPage.verifySOAMetaFields(jobPage.inputVendor);
   return invoiceNumber;
 };
 

@@ -73,6 +73,7 @@ test.describe.parallel('[75] Set an External Assignee', () => {
     );
     const invoiceNumber = await inputSoaJobMetaFields(page, jobName);
     await inputSoaTableData(page, invoiceNumber);
+    await jobPage.verifySOAMetaFields(jobPage.inputBranch);
     await reconcileJob(
       page,
       'To Do',

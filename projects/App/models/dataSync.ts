@@ -6,6 +6,7 @@ export class DataSync {
   readonly inputShipment: Locator;
   readonly inputJobID: Locator;
   readonly buttonTriggerSync: Locator;
+  readonly dialogMessageAutoReconTriggered: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -19,6 +20,9 @@ export class DataSync {
     this.buttonTriggerSync = this.page.getByRole('button', {
       name: 'Trigger auto recon',
     });
+    this.dialogMessageAutoReconTriggered = this.page
+      .locator('#alert-dialog-title')
+      .filter({ hasText: 'Auto recon has been triggered' });
   }
 
   async goto() {
@@ -30,7 +34,7 @@ export class DataSync {
     await this.buttonTriggerSync.click();
     const modal = new DataSyncModal(this.page);
     await modal.buttonOk.click();
-    await this.page.waitForTimeout(5000);
+    await this.dialogMessageAutoReconTriggered.waitFor({ state: 'visible' });
   }
 
   extractLastPathSegment(url: string): string {
@@ -43,9 +47,11 @@ export class DataSync {
 export class DataSyncModal {
   readonly page: Page;
   readonly buttonOk: Locator;
+  readonly dialogMessage: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.buttonOk = this.page.getByRole('button', { name: 'OK' });
+    this.dialogMessage = this.page.locator('#confirm-dialog-message');
   }
 }

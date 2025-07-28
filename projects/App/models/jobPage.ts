@@ -12,6 +12,7 @@ export class JobPage {
   readonly inputInvoiceNumber: Locator;
   readonly inputInvoiceDate: Locator;
   readonly inputInvoiceDueDate: Locator;
+  readonly inputVendor: Locator;
   readonly iconErrorMetaField: Locator;
   readonly fieldErroNotes: Locator;
   readonly buttonSaveAndExport: Locator;
@@ -35,6 +36,7 @@ export class JobPage {
   readonly inputMbl: Locator;
   readonly inputVoyageNumber: Locator;
   readonly inputContainerNumber: Locator;
+  readonly inputBranch: Locator;
   readonly divLineItem: Locator;
   readonly optionBatchReconcile: Locator;
   readonly optionSendToCw: Locator;
@@ -101,6 +103,8 @@ export class JobPage {
     this.toggleAutoReconAutoPostIfMatch = this.page.locator(
       'input[name="autoReconAutoPostIfMatch"]'
     );
+    this.inputVendor = this.page.getByTestId('Vendor-shipment-field');
+    this.inputBranch = this.page.getByLabel('Branch');
   }
 
   async fillAndEnter(locator: Locator, text: string) {
@@ -123,6 +127,16 @@ export class JobPage {
 
   async verifyMetaFields() {
     await this.inputInvoiceNumber.click();
+    let count = await this.iconErrorMetaField.count();
+    while (count > 0) {
+      await this.buttonCheck.click();
+      count = await this.iconErrorMetaField.count();
+    }
+  }
+
+  async verifySOAMetaFields(locator: Locator) {
+    // await this.inputVendor.click();
+    await locator.click();
     let count = await this.iconErrorMetaField.count();
     while (count > 0) {
       await this.buttonCheck.click();
