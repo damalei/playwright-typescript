@@ -34,14 +34,13 @@ test.describe.parallel('[90] User sets-up auto post at exact match', () => {
     apSettingsPage = new ApSettingsPage(page);
   });
 
-  test('[75.1] for AP Job', async () => {
+  test('[90.1] for AP Job', async () => {
     // turn on auto post toggle
     await apSettingsPage.goto();
     await apSettingsPage.toggleIfOff(
       page,
       apSettingsPage.toggleAutoPostExactMatch
     );
-    await apSettingsPage.saveSettings();
 
     // create job
     const jobName = await createJob(

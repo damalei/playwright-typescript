@@ -571,7 +571,7 @@ test.describe.serial('[94] User Save Dashboard As New Page', () => {
     const saveNewPage = new SavedViews(newPage);
     const globalFilterSection = new GlobalFilterSection(newPage);
 
-    await newPage.goto(FREIGHT_BI_BASE_URL + '/explore/explore-organizations');
+    await newPage.goto(FREIGHT_BI_BASE_URL + '/explore/organizations');
     await exploreOrganizations.waitForReferenceComponent();
     const dashboardHeaderName = await newPage
       .locator('h5[data-testid="header-title"]')

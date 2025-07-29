@@ -56,6 +56,7 @@ test.describe.parallel('[75] Set an External Assignee', () => {
     await reconPage.gotoReconUrl();
     await reconPage.searchJob(invoiceNumber);
     await reconPage.tabForOtherUsers.click();
+    await page.waitForTimeout(5000);
     await expect
       .soft(reconPage.tableFirstRow)
       .toContainText('qa-passive-1@expedock.com');

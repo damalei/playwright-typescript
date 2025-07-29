@@ -33,9 +33,7 @@ export class ExploreOrganizations {
     this.orgTypeOpen = page.getByTitle('ORG TYPE').getByLabel('Open');
   }
   async goto() {
-    await this.page.goto(
-      FREIGHT_BI_BASE_URL + '/explore/explore-organizations'
-    );
+    await this.page.goto(FREIGHT_BI_BASE_URL + '/explore/organizations');
     await waitforTablePageLoad(this.page, DEFAULT_TIMEOUT_IN_MS);
   }
 

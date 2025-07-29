@@ -155,6 +155,7 @@ export const inputSoaJobMetaFields = async (page: Page, jobName: string) => {
     .nth(0)
     .fill('Steamship Line');
   await page.getByRole('option', { name: 'Steamship Line' }).click();
+  await jobPage.verifyMetaFields();
   return invoiceNumber;
 };
 
