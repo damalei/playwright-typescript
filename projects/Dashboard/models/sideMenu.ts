@@ -14,6 +14,7 @@ export class SideMenu {
   readonly listWrapperBusiness: Locator;
   readonly apiSummary: Locator;
   readonly optionOrganizationManagement: Locator;
+  readonly accSavedViews: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -35,6 +36,7 @@ export class SideMenu {
     this.optionOrganizationManagement = page.locator(
       '//span[text()="Organization Management"]'
     );
+    this.accSavedViews = page.getByText('Saved Views');
   }
 
   async clickOnDashboardName(dashboardName: string) {

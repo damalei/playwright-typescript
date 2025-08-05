@@ -23,6 +23,10 @@ export class GlobalFilterSection {
   readonly buttonSaveModal: Locator;
   readonly buttonPickerOk: Locator;
   readonly accSandboxingFilters: Locator;
+  readonly sectionFilters: Locator;
+  readonly selectorFieldPeriod: Locator;
+  readonly radioSaveAsNewView: Locator;
+  readonly modalInputViewName: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -53,6 +57,14 @@ export class GlobalFilterSection {
       .locator('..')
       .getByRole('button', { name: 'Ok' });
     this.accSandboxingFilters = page.getByTestId('sandboxing-filters');
+    this.sectionFilters = page.getByTestId('filters');
+    this.selectorFieldPeriod = page.getByTitle('PERIOD').locator('input');
+    this.radioSaveAsNewView = page.getByRole('radio', {
+      name: 'Save as new View',
+    });
+    this.modalInputViewName = page.getByPlaceholder(
+      'Enter a name for this view'
+    );
   }
 
   async goto() {
@@ -192,5 +204,11 @@ export class GlobalFilterSection {
         .count()) > 0;
     const exists = exists1 || exists2;
     return exists;
+  }
+
+  async setPeriodFieldType(period: string) {
+    await this.selectorFieldPeriod.fill(`${period}`);
+    await this.selectorFieldPeriod.press('ArrowDown');
+    await this.selectorFieldPeriod.press('Enter');
   }
 }
