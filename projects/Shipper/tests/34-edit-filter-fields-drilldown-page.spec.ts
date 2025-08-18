@@ -1,11 +1,11 @@
 import { test, Page, expect } from '@playwright/test';
 import { LoginPage } from '../models/login.ts';
 import { EditFilterFields } from '../models/editFilterFields.ts';
-import { DASHBOARD_TIMEOUT_IN_MS } from '../../constants.ts';
 
 let loginPage;
 let editFilterFields;
 
+test.describe.configure({ mode: 'serial' });
 test.describe('TS 34 - User edits filter fields on Drilldown Page', () => {
   let page: Page;
   test.beforeAll(async ({ browser }) => {
