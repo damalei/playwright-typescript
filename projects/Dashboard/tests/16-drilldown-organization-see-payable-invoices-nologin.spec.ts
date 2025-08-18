@@ -31,6 +31,9 @@ test.describe
     await expect(page.getByTestId('table-header-org_name')).toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
+    await exploreOrganizations.waitForReferenceComponent();
+    await exploreOrganizations.columnHeaderTotalExpenses.click();
+    await exploreOrganizations.waitForReferenceComponent();
     const { totalExpensesExclTaxAmount } =
       await exploreOrganizations.getOrganizationsTotalExpensesExclTaxAmount();
     await exploreOrganizations.clickOrganizationsSeePayableInvoices();
@@ -49,7 +52,9 @@ test.describe
     await exploreOrganizations.goto();
     await waitforTablePageLoad(page, DASHBOARD_TIMEOUT_IN_MS);
     await exploreOrganizations.orgTypeUnitSelector('Shipper');
-    await waitforTablePageLoad(page, DASHBOARD_TIMEOUT_IN_MS);
+    await exploreOrganizations.waitForReferenceComponent();
+    await exploreOrganizations.columnHeaderTotalExpenses.click();
+    await exploreOrganizations.waitForReferenceComponent();
     const { totalExpensesExclTaxAmount } =
       await exploreOrganizations.getOrganizationsTotalExpensesExclTaxAmount();
     await exploreOrganizations.clickOrganizationsSeePayableInvoices();
@@ -67,7 +72,9 @@ test.describe
     await exploreOrganizations.goto();
     await waitforTablePageLoad(page, DASHBOARD_TIMEOUT_IN_MS);
     await exploreOrganizations.orgTypeUnitSelector('Consignee');
-    await waitforTablePageLoad(page, DASHBOARD_TIMEOUT_IN_MS);
+    await exploreOrganizations.waitForReferenceComponent();
+    await exploreOrganizations.columnHeaderTotalExpenses.click();
+    await exploreOrganizations.waitForReferenceComponent();
     const { totalExpensesExclTaxAmount } =
       await exploreOrganizations.getOrganizationsTotalExpensesExclTaxAmount();
     await exploreOrganizations.clickOrganizationsSeePayableInvoices();
@@ -86,7 +93,9 @@ test.describe
     await exploreOrganizations.goto();
     await waitforTablePageLoad(page, DASHBOARD_TIMEOUT_IN_MS);
     await exploreOrganizations.orgTypeUnitSelector('Debtor');
-    await waitforTablePageLoad(page, DASHBOARD_TIMEOUT_IN_MS);
+    await exploreOrganizations.waitForReferenceComponent();
+    await exploreOrganizations.columnHeaderTotalExpenses.click();
+    await exploreOrganizations.waitForReferenceComponent();
     const { totalExpensesExclTaxAmount } =
       await exploreOrganizations.getOrganizationsTotalExpensesExclTaxAmount();
     await exploreOrganizations.clickOrganizationsSeePayableInvoices();
@@ -104,7 +113,9 @@ test.describe
     await exploreOrganizations.goto();
     await waitforTablePageLoad(page, DASHBOARD_TIMEOUT_IN_MS);
     await exploreOrganizations.orgTypeUnitSelector('Creditor');
-    await waitforTablePageLoad(page, DASHBOARD_TIMEOUT_IN_MS);
+    await exploreOrganizations.waitForReferenceComponent();
+    await exploreOrganizations.columnHeaderTotalExpenses.click();
+    await exploreOrganizations.waitForReferenceComponent();
     const { totalExpensesExclTaxAmount } =
       await exploreOrganizations.getOrganizationsTotalExpensesExclTaxAmount();
     await exploreOrganizations.clickOrganizationsSeePayableInvoices();

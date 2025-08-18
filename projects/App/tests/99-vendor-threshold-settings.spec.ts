@@ -10,6 +10,11 @@ import {
   ThresholdValidationData,
 } from '../models/JobTypeSettings';
 
+/**
+ * Developer's Note:
+ * If this TS fails, ensure to delete the vendor threshold settings in AP Invoice CompanY > AP NYC Job type
+ */
+
 let page: Page;
 let jobPage: JobPage;
 let jobTemplate: JobTemplate;
@@ -43,6 +48,7 @@ test.describe
     //Edit Vendor Recon Threshold Settings
     await jobTypeSettings.openThresholdSettings();
     await jobTypeSettings.selectVendor('DIAO ENG CHAI STEAMSHIP LINE');
+    // await jobTypeSettings.selectVendor('Herculean Ocean Logistics');
     await jobTypeSettings.addThresholdSetting();
     await jobTypeSettings.addThresholdMinAndMaxValue(-Infinity, 1000, 10, true);
     await jobTypeSettings.clickAddRow();
@@ -137,6 +143,9 @@ test.describe
     await jobTypeSettingsTab.verifyVendorSectionNotVisible(
       'DIAO ENG CHAI STEAMSHIP LINE'
     );
+    // await jobTypeSettingsTab.verifyVendorSectionNotVisible(
+    //   'Herculean Ocean Logistics'
+    // );
     await jobTypeSettingsTab.applyThresholdSettings();
     await jobTypeSettingsTab.saveJobTypeSettings();
 

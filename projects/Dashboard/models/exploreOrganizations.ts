@@ -18,6 +18,7 @@ export class ExploreOrganizations {
   readonly defaultOrgType: Locator;
   readonly orgTypeSelector: Locator;
   readonly orgTypeOpen: Locator;
+  readonly columnHeaderTotalExpenses: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -31,7 +32,11 @@ export class ExploreOrganizations {
       'input[role="combobox"][aria-autocomplete="list"][value="Local Client"]'
     );
     this.orgTypeOpen = page.getByTitle('ORG TYPE').getByLabel('Open');
+    this.columnHeaderTotalExpenses = page.getByTestId(
+      'table-header-total_expenses'
+    );
   }
+
   async goto() {
     await this.page.goto(FREIGHT_BI_BASE_URL + '/explore/organizations');
     await waitforTablePageLoad(this.page, DEFAULT_TIMEOUT_IN_MS);

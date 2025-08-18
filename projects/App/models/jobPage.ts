@@ -35,6 +35,7 @@ export class JobPage {
   readonly inputMbl: Locator;
   readonly inputVoyageNumber: Locator;
   readonly inputContainerNumber: Locator;
+  readonly inputVendorShipment: Locator;
   readonly divLineItem: Locator;
   readonly optionBatchReconcile: Locator;
   readonly optionSendToCw: Locator;
@@ -101,6 +102,7 @@ export class JobPage {
     this.toggleAutoReconAutoPostIfMatch = this.page.locator(
       'input[name="autoReconAutoPostIfMatch"]'
     );
+    this.inputVendorShipment = this.page.getByTestId('Vendor-shipment-field');
   }
 
   async fillAndEnter(locator: Locator, text: string) {
@@ -122,7 +124,6 @@ export class JobPage {
   }
 
   async verifyMetaFields() {
-    await this.inputInvoiceNumber.click();
     let count = await this.iconErrorMetaField.count();
     while (count > 0) {
       await this.buttonCheck.click();
