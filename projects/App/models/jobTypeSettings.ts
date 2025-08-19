@@ -110,12 +110,7 @@ export class JobTypeSettings {
   }
 
   async clickAddRow() {
-    await this.page
-      .getByText(
-        'Greater Than or Equal (>=)Less Than (<)Threshold Amount+ ADD ROW'
-      )
-      .nth(1)
-      .click();
+    await this.page.getByRole('button', { name: '+ ADD ROW' }).nth(1).click();
   }
 
   async applyThresholdSettings() {
