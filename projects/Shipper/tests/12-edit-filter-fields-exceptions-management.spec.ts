@@ -4,7 +4,7 @@ import { EditFilterFields } from '../models/editFilterFields.ts';
 
 let loginPage;
 let editFilterFields;
-
+test.describe.configure({ mode: 'serial' });
 test.describe('TS 12 - User edits filter fields on Exceptions Management', () => {
   let page: Page;
   test.beforeAll(async ({ browser }) => {

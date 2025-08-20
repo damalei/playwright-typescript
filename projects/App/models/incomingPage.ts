@@ -16,6 +16,18 @@ export class IncomingPage {
   readonly expandedDate: Locator;
   readonly expandedIframe: Locator;
   readonly emailTableRefreshButton: Locator;
+  readonly emailFilterMenuButton: Locator;
+  readonly emailFilterAddButton: Locator;
+  readonly emailDateReceivedFilter: Locator;
+  readonly emailDateReceivedOperation: Locator;
+  readonly emailJobStatusFilter: Locator;
+  readonly emailJobStatusOperation: Locator;
+  readonly emailJobStatusValue: Locator;
+  readonly emailJobTypeFilter: Locator;
+  readonly emailJobTypeOperation: Locator;
+  readonly emailJobTypeValue: Locator;
+  readonly ingestedEmailSearch: Locator;
+  readonly deleteEmailFilter: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -54,6 +66,32 @@ export class IncomingPage {
     this.emailTableRefreshButton = page.getByTestId(
       'email-table-refresh-button'
     );
+    this.emailFilterMenuButton = page.getByTestId('email-filter-menu-button');
+    this.emailFilterAddButton = page.getByTestId('email-filter-add-button');
+    this.emailDateReceivedFilter = page.getByTestId(
+      'add-email-filter-EMAIL_DATE_RECEIVED'
+    );
+    this.emailDateReceivedOperation = page.getByRole('combobox').nth(4);
+    this.emailJobStatusFilter = page.getByTestId('add-email-filter-JOB_STATUS');
+    this.emailJobStatusOperation = page.locator(
+      'div:nth-child(4) > .MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary.css-1529hcj-emailFilterOperationField > .MuiSelect-select'
+    );
+    this.emailJobStatusValue = page
+      .getByTestId('email-filter-value-JOB_STATUS')
+      .getByRole('combobox');
+    this.emailJobTypeFilter = page.getByTestId('add-email-filter-JOB_TYPE');
+    this.emailJobTypeOperation = page.locator(
+      'div:nth-child(5) > .MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary.css-1529hcj-emailFilterOperationField > .MuiSelect-select'
+    );
+    this.emailJobTypeValue = page
+      .getByTestId('email-filter-value-JOB_TYPE')
+      .locator('div')
+      .nth(1);
+    this.ingestedEmailSearch = page
+      .getByTestId('email-filters')
+      .getByRole('button')
+      .first();
+    this.deleteEmailFilter = page.getByTestId('delete-email-filter');
   }
 
   async selectCompany(companyName: string): Promise<void> {
@@ -68,5 +106,85 @@ export class IncomingPage {
   async navigateToIncomingPage(): Promise<void> {
     await this.page.getByTestId('incoming-button').click();
     await this.page.waitForURL(/.*\/email-processing#/);
+  }
+
+  async parseEmailDateString(emailDateText: string): Promise<Date | null> {
+    const match = emailDateText.match(
+      /(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2}):(\d{2})/
+    );
+    if (!match) return null;
+
+    const [, month, day, year, hour, minute, second] = match;
+    return new Date(
+      parseInt(year),
+      parseInt(month) - 1,
+      parseInt(day),
+      parseInt(hour),
+      parseInt(minute),
+      parseInt(second)
+    );
+  }
+
+  async validateEmailDatesWithFilterApplied(
+    filterDate: Date
+  ): Promise<
+    Array<{ emailDate: Date; isValid: boolean; originalText: string }>
+  > {
+    const emailDateElements = this.page.locator(
+      '[data-testid="email-received-date"], .email-received-date, td:nth-child(4)'
+    );
+    const emailDates = await emailDateElements.allTextContents();
+    const results: Array<{
+      emailDate: Date;
+      isValid: boolean;
+      originalText: string;
+    }> = [];
+
+    for (const emailDateText of emailDates) {
+      if (!emailDateText?.trim()) continue;
+
+      const emailDate = await this.parseEmailDateString(emailDateText);
+      if (emailDate) {
+        results.push({
+          emailDate,
+          isValid: emailDate.getTime() < filterDate.getTime(),
+          originalText: emailDateText,
+        });
+      }
+    }
+
+    return results;
+  }
+
+  async setupDateAndTimeReceivedFilter(): Promise<string> {
+    await this.emailDateReceivedFilter.click();
+    await this.emailDateReceivedOperation.click();
+    await this.page.getByRole('option', { name: 'before' }).click();
+
+    const dateTimeInput = this.page.locator(
+      'input[name="dateTime"][type="datetime-local"]'
+    );
+    await dateTimeInput.waitFor({ state: 'visible', timeout: 5000 });
+
+    const currentDateTime = new Date().toISOString().slice(0, 16);
+    await dateTimeInput.fill(currentDateTime);
+
+    return currentDateTime;
+  }
+
+  async addJobStatusFilter(jobStatus: string): Promise<void> {
+    await this.emailJobStatusFilter.click();
+    await this.emailJobStatusOperation.click();
+    await this.page.getByRole('option', { name: 'contains' }).click();
+    await this.emailJobStatusValue.click();
+    await this.page.getByRole('option', { name: jobStatus }).click();
+  }
+
+  async addJobTypeFilter(jobType: string): Promise<void> {
+    await this.emailJobTypeFilter.click();
+    await this.emailJobTypeOperation.click();
+    await this.page.getByRole('option', { name: 'contains' }).click();
+    await this.emailJobTypeValue.click();
+    await this.page.getByRole('option', { name: jobType }).click();
   }
 }

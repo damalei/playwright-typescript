@@ -1,4 +1,4 @@
-import { Page, test, expect } from '@playwright/test';
+import { Page, test, expect, Locator } from '@playwright/test';
 import { APP_BASE_URL, DEFAULT_TIMEOUT_IN_MS } from '../../constants';
 import { JobPage } from '../models/jobPage';
 import { IncomingPage } from '../models/incomingPage';
@@ -80,5 +80,53 @@ test.describe('[105] User checks or edit emails table on Incoming Page', () => {
     await expect(page.getByTestId('table-container')).toBeVisible({
       timeout: DEFAULT_TIMEOUT_IN_MS,
     });
+  });
+
+  test('[105.1] User sorts all columns of emails table on Incoming Page', async () => {
+    await expect(incomingPage.firstEmailSubject).toBeVisible({
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
+
+    await expect(page.getByTestId('table-container')).toBeVisible({
+      timeout: DEFAULT_TIMEOUT_IN_MS,
+    });
+
+    const tableHeaders = page.getByTestId('table-header').locator('th');
+    const allHeaders = await tableHeaders.all();
+
+    const sortableHeaders: Locator[] = [];
+    for (const header of allHeaders) {
+      const text = await header.textContent();
+      if (text && text.trim().length > 0) {
+        sortableHeaders.push(header);
+      }
+    }
+
+    for (const currentHeader of sortableHeaders) {
+      const columnText = await currentHeader.textContent();
+
+      await currentHeader.waitFor({
+        state: 'visible',
+        timeout: DEFAULT_TIMEOUT_IN_MS,
+      });
+
+      console.log(`Ascending sort for column: ${columnText}`);
+      await currentHeader.click();
+      await page.waitForTimeout(1000);
+
+      await expect(incomingPage.firstEmailSubject).toBeVisible({
+        timeout: DEFAULT_TIMEOUT_IN_MS,
+      });
+
+      console.log(`Descending sort for column: ${columnText}`);
+      await currentHeader.click();
+      await page.waitForTimeout(1000);
+
+      await expect(incomingPage.firstEmailSubject).toBeVisible({
+        timeout: DEFAULT_TIMEOUT_IN_MS,
+      });
+    }
+
+    console.log('All table columns sorting test completed successfully');
   });
 });

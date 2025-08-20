@@ -72,7 +72,7 @@ test.describe('Login', () => {
     await page.getByLabel('Email Address').fill(username);
     await page.getByRole('button', { name: 'SUBMIT' }).click();
     await expect
-      .soft(page.getByText('Successfully sent!'))
+      .soft(page.getByText('Successfully requested'))
       .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
   });
 
