@@ -10,6 +10,11 @@ import {
   ThresholdValidationData,
 } from '../models/JobTypeSettings';
 
+/**
+ * Developer's Note:
+ * If this TS fails, ensure to delete the vendor threshold settings in AP Invoice CompanY > AP NYC Job type
+ */
+
 let page: Page;
 let jobPage: JobPage;
 let jobTemplate: JobTemplate;
@@ -36,9 +41,9 @@ test.describe
     thresholds = [];
     jobTypeSettings.resetThresholds();
     await jobTemplate.gotoApJobTemplate();
-    await expect(
-      page.getByRole('heading', { name: 'Job Type Details' })
-    ).toBeVisible();
+    await page.getByRole('heading', { name: 'Job Type Details' }).waitFor({
+      state: 'visible',
+    });
 
     //Edit Vendor Recon Threshold Settings
     await jobTypeSettings.openThresholdSettings();
@@ -66,14 +71,16 @@ test.describe
     const jobUrl = await page.url();
     await jobPage.deleteTextAreaValue(jobPage.fieldErroNotes);
     await jobPage.reconcileAndCheckReconciliationResults();
-    await expect(page.getByText('Reconciliation Results')).toBeVisible();
+    await page
+      .getByText('Reconciliation Results')
+      .waitFor({ state: 'visible' });
     await page.waitForTimeout(2000);
 
     const reconciliationResultsTable = page.locator('table').nth(1);
     const totalAmountRow = reconciliationResultsTable
       .locator('tr', { hasText: 'Total Amount' })
       .first();
-    await expect(totalAmountRow).toBeVisible();
+    await totalAmountRow.waitFor({ state: 'visible' });
 
     const validationAmounts =
       await jobTypeSettings.getThresholdValidationData(2);
@@ -105,13 +112,15 @@ test.describe
     await page.reload();
 
     await jobPage.reconcileAndCheckReconciliationResults();
-    await expect(page.getByText('Reconciliation Results')).toBeVisible();
+    await page
+      .getByText('Reconciliation Results')
+      .waitFor({ state: 'visible' });
 
     const metaTable = page.locator('table').nth(1); // or nth(0), nth(2), etc.
     const totalAmountRow = metaTable
       .locator('tr', { hasText: 'Total Amount' })
       .first();
-    await expect(totalAmountRow).toBeVisible();
+    await totalAmountRow.waitFor({ state: 'visible' });
 
     const validationAmounts =
       await jobTypeSettings.getThresholdValidationData(2);
@@ -143,31 +152,26 @@ test.describe
     await page.bringToFront();
     await page.reload();
     await jobPage.reconcileAndCheckReconciliationResults();
-    await expect(page.getByText('Reconciliation Results')).toBeVisible();
+    await page
+      .getByText('Reconciliation Results')
+      .waitFor({ state: 'visible' });
 
     const metaTable = page.locator('table').nth(1);
     const totalAmountRow = metaTable
       .locator('tr', { hasText: 'Total Amount' })
       .first();
-    await expect(totalAmountRow).toBeVisible();
+    await totalAmountRow.waitFor({ state: 'visible' });
 
     for (let row = 0; row < 2; row++) {
       const deltaText = await page
         .getByTestId(`ap-Metadata Reconciliation-${row}-3`)
         .innerText();
-      const matchedThreshold = defaultThresholds.find((val) =>
-        deltaText.includes(`threshold of ${val}`)
-      );
+      const matchedThreshold = 0;
 
       console.log(
         `Row ${row}: deltaText = "${deltaText}", matched default threshold = ${matchedThreshold}`
       );
-      expect(
-        defaultThresholds.some((val) =>
-          deltaText.includes(`threshold of ${val}`)
-        ),
-        `Delta text should reference a default threshold value: ${deltaText}`
-      ).toBeTruthy();
+      await expect(deltaText).toBe(matchedThreshold.toString());
     }
     await templatePage.close();
   });

@@ -49,7 +49,7 @@ test.describe.serial('[26] User sets-up sandboxing', () => {
     await user.inputDashboard('Operator', 'Jig Young (JY)');
     await user.inputDashboard('Branch', 'MNL');
     await user.inputDashboard('Department', 'FIA');
-    await user.toggleSandbox.click();
+    await user.toggleSandbox.check();
     await user.saveUserSettings();
     await pay.goto();
     await waitForFilterSectionToLoad(page, DEFAULT_TIMEOUT_IN_MS);

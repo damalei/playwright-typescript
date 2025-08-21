@@ -52,6 +52,7 @@ export const reconcileAPInvoice = async (
 export const inputApJobMetaFields = async (page: Page, jobName: string) => {
   const jobPage = new JobPage(page);
   const invoiceNumber = `INV-${jobName}`;
+  await jobPage.inputInvoiceNumber.click();
   await jobPage.verifyMetaFields();
   await jobPage.inputInvoiceNumber.fill(invoiceNumber);
   await jobPage.inputInvoiceDate.fill('04-25-2025');
@@ -155,6 +156,7 @@ export const inputSoaJobMetaFields = async (page: Page, jobName: string) => {
     .nth(0)
     .fill('Steamship Line');
   await page.getByRole('option', { name: 'Steamship Line' }).click();
+  await jobPage.inputVendorShipment.click();
   await jobPage.verifyMetaFields();
   return invoiceNumber;
 };

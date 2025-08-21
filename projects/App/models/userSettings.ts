@@ -45,28 +45,28 @@ export class UserSettings {
       name: 'External Assignee',
     });
     this.lockOperatorCheckbox = page.getByRole('checkbox', {
-      name: 'Lock Recon Dashboard Operator',
+      name: 'Lock Recon Dashboard Operator filter for user',
     });
     this.lockBranchCheckbox = page.getByRole('checkbox', {
-      name: 'Lock Recon Dashboard Branch',
+      name: 'Lock Recon Dashboard Branch filter for user',
     });
     this.lockDepartmentCheckbox = page.getByRole('checkbox', {
       name: 'Lock Recon Dashboard Department filter for user',
     });
     this.lockExternalCheckbox = page.getByRole('checkbox', {
-      name: 'Lock Recon Dashboard External',
+      name: 'Lock Recon Dashboard External Assignee Filter to this User',
     });
     this.unlockOperatorCheckbox = page.getByRole('checkbox', {
-      name: 'Recon Dashboard Operator',
+      name: 'Recon Dashboard Operator filter locked',
     });
     this.unlockBranchCheckbox = page.getByRole('checkbox', {
-      name: 'Recon Dashboard Branch filter',
+      name: 'Recon Dashboard Branch filter locked',
     });
     this.unlockDepartmentCheckbox = page.getByRole('checkbox', {
-      name: 'Recon Dashboard Department',
+      name: 'Recon Dashboard Department filter locked',
     });
     this.unlockExternalCheckbox = page.getByRole('checkbox', {
-      name: 'External Recon Dashboard',
+      name: 'External Recon Dashboard Assignee Filter Locked to this User',
     });
     this.updateButton = page.getByRole('button', { name: 'Update' });
     this.cancelIcon = page.getByTestId('CancelIcon');

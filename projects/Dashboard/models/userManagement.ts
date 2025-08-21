@@ -66,6 +66,7 @@ export class UserManagement {
     await field.pressSequentially(dashboard);
     await this.page.keyboard.press('Space');
     await this.page.keyboard.press('Backspace');
+    await this.page.waitForTimeout(1000);
     await this.page.keyboard.press('ArrowDown');
     await this.page.keyboard.press('Enter');
   }
