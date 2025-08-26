@@ -218,3 +218,51 @@ export class SendToCwModal {
       .filter({ hasText: 'Review Data to Send to CW' });
   }
 }
+
+export class ExportActionsModal {
+  readonly page: Page;
+  readonly modal: Locator;
+  readonly buttonClose: Locator;
+  readonly checkBox_edocPages: Locator;
+  readonly checkBox_sendtoCW: Locator;
+  readonly checkBox_postToCW: Locator;
+  readonly button_goBack: Locator;
+  readonly button_showToCustomer: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.modal = page.getByRole('dialog').filter({ hasText: 'Export Actions' });
+    this.buttonClose = this.modal.getByTestId('close-btn');
+    this.checkBox_edocPages = this.modal
+      .getByTestId('edoc-pages-checkbox')
+      .locator('input');
+    this.checkBox_sendtoCW = this.modal
+      .getByTestId('send-to-cw-checkbox')
+      .locator('input');
+    this.checkBox_postToCW = this.modal
+      .getByTestId('post-to-cw-checkbox')
+      .locator('input');
+    this.button_goBack = this.modal.getByText('Go Back');
+    this.button_showToCustomer = this.modal.getByTestId(
+      'continue-to-customer-btn'
+    );
+  }
+}
+
+export class ShowToCustomerWithActionModal {
+  readonly page: Page;
+  readonly modal: Locator;
+  readonly button_cancel: Locator;
+  readonly button_showToCustomer: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.modal = page
+      .getByRole('dialog')
+      .filter({ hasText: 'Show to customer with the selected actions?' });
+    this.button_cancel = this.modal.getByText('Cancel');
+    this.button_showToCustomer = this.modal.getByRole('button', {
+      name: 'Show to Customer',
+    });
+  }
+}

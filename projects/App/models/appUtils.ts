@@ -1,7 +1,12 @@
 import { Page } from '@playwright/test';
-import { APP_TASK_COLLECTION_URL, __apFilePath } from '../../constants.ts';
+import { __apFilePath } from '../../constants.ts';
 import { TaskPage } from './taskPage.ts';
-import { JobPage, ReconcileModal } from './jobPage.ts';
+import {
+  JobPage,
+  ReconcileModal,
+  ExportActionsModal,
+  ShowToCustomerWithActionModal,
+} from './jobPage.ts';
 
 export const createJob = async (
   page: Page,
@@ -9,7 +14,7 @@ export const createJob = async (
   owner: string,
   qa: string,
   fileName: string,
-  task: string = APP_TASK_COLLECTION_URL
+  task: string = `${process.env.APP_TASK_COLLECTION_URL}`
 ) => {
   const jobPage = new JobPage(page);
   const taskPage = new TaskPage(page);
@@ -76,6 +81,14 @@ export const reconcileJob = async (
     await reconcileModal.buttonReconcile.click();
     await addAssigneeAP(page, externalStatus, externalAssignee, isAutoAssign);
     await reconcileModal.buttonShowCustomerAP.click();
+    if (`${process.env.FTR_AP_EXPORT_ACTION_RECON_MODAL}` === 'true') {
+      const exportActionsModal = new ExportActionsModal(page);
+      await exportActionsModal.button_showToCustomer.click();
+      const showToCustomerWithActionModal = new ShowToCustomerWithActionModal(
+        page
+      );
+      await showToCustomerWithActionModal.button_showToCustomer.click();
+    }
     await page
       .getByText('Successfully saved recon details')
       .waitFor({ state: 'visible' });
