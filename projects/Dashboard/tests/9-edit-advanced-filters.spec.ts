@@ -8,6 +8,8 @@ let explorePayableInvoices;
 let exploreShipments;
 let advancedFilterView;
 
+test.describe.configure({ mode: 'serial' });
+
 test.describe('Edit, Save, and Remove filters on Advanced view', () => {
   let page: Page;
   test.beforeAll(async ({ browser }) => {

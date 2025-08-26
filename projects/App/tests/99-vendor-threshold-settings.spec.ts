@@ -21,9 +21,9 @@ let jobTemplate: JobTemplate;
 let jobTypeSettings: JobTypeSettings;
 
 let thresholds: ThresholdRule[] = [];
+test.describe.configure({ mode: 'serial' });
 
-test.describe
-  .parallel('[99] User edits the company vendor recon threshold settings ', () => {
+test.describe('[99] User edits the company vendor recon threshold settings ', () => {
   test.beforeAll(async ({ browser }) => {
     const context = await browser.newContext({ storageState: undefined });
     page = await context.newPage();

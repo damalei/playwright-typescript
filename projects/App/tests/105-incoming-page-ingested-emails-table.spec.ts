@@ -7,6 +7,8 @@ let jobPage: JobPage;
 let incomingPage: IncomingPage;
 let page: Page;
 
+test.describe.configure({ mode: 'serial' });
+
 test.describe('[105] User checks or edit emails table on Incoming Page', () => {
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
@@ -98,7 +100,11 @@ test.describe('[105] User checks or edit emails table on Incoming Page', () => {
     for (const header of allHeaders) {
       const text = await header.textContent();
       if (text && text.trim().length > 0) {
-        sortableHeaders.push(header);
+        const hasSortIcon =
+          (await header.getByTestId('selector-icon').count()) > 0;
+        if (hasSortIcon) {
+          sortableHeaders.push(header);
+        }
       }
     }
 
