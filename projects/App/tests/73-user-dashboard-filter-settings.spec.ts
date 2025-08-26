@@ -6,10 +6,11 @@ import { UserSettings } from '../models/userSettings';
 let page: Page;
 let userSettings: UserSettings;
 
+test.describe.configure({ mode: 'serial' });
+
 //*** Dev Note: This can be a very flaky test due to JMS Saving filters is not instant */
 
-test.describe
-  .parallel('[73] user edits the recon dashboard filter settings ', () => {
+test.describe('[73] user edits the recon dashboard filter settings ', () => {
   test.beforeAll(async ({ browser }) => {
     const context = await browser.newContext({ storageState: undefined });
     page = await context.newPage();
@@ -25,6 +26,7 @@ test.describe
     await page.goto(APP_BASE_URL);
     await userSettings.navigateToUsersPage();
     await userSettings.searchUser('qa-passive-app-recon-client@expedock.com');
+    await userSettings.editButton.click();
     await userSettings.addUserDashboardFilters(
       'Casper Chan (CC)',
       ['MNL', 'NYC'],
@@ -100,6 +102,7 @@ test.describe
     await expect(page.getByText('1+ Create TaskCreate Job')).toBeVisible();
     await userSettings.navigateToUsersPage();
     await userSettings.searchUser('qa-passive-app-recon-client@expedock.com');
+    await userSettings.editButton.click();
     await userSettings.removeAllFilters([
       'Casper Chan (CC)',
       'MNL',

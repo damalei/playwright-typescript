@@ -161,7 +161,6 @@ export class UserSettings {
     await this.emailInput.fill(email);
     await this.emailInput.press('Enter');
     await this.searchButton.click();
-    await this.editButton.click();
   }
 
   async addUserDashboardFilters(
