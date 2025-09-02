@@ -40,6 +40,14 @@ export class JobPage {
   readonly optionBatchReconcile: Locator;
   readonly optionSendToCw: Locator;
   readonly toggleAutoReconAutoPostIfMatch: Locator;
+  readonly editLineItemTable: Locator;
+  readonly backToJobHideLineItemTable: Locator;
+  readonly extractTableBox: Locator;
+  readonly contextMenuOptionCopy: Locator;
+  readonly contextMenuOptionCut: Locator;
+  readonly contextMenuOptionRemoveRow: Locator;
+  readonly contextMenuOptionInsertRowBelow: Locator;
+  readonly contextMenuOptionInsertRowAbove: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -103,6 +111,26 @@ export class JobPage {
       'input[name="autoReconAutoPostIfMatch"]'
     );
     this.inputVendorShipment = this.page.getByTestId('Vendor-shipment-field');
+    this.editLineItemTable = this.page.getByTestId('edit-line-item-table');
+    this.backToJobHideLineItemTable = this.page.getByTestId(
+      'hide-line-item-table'
+    );
+    this.extractTableBox = this.page.getByTestId('extract-table-box');
+    this.contextMenuOptionCopy = this.page.getByTestId(
+      'context-menu-option-copy'
+    );
+    this.contextMenuOptionCut = this.page.getByTestId(
+      'context-menu-option-cut'
+    );
+    this.contextMenuOptionRemoveRow = this.page.getByTestId(
+      'context-menu-option-remove-row'
+    );
+    this.contextMenuOptionInsertRowBelow = this.page.getByTestId(
+      'context-menu-option-insert-row-below'
+    );
+    this.contextMenuOptionInsertRowAbove = this.page.getByTestId(
+      'context-menu-option-insert-row-above'
+    );
   }
 
   async fillAndEnter(locator: Locator, text: string) {
@@ -166,6 +194,142 @@ export class JobPage {
     if (!isEnabled) {
       await this.toggleAutoReconAutoPostIfMatch.click();
     }
+  }
+
+  // Line Item Table Methods
+  async openLineItemTable() {
+    await this.editLineItemTable.click();
+    await this.extractTableBox.waitFor({ state: 'visible' });
+  }
+
+  async closeLineItemTable() {
+    await this.backToJobHideLineItemTable.click();
+  }
+
+  async getTableRowCount() {
+    return await this.extractTableBox.locator('tbody tr').count();
+  }
+
+  async getRowCells(rowIndex: number) {
+    return this.extractTableBox.locator('tbody tr').nth(rowIndex).locator('td');
+  }
+
+  async getRowCellValue(rowIndex: number, cellIndex: number) {
+    const cells = await this.getRowCells(rowIndex);
+    return await cells.nth(cellIndex).innerText();
+  }
+
+  async getRowValues(rowIndex: number): Promise<string[]> {
+    const cells = await this.getRowCells(rowIndex);
+    const cellCount = await cells.count();
+    const values: string[] = [];
+
+    for (let i = 0; i < cellCount; i++) {
+      const value = await cells.nth(i).innerText();
+      values.push(value);
+    }
+
+    return values;
+  }
+
+  async clickRow(rowNumber: number) {
+    await this.page
+      .getByRole('cell', { name: rowNumber.toString(), exact: true })
+      .click();
+  }
+
+  async rightClickRow(rowNumber: number) {
+    await this.page
+      .getByRole('cell', { name: rowNumber.toString(), exact: true })
+      .click({
+        button: 'right',
+      });
+  }
+
+  async copyRow(rowNumber: number) {
+    await this.clickRow(rowNumber);
+    await this.rightClickRow(rowNumber);
+    await this.contextMenuOptionCopy.getByText('Copy').click();
+  }
+
+  async cutRow(rowNumber: number) {
+    await this.clickRow(rowNumber);
+    await this.rightClickRow(rowNumber);
+    await this.page.getByText('Cut').click();
+  }
+
+  async pasteToRow(rowNumber: number) {
+    await this.rightClickRow(rowNumber);
+    await this.clickRow(rowNumber);
+    await this.page.keyboard.press('Control+V');
+  }
+
+  async insertRowBelow(rowNumber: number) {
+    await this.clickRow(rowNumber);
+    await this.rightClickRow(rowNumber);
+    await this.page.getByText('Insert row below').click();
+  }
+
+  async insertRowAbove(rowNumber: number) {
+    await this.clickRow(rowNumber);
+    await this.rightClickRow(rowNumber);
+    await this.page.getByText('Insert row above').click();
+  }
+
+  async removeRow(rowNumber: number) {
+    await this.clickRow(rowNumber);
+    await this.page
+      .getByRole('cell', { name: rowNumber.toString(), exact: true })
+      .locator('span')
+      .click({
+        button: 'right',
+      });
+    await this.page.getByText('Remove row').click();
+  }
+
+  async waitForTableUpdate(timeout: number = 2000) {
+    await this.page.waitForTimeout(timeout);
+  }
+
+  async compareRowValues(
+    sourceRowIndex: number,
+    targetRowIndex: number
+  ): Promise<boolean> {
+    const sourceValues = await this.getRowValues(sourceRowIndex);
+    const targetValues = await this.getRowValues(targetRowIndex);
+
+    if (sourceValues.length !== targetValues.length) {
+      return false;
+    }
+
+    for (let i = 0; i < sourceValues.length; i++) {
+      if (
+        sourceValues[i].trim() !== '' &&
+        sourceValues[i] !== targetValues[i]
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  async verifyRowIsEmpty(rowIndex: number): Promise<boolean> {
+    const values = await this.getRowValues(rowIndex);
+    return values.every((value) => value.trim() === '');
+  }
+
+  async findRowWithContent(content: string): Promise<number> {
+    const rowCount = await this.getTableRowCount();
+
+    for (let i = 0; i < rowCount; i++) {
+      const values = await this.getRowValues(i);
+      if (values.some((value) => value.includes(content))) {
+        return i;
+      }
+    }
+
+    return -1;
   }
 }
 
@@ -258,7 +422,7 @@ export class ShowToCustomerWithActionModal {
   constructor(page: Page) {
     this.page = page;
     this.modal = page
-      .getByRole('dialog')
+      .locator('div[role="dialog"]')
       .filter({ hasText: 'Show to customer with the selected actions?' });
     this.button_cancel = this.modal.getByText('Cancel');
     this.button_showToCustomer = this.modal.getByRole('button', {
