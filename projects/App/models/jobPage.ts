@@ -36,10 +36,13 @@ export class JobPage {
   readonly inputVoyageNumber: Locator;
   readonly inputContainerNumber: Locator;
   readonly inputVendorShipment: Locator;
+  readonly inputExpedockActions: Locator;
   readonly divLineItem: Locator;
   readonly optionBatchReconcile: Locator;
   readonly optionSendToCw: Locator;
   readonly toggleAutoReconAutoPostIfMatch: Locator;
+  readonly divJobNotesContainer: Locator;
+  readonly divAutoReconLog: Locator;
   readonly editLineItemTable: Locator;
   readonly backToJobHideLineItemTable: Locator;
   readonly extractTableBox: Locator;
@@ -102,6 +105,9 @@ export class JobPage {
     this.inputMbl = this.page.getByLabel('MBL No');
     this.inputVoyageNumber = this.page.getByLabel('Voyage No.');
     this.inputContainerNumber = this.page.getByLabel('Container Number');
+    this.inputExpedockActions = this.page
+      .getByTestId('Expedock Resolution-shipment-field')
+      .getByRole('combobox');
     this.divLineItem = this.page
       .getByRole('combobox', { name: 'Line Items' })
       .locator('ancestor::*[4]');
@@ -111,6 +117,11 @@ export class JobPage {
       'input[name="autoReconAutoPostIfMatch"]'
     );
     this.inputVendorShipment = this.page.getByTestId('Vendor-shipment-field');
+
+    this.divJobNotesContainer = this.page.locator('#notesContainer');
+    this.divAutoReconLog = this.divJobNotesContainer.locator(
+      'div:has-text("Auto-recon")'
+    );
     this.editLineItemTable = this.page.getByTestId('edit-line-item-table');
     this.backToJobHideLineItemTable = this.page.getByTestId(
       'hide-line-item-table'
@@ -131,6 +142,34 @@ export class JobPage {
     this.contextMenuOptionInsertRowAbove = this.page.getByTestId(
       'context-menu-option-insert-row-above'
     );
+  }
+
+  async refreshJobNotes(
+    locator: Locator,
+    timeout: number = 300000,
+    interval: number = 10000
+  ): Promise<boolean> {
+    const start = Date.now();
+    while (Date.now() - start < timeout) {
+      try {
+        if (await locator.isVisible()) {
+          return true;
+        } else {
+          await this.page.reload();
+          await this.tabJobInfo.click();
+        }
+      } catch (e) {}
+      await new Promise((r) => setTimeout(r, interval));
+    }
+
+    return false;
+  }
+
+  async assertAutoReconDivCount() {
+    await this.divAutoReconLog.nth(0).waitFor({ state: 'visible' });
+    const autoReconDivs = await this.divAutoReconLog.count();
+    console.log('autoReconDivs', autoReconDivs);
+    return autoReconDivs;
   }
 
   async fillAndEnter(locator: Locator, text: string) {
@@ -335,6 +374,7 @@ export class JobPage {
 
 export class ReconcileModal {
   readonly page: Page;
+  readonly modal: Locator;
   readonly buttonReconcile: Locator;
   readonly buttonShowCustomerAP: Locator;
   readonly fieldAssignee: Locator;
@@ -342,9 +382,10 @@ export class ReconcileModal {
 
   constructor(page: Page) {
     this.page = page;
+    this.modal = page.getByTestId('recon-modal');
     this.buttonReconcile = page.getByTestId('recon-button');
-    this.buttonShowCustomerAP = page.getByTestId('show-customer-aprecon');
-    this.buttonSaveJobDetails = page.getByTestId('save-job-details-btn');
+    this.buttonShowCustomerAP = this.modal.getByTestId('show-customer-aprecon');
+    this.buttonSaveJobDetails = this.modal.getByTestId('save-job-details-btn');
   }
 
   async selectAssignee(assignee: string) {
