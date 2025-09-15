@@ -48,7 +48,7 @@ export class SignUpPage {
       exact: true,
     });
     this.fbiLoginEmail = page.getByLabel('Email Address');
-    this.fbiLoginPass = page.getByLabel('Password');
+    this.fbiLoginPass = page.getByLabel('Password *');
     this.requestAccountBtn = page.getByRole('button', {
       name: 'Request for an account',
     });
@@ -280,7 +280,7 @@ export class SignUpPage {
   }
 
   async searchShipmentonShipperViz() {
-    await this.signUpSearchShipment.fill('S00724521');
+    await this.signUpSearchShipment.fill('S00068422');
     await this.trackShipmentBtn.click();
     await this.shipmentCardResult.click();
     await expect(this.shipmentRoute).toBeVisible({

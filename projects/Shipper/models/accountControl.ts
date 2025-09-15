@@ -75,7 +75,9 @@ export class AccountControl {
     this.loginBtn = page.getByRole('button', { name: 'LOG IN' });
 
     this.setOrgCodeXYZABChip = page.locator('span:has-text("XYZAB") + *');
-    this.setOrgCodeDOCTChip = page.locator('span:has-text("DOCT") + *');
+    this.setOrgCodeDOCTChip = page.locator(
+      `span:has-text('${process.env.SHIPPER_ORG}') + *`
+    );
     this.autoApproveDomainChip = page.locator(
       'span:has-text("test-auto-approve.com") + *'
     );
@@ -93,7 +95,9 @@ export class AccountControl {
     this.editOrgCode = page.getByRole('combobox', {
       name: 'Enter at least 3 characters',
     });
-    this.setOrgCodeDOCT = page.getByRole('option', { name: 'DOCT' });
+    this.setOrgCodeDOCT = page.getByRole('option', {
+      name: `${process.env.SHIPPER_ORG}`,
+    });
     this.setOrgCodeToDefault = page.getByRole('option', { name: 'XYZAB' });
     this.updateOrganizationBtn = page.getByRole('button', {
       name: 'Update Organization',
@@ -191,7 +195,7 @@ export class AccountControl {
   async editShipperPortalOrg() {
     await this.editOrgName.fill('Automation Test Organization Edited');
     await this.removeSetOrgXYZAB();
-    await this.editOrgCode.fill('DOCT');
+    await this.editOrgCode.fill(`${process.env.SHIPPER_ORG}`);
     await this.setOrgCodeDOCT.waitFor({ state: 'visible' });
     await this.setOrgCodeDOCT.click();
     await this.updateOrganizationBtn.click();

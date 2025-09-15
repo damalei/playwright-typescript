@@ -218,7 +218,7 @@ test.describe('TS 93 - User saves as new page ', () => {
     await page
       .getByRole('main')
       .waitFor({ state: 'visible', timeout: DASHBOARD_TIMEOUT_IN_MS });
-    await expect(page.getByText('Dashboards')).toBeVisible({
+    await expect(page.getByText('Dashboards', { exact: true })).toBeVisible({
       timeout: DASHBOARD_TIMEOUT_IN_MS,
     });
     await editFilterFields.viewSavedViewListDropdown.click();

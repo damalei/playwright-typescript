@@ -121,7 +121,7 @@ test.describe.serial('[29] ShipperViz Account Control', () => {
     await accountControl.searchShipperOrg();
     await accountControl.editShipperPortalOrg();
     await expect
-      .soft(page.getByRole('cell', { name: 'DOCT' }))
+      .soft(page.getByRole('cell', { name: `${process.env.SHIPPER_ORG}` }))
       .toBeVisible({ timeout: DEFAULT_TIMEOUT_IN_MS });
     await expect
       .soft(
